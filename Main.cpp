@@ -25,21 +25,22 @@
 
 using namespace std;
 
-
+//Extern
 int W_WIDTH = 800;
 int W_HEIGHT = 600;
 
+//Static
 bool Main::keys[1024];
-
-GLFWwindow * window;
-vec2 MousePos, OldMousePos;
-
+GLFWwindow * Main::window;
 Camera Main::MainCamera = Camera();
+
+//Private
+vec2 MousePos, OldMousePos;
 Blurb A = Blurb();
 Blurb B = Blurb();
 
 // Is called whenever a key is pressed/released via GLFW
-void key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
+void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
 {
 	if (action == GLFW_PRESS)
 		Main::keys[key] = true;
@@ -51,19 +52,33 @@ void key_callback(GLFWwindow * window, int key, int scancode, int action, int mo
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
-void mouse_callback(GLFWwindow * window, double xpos, double ypos) {
+void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 	MousePos.x = xpos;
 	MousePos.y = ypos;
 
 	//cout << MousePos.x << "," << MousePos.y << endl;
 }
 
-void Test() {
+void Main::Setup() {
 	A = Blurb(-1);
 	cout << A.mode << endl;
 
 	B = Blurb(2);
 	cout << B.mode << endl;
+}
+
+void Main::Update() {
+
+}
+
+void Main::Draw() {
+
+	A.Draw();
+	B.Draw();
+}
+
+void Main::LateUpdate() {
+
 }
 
 // The MAIN function, from here we start the application and run the game loop
@@ -84,8 +99,8 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	// Set the required callback functions
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetKeyCallback(window, Main::key_callback);
+	glfwSetCursorPosCallback(window, Main::mouse_callback);
 
 	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
 	glewExperimental = GL_TRUE;
@@ -126,8 +141,8 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Test();
 
+	Main::Setup();
 	A.SetShaderProgram(shader.GetProgram());
 	A.SetTexture(texture);
 
@@ -147,11 +162,9 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		
+		Main::Draw();
 
-		A.Draw();
-		B.Draw();
-
+		Main::LateUpdate();
 		glfwSwapBuffers(window);
 		OldMousePos = MousePos;
 	}
