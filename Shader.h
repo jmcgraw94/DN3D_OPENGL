@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include "Shader.h"
 #include <string>
@@ -119,5 +118,3 @@ public:
 		return Program;
 	}
 };
-
-#endif

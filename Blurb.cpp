@@ -23,6 +23,14 @@ using namespace std;
 using namespace glm;
 
 Blurb::Blurb() {
+	cout << "EMPTY BLURB" << endl;
+}
+
+Blurb::~Blurb()
+{
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 }
 
 Blurb::Blurb(int _mode)
@@ -120,11 +128,10 @@ void Blurb::SetTexture(GLuint _texture) {
 void Blurb::Draw() {
 	glEnable(GL_BLEND);
 
-
+	cout << mode << endl;
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	glm::mat4 model;
-	position.x =  mode / 2;
 	model = glm::translate(model, position);
 	model = glm::rotate(model, (float)sin(glfwGetTime() / 2) * mode, glm::vec3(1.0, 0.0, 0.0));
 	model = glm::scale(model, glm::vec3(.5f,.5f,.5f));
@@ -143,9 +150,4 @@ void Blurb::Draw() {
 	glDisable(GL_BLEND);
 }
 
-Blurb::~Blurb()
-{
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-}
+

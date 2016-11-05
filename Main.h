@@ -1,7 +1,7 @@
-#ifndef BLURB_H
-#define BLURB_H
+#pragma once
 
 #include "Camera.h"
+#include "Blurb.h"
 
 #include "..\include\GL\glew.h"
 #include "..\include\glm\glm.hpp"
@@ -18,7 +18,8 @@ public:
 
 	static bool keys[1024];
 
-	Camera MainCamera;
+	//static Camera MainCamera;
+	static Blurb A;
 
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -31,5 +32,4 @@ public:
 	Main();
 	virtual ~Main();
 };
-#endif
 
