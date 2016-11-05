@@ -20,15 +20,16 @@ public:
 	void Draw();
 	~Blurb();
 
-	float mode = 1;
-protected:
-
-private:
+	float mode = 0;
 	vec3 position;
 	string objName;
 	GLfloat * VertArray;
 	GLint texture;
 	GLuint shaderProgram;
 	GLuint VBO, VAO, EBO;
+protected:
+
+private:
+
 };
 

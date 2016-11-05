@@ -35,8 +35,6 @@ void Camera::Update() {
 	view = glm::mat4();
 	projection = glm::mat4();
 
-	Main::A.mode = -1;
-
 	{
 		GLfloat cameraSpeed = 0.05f;
 		if (Main::keys[GLFW_KEY_W])

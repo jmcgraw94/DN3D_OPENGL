@@ -36,6 +36,7 @@ vec2 MousePos, OldMousePos;
 
 Camera MainCamera = Camera();
 Blurb Main::A = Blurb();
+Blurb Main::B = Blurb();
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
@@ -118,14 +119,12 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Main::A = Blurb(-20);
+	Main::A = Blurb(-1);
 	cout << Main::A.mode << endl;
-	Blurb A = Blurb(45);
-	cout << Main::A.mode << endl;
-	Main::A.SetShaderProgram(shader.GetProgram());
-	Main::A.SetTexture(texture);
-	
-	cout << Main::A.mode << endl;
+
+	Main::B = Blurb();
+	cout << Main::B.mode << endl;
+
 
 	MapFactory MF = MapFactory();
 	MF.LoadMap();
@@ -140,7 +139,6 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		//projection = glm::rotate(projection, (float)sin(glfwGetTime() * 3) / 8, glm::vec3(0, 1, 0));
 
 		GLint viewLoc = glGetUniformLocation(Main::A.GetShaderProgram(), "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(MainCamera.view));
@@ -148,7 +146,13 @@ int main()
 		GLint projLoc = glGetUniformLocation(Main::A.GetShaderProgram(), "projection");
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(MainCamera.projection));
 
+		Main::A.SetShaderProgram(shader.GetProgram());
+		Main::A.SetTexture(texture);
+		Main::B.SetShaderProgram(shader.GetProgram());
+		Main::B.SetTexture(texture);
+
 		Main::A.Draw();
+		Main::B.Draw();
 
 		glfwSwapBuffers(window);
 		OldMousePos = MousePos;

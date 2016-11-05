@@ -20,15 +20,16 @@ public:
 
 	//static Camera MainCamera;
 	static Blurb A;
+	static Blurb B;
 
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-
 	//void Setup();
 	//void Update();
 	//void Draw();
 	//void LateUpdate();
 
+	static void Test();
 	Main();
 	virtual ~Main();
 };
