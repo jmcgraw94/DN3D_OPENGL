@@ -1,4 +1,5 @@
 #include "Blurb.h"
+#include "Main.h"
 
 #include "..\include\glfw3.h"
 #include "..\include\GL\glew.h"
@@ -22,12 +23,7 @@
 using namespace std;
 using namespace glm;
 
-//vec3 position;
-//string objName;
-//GLfloat * VertArray;
-//GLint texture;
-//GLuint shaderProgram;
-//GLuint VBO, VAO, EBO;
+
 GLfloat verts[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 	0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -106,11 +102,7 @@ void Blurb::SetTexture(GLuint _texture) {
 	texture = _texture;
 }
 
-void Blurb::Draw() {
-	position = vec3(mode / 2, 0, 0);
-
-	glEnable(GL_BLEND);
-
+void Blurb::Buffer() {
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -127,7 +119,6 @@ void Blurb::Draw() {
 																					  //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Color
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Texture
 
-
 	glEnableVertexAttribArray(0); // Position attribute	  
 								  //glEnableVertexAttribArray(1); // Color attribute
 	glEnableVertexAttribArray(2); // TexCoord attribute
@@ -135,8 +126,11 @@ void Blurb::Draw() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindVertexArray(VAO);
+}
 
+void Blurb::SetUniforms() {
 	glm::mat4 model;
 	model = glm::translate(model, position);
 	model = glm::rotate(model, (float)sin(glfwGetTime() / 2) * mode, glm::vec3(1.0, 0.0, 0.0));
@@ -145,10 +139,22 @@ void Blurb::Draw() {
 	GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-	glUseProgram(shaderProgram);
+	GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(Main::MainCamera.view));
 
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glBindVertexArray(VAO);
+	GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
+
+	glUseProgram(shaderProgram);
+}
+
+void Blurb::Draw() {
+	position = vec3(mode / 2, 0, 0);
+
+	glEnable(GL_BLEND);
+	Buffer();
+	SetUniforms();
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);

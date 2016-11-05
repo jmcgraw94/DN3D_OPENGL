@@ -18,9 +18,9 @@ public:
 
 	static bool keys[1024];
 
-	//static Camera MainCamera;
-	static Blurb A;
-	static Blurb B;
+	static Camera MainCamera;
+	//static Blurb A;
+	//static Blurb B;
 
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos);

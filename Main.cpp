@@ -34,9 +34,9 @@ bool Main::keys[1024];
 GLFWwindow * window;
 vec2 MousePos, OldMousePos;
 
-Camera MainCamera = Camera();
-Blurb Main::A = Blurb();
-Blurb Main::B = Blurb();
+Camera Main::MainCamera = Camera();
+Blurb A = Blurb();
+Blurb B = Blurb();
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
@@ -58,6 +58,13 @@ void mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 	//cout << MousePos.x << "," << MousePos.y << endl;
 }
 
+void Test() {
+	A = Blurb(-1);
+	cout << A.mode << endl;
+
+	B = Blurb(2);
+	cout << B.mode << endl;
+}
 
 // The MAIN function, from here we start the application and run the game loop
 int main()
@@ -119,12 +126,13 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Main::A = Blurb(-1);
-	cout << Main::A.mode << endl;
+	Test();
 
-	Main::B = Blurb();
-	cout << Main::B.mode << endl;
+	A.SetShaderProgram(shader.GetProgram());
+	A.SetTexture(texture);
 
+	B.SetShaderProgram(shader.GetProgram());
+	B.SetTexture(texture);
 
 	MapFactory MF = MapFactory();
 	MF.LoadMap();
@@ -134,25 +142,15 @@ int main()
 	{
 		glfwPollEvents();
 
-		MainCamera.Update();
+		Main::MainCamera.Update();
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		
 
-		GLint viewLoc = glGetUniformLocation(Main::A.GetShaderProgram(), "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(MainCamera.view));
-
-		GLint projLoc = glGetUniformLocation(Main::A.GetShaderProgram(), "projection");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(MainCamera.projection));
-
-		Main::A.SetShaderProgram(shader.GetProgram());
-		Main::A.SetTexture(texture);
-		Main::B.SetShaderProgram(shader.GetProgram());
-		Main::B.SetTexture(texture);
-
-		Main::A.Draw();
-		Main::B.Draw();
+		A.Draw();
+		B.Draw();
 
 		glfwSwapBuffers(window);
 		OldMousePos = MousePos;

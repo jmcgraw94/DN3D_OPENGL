@@ -16,6 +16,8 @@ public:
 	Blurb(int _mode);
 	void SetShaderProgram(GLuint Program);
 	GLuint GetShaderProgram();
+	void Buffer();
+	void SetUniforms();
 	void SetTexture(GLuint Texture);
 	void Draw();
 	~Blurb();
