@@ -31,7 +31,7 @@ int W_HEIGHT = 600;
 
 bool Main::keys[1024];
 
-GLFWwindow* window;
+GLFWwindow * window;
 vec2 MousePos, OldMousePos;
 
 Camera MainCamera = Camera();
@@ -43,7 +43,7 @@ void key_callback(GLFWwindow * window, int key, int scancode, int action, int mo
 	else if (action == GLFW_RELEASE)
 		Main::keys[key] = false;
 
-	cout << key << endl;
+	//cout << key << endl;
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
