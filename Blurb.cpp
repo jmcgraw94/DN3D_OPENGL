@@ -22,6 +22,9 @@
 using namespace std;
 using namespace glm;
 
+Blurb::Blurb() {
+}
+
 Blurb::Blurb(int _mode)
 {
 	mode = _mode;

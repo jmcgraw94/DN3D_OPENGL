@@ -120,9 +120,6 @@ int main()
 	A.SetShaderProgram(shader.GetProgram());
 	A.SetTexture(texture);
 	
-	Blurb B = Blurb(-1);
-	B.SetShaderProgram(shader.GetProgram());
-	B.SetTexture(texture);
 
 	MapFactory MF = MapFactory();
 	MF.LoadMap();
@@ -146,7 +143,6 @@ int main()
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(MainCamera.projection));
 
 		A.Draw();
-		B.Draw();
 
 		glfwSwapBuffers(window);
 		OldMousePos = MousePos;
