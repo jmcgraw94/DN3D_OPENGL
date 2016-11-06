@@ -16,13 +16,12 @@
 #include <time.h>
 #include <vector>
 
-//#include <stdio.h>
+#include <stdio.h>
 #include <string>
 #include <iostream>
 
 using namespace std;
 using namespace glm;
-
 
 GLfloat verts[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -77,6 +76,17 @@ Blurb::Blurb() {
 	cout << "EMPTY BLURB" << endl;
 }
 
+Blurb::Blurb(vec3 _pos, int _mode)
+{
+	Position = _pos;
+	Scale = vec3(2, 1, 1);
+	Rotation = vec3(0, 0, 15);
+
+	ID = _mode;
+
+	cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
+}
+
 Blurb::~Blurb()
 {
 	glDeleteVertexArrays(1, &VAO);
@@ -84,13 +94,9 @@ Blurb::~Blurb()
 	glDeleteBuffers(1, &EBO);
 }
 
-Blurb::Blurb(int _mode)
-{
-	mode = _mode;
-}
 
-void Blurb::SetShaderProgram(GLuint Program) {
-	shaderProgram = Program;
+void Blurb::SetShaderProgram(GLuint _Program) {
+	shaderProgram = _Program;
 }
 
 GLuint Blurb::GetShaderProgram()
@@ -115,9 +121,12 @@ void Blurb::Buffer() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0); //Verts
-																					  //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Color
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Texture
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 *
+		sizeof(GLfloat), (GLvoid*)0); //Verts
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Color
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 *
+		sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Texture
 
 	glEnableVertexAttribArray(0); // Position attribute	  
 								  //glEnableVertexAttribArray(1); // Color attribute
@@ -131,10 +140,17 @@ void Blurb::Buffer() {
 }
 
 void Blurb::SetUniforms() {
-	glm::mat4 model;
-	model = glm::translate(model, position);
-	model = glm::rotate(model, (float)sin(glfwGetTime() / 2) * mode, glm::vec3(1.0, 0.0, 0.0));
-	model = glm::scale(model, glm::vec3(.5f, .5f, .5f));
+	mat4 model = mat4(1);
+
+	model = glm::translate(model, Position);
+
+	model = glm::rotate(model, glm::radians(Rotation.z) * ID, vec3(0, 0, 1));
+	model = glm::rotate(model, glm::radians(Rotation.y) * ID, vec3(0, 1, 0));
+	model = glm::rotate(model, glm::radians(Rotation.x) * ID, vec3(1, 0, 0));
+
+	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
+
+	cout << ID << ": " << Rotation.z << endl;
 
 	GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -148,18 +164,32 @@ void Blurb::SetUniforms() {
 	glUseProgram(shaderProgram);
 }
 
-void Blurb::Draw() {
-	position = vec3(mode / 2, 0, 0);
+void Blurb::UpdateModelMatrix() {
+	
 
+}
+
+void Blurb::Update() {
+	Position += vec3(.005f, 0, 0);
+	//Rotation += vec3()
+}
+
+void Blurb::Draw() {
 	glEnable(GL_BLEND);
+
+	UpdateModelMatrix();
+	
 	Buffer();
+
 	SetUniforms();
+
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 
 	glDisable(GL_BLEND);
+
 }
 
 

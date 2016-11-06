@@ -21,7 +21,7 @@ bool init = false;
 Camera::Camera()
 {
 	cameraPos = glm::vec3(0, 0, -3);
-	cameraFront = glm::vec3(0, 0, -1);
+	cameraFront = glm::vec3(0, 0, 1);
 	cameraUp = glm::vec3(0, 1, 0);
 
 	cout << "Camera Created" << endl;
@@ -38,13 +38,13 @@ void Camera::Update() {
 	{
 		GLfloat cameraSpeed = 0.05f;
 		if (Main::keys[GLFW_KEY_W])
-			cameraPos -= cameraSpeed * cameraFront;
-		if (Main::keys[GLFW_KEY_S])
 			cameraPos += cameraSpeed * cameraFront;
+		if (Main::keys[GLFW_KEY_S])
+			cameraPos -= cameraSpeed * cameraFront;
 		if (Main::keys[GLFW_KEY_A])
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-		if (Main::keys[GLFW_KEY_D])
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		if (Main::keys[GLFW_KEY_D])
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 
 	view = glm::translate(view, cameraPos);

@@ -36,8 +36,9 @@ Camera Main::MainCamera = Camera();
 
 //Private
 vec2 MousePos, OldMousePos;
-Blurb A = Blurb();
-Blurb B = Blurb();
+
+
+vector<Blurb> Blurbs = vector<Blurb>();
 
 // Is called whenever a key is pressed/released via GLFW
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
@@ -60,30 +61,6 @@ void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 }
 
 void Main::Setup() {
-	A = Blurb(-1);
-	cout << A.mode << endl;
-
-	B = Blurb(2);
-	cout << B.mode << endl;
-}
-
-void Main::Update() {
-
-}
-
-void Main::Draw() {
-
-	A.Draw();
-	B.Draw();
-}
-
-void Main::LateUpdate() {
-
-}
-
-// The MAIN function, from here we start the application and run the game loop
-int main()
-{
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 	// Init GLFW
 	glfwInit();
@@ -95,12 +72,12 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "LearnOpenGL", nullptr, nullptr);
-	glfwMakeContextCurrent(window);
+	Main::window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+	glfwMakeContextCurrent(Main::window);
 
 	// Set the required callback functions
-	glfwSetKeyCallback(window, Main::key_callback);
-	glfwSetCursorPosCallback(window, Main::mouse_callback);
+	glfwSetKeyCallback(Main::window, Main::key_callback);
+	glfwSetCursorPosCallback(Main::window, Main::mouse_callback);
 
 	// Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
 	glewExperimental = GL_TRUE;
@@ -110,7 +87,7 @@ int main()
 
 	// Define the viewport dimensions
 	int _w, _h;
-	glfwGetFramebufferSize(window, &_w, &_h);
+	glfwGetFramebufferSize(Main::window, &_w, &_h);
 	glViewport(0, 0, _w, _h);
 
 	Shader shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
@@ -136,39 +113,69 @@ int main()
 	unsigned char* image = SOIL_load_image("Content/container.png", &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	glEnable(GL_DEPTH_TEST);
+	SOIL_free_image_data(image);
 
+	Blurb A = Blurb();
+	Blurb B = Blurb();
 
-	Main::Setup();
+	A = Blurb(glm::vec3(-1, 0, 0), 1);
+	B = Blurb(glm::vec3(1, 0, 0), 2);
+
 	A.SetShaderProgram(shader.GetProgram());
 	A.SetTexture(texture);
 
 	B.SetShaderProgram(shader.GetProgram());
 	B.SetTexture(texture);
 
+	Blurbs.push_back(A);
+	Blurbs.push_back(B);
+
 	MapFactory MF = MapFactory();
 	MF.LoadMap();
 
-	// Game loop
-	while (!glfwWindowShouldClose(window))
+	cout << "SETUP COMPLETE\n" << endl;
+}
+
+void Main::Update() {
+	glfwPollEvents();
+	Main::MainCamera.Update();
+
+	for (int i = 0; i < Blurbs.size(); i++) {
+		Blurbs[i].Update();
+	}
+}
+
+void Main::Draw() {
+	glClearColor(0.5f, 0.2f, 0.7f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	for (int i = 0; i < Blurbs.size(); i++) {
+		Blurbs[i].Draw();
+	}
+}
+
+void Main::LateUpdate() {
+	glfwSwapBuffers(Main::window);
+	OldMousePos = MousePos;
+}
+
+int main()
+{
+	Main::Setup();
+
+	while (!glfwWindowShouldClose(Main::window))
 	{
-		glfwPollEvents();
-
-		Main::MainCamera.Update();
-
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Main::Update();
 
 		Main::Draw();
 
 		Main::LateUpdate();
-		glfwSwapBuffers(window);
-		OldMousePos = MousePos;
 	}
+
 	glfwTerminate();
+
 	return 0;
 }
 

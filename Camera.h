@@ -9,7 +9,6 @@ public:
 	void Update();
 	void Init();
 
-
 	glm::mat4 view;
 	glm::mat4 projection;
 
