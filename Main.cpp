@@ -119,9 +119,11 @@ void Main::Setup() {
 
 	Blurb A = Blurb();
 	Blurb B = Blurb();
+	Blurb C = Blurb();
 
-	A = Blurb(glm::vec3(-1, 0, 0), 1);
-	B = Blurb(glm::vec3(1, 0, 0), 2);
+	A = Blurb(glm::vec3(2, 0, 0), 1);
+	B = Blurb(glm::vec3(0, 0, 0), 2);
+	C = Blurb(glm::vec3(-2, 0, 0), 3);
 
 	A.SetShaderProgram(shader.GetProgram());
 	A.SetTexture(texture);
@@ -129,8 +131,12 @@ void Main::Setup() {
 	B.SetShaderProgram(shader.GetProgram());
 	B.SetTexture(texture);
 
+	C.SetShaderProgram(shader.GetProgram());
+	C.SetTexture(texture);
+
 	Blurbs.push_back(A);
 	Blurbs.push_back(B);
+	Blurbs.push_back(C);
 
 	MapFactory MF = MapFactory();
 	MF.LoadMap();

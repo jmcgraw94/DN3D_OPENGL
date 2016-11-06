@@ -80,7 +80,7 @@ Blurb::Blurb(vec3 _pos, int _mode)
 {
 	Position = _pos;
 	Scale = vec3(2, 1, 1);
-	Rotation = vec3(0, 0, 15);
+	Rotation = vec3(0, 0, 45);
 
 	ID = _mode;
 
@@ -140,13 +140,13 @@ void Blurb::Buffer() {
 }
 
 void Blurb::SetUniforms() {
-	mat4 model = mat4(1);
+	mat4 model = mat4();
 
 	model = glm::translate(model, Position);
 
-	model = glm::rotate(model, glm::radians(Rotation.z) * ID, vec3(0, 0, 1));
-	model = glm::rotate(model, glm::radians(Rotation.y) * ID, vec3(0, 1, 0));
-	model = glm::rotate(model, glm::radians(Rotation.x) * ID, vec3(1, 0, 0));
+	model = glm::rotate(model, glm::radians(Rotation.z), vec3(0, 0, 1));
+	model = glm::rotate(model, glm::radians(Rotation.y), vec3(0, 1, 0));
+	model = glm::rotate(model, glm::radians(Rotation.x), vec3(1, 0, 0));
 
 	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
 
