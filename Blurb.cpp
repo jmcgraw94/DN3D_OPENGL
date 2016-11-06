@@ -1,6 +1,7 @@
 #include "Blurb.h"
 #include "Main.h"
 
+#include "..\include\SOIL.h"
 #include "..\include\glfw3.h"
 #include "..\include\GL\glew.h"
 #include "..\include\math\matrix4d.h"
@@ -15,6 +16,7 @@
 #include <GL\GL.h>
 #include <time.h>
 #include <vector>
+#include <string>
 
 #include <stdio.h>
 #include <string>
@@ -76,15 +78,33 @@ Blurb::Blurb() {
 	cout << "EMPTY BLURB" << endl;
 }
 
-Blurb::Blurb(vec3 _pos, int _mode)
+Blurb::Blurb(vec3 _pos, int _ID)
 {
 	Position = _pos;
-	Scale = vec3(2, 1, 1);
-	Rotation = vec3(0, 0, 45);
+	Scale = vec3(1.25f, 1, 1);
 
-	ID = _mode;
+	ID = _ID;
 
 	cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
+
+	shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
+
+	texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
+
+	int texWidth, texHeight;
+	unsigned char* image;
+	image = SOIL_load_image("Content/funDesign.jpg", &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
+
+	SetShaderProgram(shader.GetProgram());
+	SetTexture(texture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEnable(GL_DEPTH_TEST);
+	SOIL_free_image_data(image);
 }
 
 Blurb::~Blurb()
@@ -109,6 +129,7 @@ void Blurb::SetTexture(GLuint _texture) {
 }
 
 void Blurb::Buffer() {
+
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -150,7 +171,7 @@ void Blurb::SetUniforms() {
 
 	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
 
-	cout << ID << ": " << Rotation.z << endl;
+	//cout << ID << ": " << Rotation.z << endl;
 
 	GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -165,20 +186,19 @@ void Blurb::SetUniforms() {
 }
 
 void Blurb::UpdateModelMatrix() {
-	
+
 
 }
 
 void Blurb::Update() {
 	Position += vec3(.005f, 0, 0);
-	//Rotation += vec3()
 }
 
 void Blurb::Draw() {
 	glEnable(GL_BLEND);
 
 	UpdateModelMatrix();
-	
+
 	Buffer();
 
 	SetUniforms();

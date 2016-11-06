@@ -1,6 +1,5 @@
 #pragma once
 #include "Shader.h"
-#include "GameObject.h"
 
 #include "..\include\math\vect3d.h"
 #include "..\include\GL\glew.h"
@@ -11,12 +10,12 @@
 using namespace std;
 using namespace glm;
 
-class Blurb : public GameObject
+class GameObject
 {
-
 public:
-	Blurb();
-	Blurb(vec3 _pos, int _mode);
+	GameObject();
+	~GameObject();
+
 	void SetShaderProgram(GLuint Program);
 	GLuint GetShaderProgram();
 	void Buffer();
@@ -25,21 +24,17 @@ public:
 	void UpdateModelMatrix();
 	void SetTexture(GLuint Texture);
 	void Draw();
-	~Blurb();
 
 	glm::vec3 Position;
 	glm::vec3 Rotation;
 	glm::vec3 Scale;
-	
+
 	Shader shader;
 
-	//glm::mat4 model;
 	float ID = 0;
 	string objName;
 	GLfloat * VertArray;
 	GLuint texture;
-	unsigned char* rawTexture;
-	int texWidth, texHeight;
 	GLuint shaderProgram;
 	GLuint VBO, VAO, EBO;
 };

@@ -37,7 +37,6 @@ Camera Main::MainCamera = Camera();
 //Private
 vec2 MousePos, OldMousePos;
 
-
 vector<Blurb> Blurbs = vector<Blurb>();
 
 // Is called whenever a key is pressed/released via GLFW
@@ -90,11 +89,6 @@ void Main::Setup() {
 	glfwGetFramebufferSize(Main::window, &_w, &_h);
 	glViewport(0, 0, _w, _h);
 
-	Shader shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
-
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
 
 	// Set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
@@ -109,13 +103,6 @@ void Main::Setup() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	// Load image, create texture and generate mipmaps
-	int texWidth, texHeight;
-	unsigned char* image = SOIL_load_image("Content/container.png", &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glEnable(GL_DEPTH_TEST);
-	SOIL_free_image_data(image);
 
 	Blurb A = Blurb();
 	Blurb B = Blurb();
@@ -125,14 +112,14 @@ void Main::Setup() {
 	B = Blurb(glm::vec3(0, 0, 0), 2);
 	C = Blurb(glm::vec3(-2, 0, 0), 3);
 
-	A.SetShaderProgram(shader.GetProgram());
+	/*A.SetShaderProgram(shader.GetProgram());
 	A.SetTexture(texture);
 
 	B.SetShaderProgram(shader.GetProgram());
 	B.SetTexture(texture);
 
 	C.SetShaderProgram(shader.GetProgram());
-	C.SetTexture(texture);
+	C.SetTexture(texture);*/
 
 	Blurbs.push_back(A);
 	Blurbs.push_back(B);
@@ -156,6 +143,7 @@ void Main::Update() {
 void Main::Draw() {
 	glClearColor(0.5f, 0.2f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Draw();
