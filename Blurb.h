@@ -35,6 +35,7 @@ public:
 	Shader shader;
 	string textureFile;
 
+	mat4 model;
 	bool isInit = false;
 	float ID = 0;
 	string objName;

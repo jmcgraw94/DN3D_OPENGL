@@ -87,7 +87,7 @@ Blurb::Blurb(vec3 _pos, int _ID)
 
 	cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
 
-	
+
 
 	textureFile = "Content/funDesign.jpg";
 
@@ -150,15 +150,7 @@ void Blurb::Buffer() {
 }
 
 void Blurb::SetUniforms() {
-	mat4 model = mat4();
 
-	model = glm::translate(model, Position);
-
-	model = glm::rotate(model, glm::radians(Rotation.z), vec3(0, 0, 1));
-	model = glm::rotate(model, glm::radians(Rotation.y), vec3(0, 1, 0));
-	model = glm::rotate(model, glm::radians(Rotation.x), vec3(1, 0, 0));
-
-	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
 
 	//cout << ID << ": " << Rotation.z << endl;
 
@@ -175,7 +167,15 @@ void Blurb::SetUniforms() {
 }
 
 void Blurb::UpdateModelMatrix() {
+	model = mat4();
 
+	model = glm::translate(model, Position);
+
+	model = glm::rotate(model, glm::radians(Rotation.z), vec3(0, 0, 1));
+	model = glm::rotate(model, glm::radians(Rotation.y), vec3(0, 1, 0));
+	model = glm::rotate(model, glm::radians(Rotation.x), vec3(1, 0, 0));
+
+	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
 
 }
 
