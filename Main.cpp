@@ -89,44 +89,27 @@ void Main::Setup() {
 	glfwGetFramebufferSize(Main::window, &_w, &_h);
 	glViewport(0, 0, _w, _h);
 
+	
 
-	// Set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	Blurb A = Blurb(glm::vec3(2, 0, 0), 1);
+	Blurb B = Blurb(glm::vec3(0, 0, 0), 2);
+	Blurb C = Blurb(glm::vec3(-2, 0, 0), 3);
 
-	// Set texture filtering parameters
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//A.SetShaderProgram(shader.GetProgram());
+	//A.SetTexture(textures);
 
-	// Set nearest neighbor filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//B.SetShaderProgram(shader.GetProgram());
+	//B.SetTexture(textures);
 
-	// Load image, create texture and generate mipmaps
-
-	Blurb A = Blurb();
-	Blurb B = Blurb();
-	Blurb C = Blurb();
-
-	A = Blurb(glm::vec3(2, 0, 0), 1);
-	B = Blurb(glm::vec3(0, 0, 0), 2);
-	C = Blurb(glm::vec3(-2, 0, 0), 3);
-
-	/*A.SetShaderProgram(shader.GetProgram());
-	A.SetTexture(texture);
-
-	B.SetShaderProgram(shader.GetProgram());
-	B.SetTexture(texture);
-
-	C.SetShaderProgram(shader.GetProgram());
-	C.SetTexture(texture);*/
+	//C.SetShaderProgram(shader.GetProgram());
+	//C.SetTexture(textures);
 
 	Blurbs.push_back(A);
 	Blurbs.push_back(B);
 	Blurbs.push_back(C);
 
-	MapFactory MF = MapFactory();
-	MF.LoadMap();
+	//MapFactory MF = MapFactory();
+	//MF.LoadMap();
 
 	cout << "SETUP COMPLETE\n" << endl;
 }

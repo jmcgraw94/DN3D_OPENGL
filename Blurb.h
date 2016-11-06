@@ -20,6 +20,7 @@ public:
 	void SetShaderProgram(GLuint Program);
 	GLuint GetShaderProgram();
 	void Buffer();
+	void Init();
 	void Update();
 	void SetUniforms();
 	void UpdateModelMatrix();
@@ -32,13 +33,14 @@ public:
 	glm::vec3 Scale;
 	
 	Shader shader;
+	string textureFile;
 
-	//glm::mat4 model;
+	bool isInit = false;
 	float ID = 0;
 	string objName;
 	GLfloat * VertArray;
 	GLuint texture;
-	unsigned char* rawTexture;
+	unsigned char* rawTex;
 	int texWidth, texHeight;
 	GLuint shaderProgram;
 	GLuint VBO, VAO, EBO;

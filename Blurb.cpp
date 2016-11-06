@@ -81,30 +81,19 @@ Blurb::Blurb() {
 Blurb::Blurb(vec3 _pos, int _ID)
 {
 	Position = _pos;
-	Scale = vec3(1.25f, 1, 1);
+	Scale = vec3(1, 1, 1);
 
 	ID = _ID;
 
 	cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
 
-	shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
+	
 
-	texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
+	textureFile = "Content/funDesign.jpg";
 
-	int texWidth, texHeight;
-	unsigned char* image;
-	image = SOIL_load_image("Content/funDesign.jpg", &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
+	if (ID == 2)
+		textureFile = "Content/container.png";
 
-	SetShaderProgram(shader.GetProgram());
-	SetTexture(texture);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glEnable(GL_DEPTH_TEST);
-	SOIL_free_image_data(image);
 }
 
 Blurb::~Blurb()
@@ -113,7 +102,6 @@ Blurb::~Blurb()
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 }
-
 
 void Blurb::SetShaderProgram(GLuint _Program) {
 	shaderProgram = _Program;
@@ -130,6 +118,7 @@ void Blurb::SetTexture(GLuint _texture) {
 
 void Blurb::Buffer() {
 
+	//---------------------------------
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -191,7 +180,8 @@ void Blurb::UpdateModelMatrix() {
 }
 
 void Blurb::Update() {
-	Position += vec3(.005f, 0, 0);
+	Init();
+	Rotation += vec3(.5f, 0, .5f);
 }
 
 void Blurb::Draw() {
@@ -206,10 +196,46 @@ void Blurb::Draw() {
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+
 	glBindVertexArray(0);
 
 	glDisable(GL_BLEND);
 
+}
+
+void Blurb::Init() {
+	if (!isInit) {
+		isInit = true;
+		shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
+
+		char _textureFileChar[1024];
+		strcpy_s(_textureFileChar, textureFile.c_str());
+
+		rawTex = SOIL_load_image(_textureFileChar, &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
+
+		// All upcoming GL_TEXTURE_2D operations now have effect on this texture object
+		GLuint textures;
+		glGenTextures(1, &textures);
+		glBindTexture(GL_TEXTURE_2D, textures);
+
+		//Define texture images
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, rawTex);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		// Set the texture wrapping parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		// Set the filter parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glBindTexture(GL_TEXTURE_2D, 0); //Unbind the texture
+		SOIL_free_image_data(rawTex); //Release image data
+
+		SetShaderProgram(shader.GetProgram());
+		SetTexture(textures);
+	}
 }
 
 
