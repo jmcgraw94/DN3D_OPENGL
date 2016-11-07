@@ -36,13 +36,13 @@ public:
 	string textureFile;
 
 	mat4 model;
-	bool isInit = false;
+	bool isInit;
 	float ID = 0;
 	string objName;
 	GLfloat * VertArray;
 	GLuint texture;
-	unsigned char* TextureObject;
-	int texWidth, texHeight;
+	unsigned char * TextureObject;
+	//int texWidth, texHeight;
 	GLuint shaderProgram;
 	GLuint VBO, VAO, EBO;
 };

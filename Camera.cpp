@@ -20,6 +20,9 @@ bool init = false;
 
 Camera::Camera()
 {
+	view = glm::mat4();
+	projection = glm::mat4();
+
 	cameraPos = glm::vec3(0, 0, -3);
 	cameraFront = glm::vec3(0, 0, 1);
 	cameraUp = glm::vec3(0, 1, 0);
@@ -36,7 +39,7 @@ void Camera::Update() {
 	projection = glm::mat4();
 
 	{
-		GLfloat cameraSpeed = 0.05f;
+		GLfloat cameraSpeed = 0.15f;
 		if (Main::keys[GLFW_KEY_W])
 			cameraPos += cameraSpeed * cameraFront;
 		if (Main::keys[GLFW_KEY_S])

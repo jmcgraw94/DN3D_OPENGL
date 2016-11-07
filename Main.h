@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Blurb.h"
+#include "ContentManager.h"
 
 #include "..\include\GL\glew.h"
 #include "..\include\glm\glm.hpp"
@@ -18,8 +19,8 @@ public:
 
 	static bool keys[1024];
 	static GLFWwindow* window;
-
 	static Camera MainCamera;
+	static ContentManager contentManager;
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);

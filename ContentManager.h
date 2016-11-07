@@ -15,11 +15,12 @@ class ContentManager
 {
 public:
 	ContentManager();
+	
+	unsigned char * LoadTexture(
+		string fileName, int * w, int * h);
 
-	map<string, unsigned char*> Textures;
-
-	void Init();
-	void LoadTexture(string fileName);
+	map<string, unsigned char *> 
+		Collection_Textures;
 
 	~ContentManager();
 };
