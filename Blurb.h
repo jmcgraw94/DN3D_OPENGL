@@ -41,7 +41,7 @@ public:
 	string objName;
 	GLfloat * VertArray;
 	GLuint texture;
-	unsigned char* rawTex;
+	unsigned char* TextureObject;
 	int texWidth, texHeight;
 	GLuint shaderProgram;
 	GLuint VBO, VAO, EBO;

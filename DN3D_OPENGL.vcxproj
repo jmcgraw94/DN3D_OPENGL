@@ -118,6 +118,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="Blurb.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ContentManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glfw3.h" />
     <ClInclude Include="Level.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blurb.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="lodepng.cpp" />

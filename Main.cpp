@@ -24,6 +24,7 @@
 
 
 using namespace std;
+using namespace glm;
 
 //Extern
 int W_WIDTH = 800;
@@ -88,25 +89,12 @@ void Main::Setup() {
 	int _w, _h;
 	glfwGetFramebufferSize(Main::window, &_w, &_h);
 	glViewport(0, 0, _w, _h);
-
 	
 
-	Blurb A = Blurb(glm::vec3(2, 0, 0), 1);
-	Blurb B = Blurb(glm::vec3(0, 0, 0), 2);
-	Blurb C = Blurb(glm::vec3(-2, 0, 0), 3);
-
-	//A.SetShaderProgram(shader.GetProgram());
-	//A.SetTexture(textures);
-
-	//B.SetShaderProgram(shader.GetProgram());
-	//B.SetTexture(textures);
-
-	//C.SetShaderProgram(shader.GetProgram());
-	//C.SetTexture(textures);
-
-	Blurbs.push_back(A);
-	Blurbs.push_back(B);
-	Blurbs.push_back(C);
+	for (int i = 0; i < 100; i++) {
+		Blurb B = Blurb(vec3(i, 0, 0), 0);
+		Blurbs.push_back(B);
+	}
 
 	//MapFactory MF = MapFactory();
 	//MF.LoadMap();

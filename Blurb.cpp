@@ -87,8 +87,6 @@ Blurb::Blurb(vec3 _pos, int _ID)
 
 	cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
 
-
-
 	textureFile = "Content/funDesign.jpg";
 
 	if (ID == 2)
@@ -150,10 +148,6 @@ void Blurb::Buffer() {
 }
 
 void Blurb::SetUniforms() {
-
-
-	//cout << ID << ": " << Rotation.z << endl;
-
 	GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -181,7 +175,7 @@ void Blurb::UpdateModelMatrix() {
 
 void Blurb::Update() {
 	Init();
-	Rotation += vec3(.5f, 0, .5f);
+	//Rotation += vec3(.5f, 0, .5f);
 }
 
 void Blurb::Draw() {
@@ -211,7 +205,7 @@ void Blurb::Init() {
 		char _textureFileChar[1024];
 		strcpy_s(_textureFileChar, textureFile.c_str());
 
-		rawTex = SOIL_load_image(_textureFileChar, &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
+		TextureObject = SOIL_load_image(_textureFileChar, &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
 
 		// All upcoming GL_TEXTURE_2D operations now have effect on this texture object
 		GLuint textures;
@@ -219,7 +213,7 @@ void Blurb::Init() {
 		glBindTexture(GL_TEXTURE_2D, textures);
 
 		//Define texture images
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, rawTex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, TextureObject);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		// Set the texture wrapping parameters
@@ -231,7 +225,7 @@ void Blurb::Init() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		glBindTexture(GL_TEXTURE_2D, 0); //Unbind the texture
-		SOIL_free_image_data(rawTex); //Release image data
+		SOIL_free_image_data(TextureObject); //Release image data
 
 		SetShaderProgram(shader.GetProgram());
 		SetTexture(textures);
