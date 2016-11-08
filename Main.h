@@ -14,7 +14,7 @@
 
 #include <string>
 
-extern int W_WIDTH, W_HEIGHT;
+extern int WIN_W, WIN_H;
 
 class Main
 {
@@ -26,9 +26,10 @@ public:
 	static ContentManager CM;
 	static MapFactory MF;
 
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	
+	static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mode);
+	static void mouse_callback(GLFWwindow * window, double xpos, double ypos);
+	static void resize_callback(GLFWwindow * window, int x, int y);
+
 	static void Setup();
 	static void Update();
 	static void Draw();

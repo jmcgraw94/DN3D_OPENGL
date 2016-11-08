@@ -28,8 +28,8 @@ using namespace std;
 using namespace glm;
 
 //Extern
-int W_WIDTH = 800;
-int W_HEIGHT = 600;
+int WIN_W = 800;
+int WIN_H = 600;
 
 //Static
 bool Main::keys[1024];
@@ -37,7 +37,6 @@ GLFWwindow * Main::window;
 Camera Main::MainCamera;
 ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
-
 
 //Private
 vec2 MousePos, OldMousePos;
@@ -62,9 +61,16 @@ void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 	//cout << MousePos.x << "," << MousePos.y << endl;
 }
 
+void Main::resize_callback(GLFWwindow * window, int x, int y) {
+	WIN_W = x;
+	WIN_H = y;
+
+	cout << x << "," << y << endl;
+}
+
 void Main::Setup() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
-	// Init GLFW
+
 	glfwInit();
 
 	// Set all the required options for GLFW
@@ -74,7 +80,8 @@ void Main::Setup() {
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	Main::window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "RogueGL", nullptr, nullptr);
+	Main::window = glfwCreateWindow(WIN_W, WIN_H, "RogueGL", nullptr, nullptr);
+	glfwSetFramebufferSizeCallback(window, resize_callback);
 	glfwMakeContextCurrent(Main::window);
 
 	// Set the required callback functions
@@ -94,7 +101,7 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 100; i++) {
 		Blurb B = Blurb(vec3(i, 0, 0), i % 3 + 1);
 		B.Init();
 		Blurbs.push_back(B);

@@ -65,6 +65,6 @@ void Camera::Update() {
 
 	view = glm::rotate(view, -rot, vec3(0, 1, 0));
 	view = glm::translate(view, cameraPos);
-	projection = glm::perspective(45.0f, (float)W_WIDTH / (float)W_HEIGHT, 0.1f, 100.0f);
+	projection = glm::perspective(45.0f, (float)WIN_W / (float)WIN_H, 0.1f, 100.0f);
 	//projection *= glm::lookAt(vec3(0,0,0), cameraPos, cameraUp);
 }

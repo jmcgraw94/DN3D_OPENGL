@@ -92,12 +92,11 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
 
 	if (ID == 1)
-		textureFile = "Content/funDesign.jpg";
+		textureFile = "Content/funDesign.png";
 	if (ID == 2)
 		textureFile = "Content/container.png";
-	//if (ID == 3)
-	//	textureFile = "Content/Test.png";
-
+	if (ID == 3)
+		textureFile = "Content/Test.png";
 }
 
 Blurb::~Blurb()
@@ -111,7 +110,6 @@ void Blurb::Init() {
 	if (!isInit) {
 		isInit = true;
 
-
 		cout << "INIT()" << endl;
 
 		shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
@@ -119,10 +117,7 @@ void Blurb::Init() {
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		/*unsigned int w = 512;
-		unsigned int h = 512;*/
-		//float * tex_ptr = Main::CM.LoadTexture("Content/container.png", &w, &h);
-		Texture2D texture = Texture2D("Content/container.png");
+		Texture2D texture = Texture2D(textureFile);
 
 		//Define texture images
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
@@ -133,21 +128,10 @@ void Blurb::Init() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		// Set the filter parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
-		//GLboolean b = glIsTexture(textureID);
-		//cout << "isTexture: " << (bool)b << endl;
-
-		//SetTexture(textureID);
 		shaderProgram = shader.GetProgram();
-
-		//cout << "RES: " << res << endl;
-		//if (res) {
-		//	cout << "CLEARING DATA" << endl;
-		//	//SOIL_free_image_data(TexturePixels);
-		//}
-		//cout << "---------" << endl;
 	}
 }
 
@@ -176,12 +160,12 @@ void Blurb::Buffer() {
 	//glEnableVertexAttribArray(1); // Color attribute
 	glEnableVertexAttribArray(2); // TexCoord attribute
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
-	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
-
+	// Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), 
+	//remember: do NOT unbind the EBO, keep it bound to this VAO
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glBindVertexArray(VAO);
 
+	
 }
 
 void Blurb::SetUniforms() {
@@ -224,7 +208,8 @@ void Blurb::Draw() {
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	//glDeleteTextures(1, &textureID);
-	//glBindVertexArray(0); //Unbind the vertex Array
+	glBindVertexArray(0); //Unbind the vertex Array
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 

@@ -11,24 +11,28 @@ ContentManager::~ContentManager()
 }
 
 float * ContentManager::LoadPixels(string path, unsigned int * w, unsigned int * h, unsigned int channels) {
-	if (Collection_Textures.find(path) != Collection_Textures.end()) {
+	if (Textures_Pixels.find(path) != Textures_Pixels.end()) {
 		cout << path << ": GETTING FILE FROM COLLECTION " << endl;
-		return Collection_Textures[path];
+		*w = (unsigned int)Textures_Sizes[path].x;
+		*h = (unsigned int)Textures_Sizes[path].y;
+		cout << "W: " << *w << endl;
+		return Textures_Pixels[path];
 	}
 	else {
 		cout << path << ": ADDING NEW FILE TO COLLECTION " << endl;
 		vector<unsigned char> _decodeResult;
-		decode(_decodeResult, (*w), (*h), path);
+		decode(_decodeResult, *w, *h, path);
 
 		int size = (*w) * (*h) * channels;
-		cout << "Size: " << size << endl;
+		cout << "TOTAL: " << size << endl;
 		float * InputArray = new float[size];
 
 		for (int i = 0; i < size; i++) {
 			InputArray[i] = (_decodeResult[i] / 255.0f);
 		}
 
-		Collection_Textures.insert({ path, InputArray });
+		Textures_Sizes.insert({ path, vec2((unsigned int)*w,(unsigned int)*h) });
+		Textures_Pixels.insert({ path, InputArray });
 
 		return InputArray;
 	}
