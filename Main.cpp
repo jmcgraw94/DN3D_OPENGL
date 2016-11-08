@@ -35,14 +35,14 @@ int W_HEIGHT = 600;
 bool Main::keys[1024];
 GLFWwindow * Main::window;
 Camera Main::MainCamera;
-ContentManager Main::contentManager = ContentManager();
+ContentManager Main::CM = ContentManager();
+MapFactory Main::MF = MapFactory();
+
+
 //Private
 vec2 MousePos, OldMousePos;
 vector<Blurb> Blurbs = vector<Blurb>();
 
-Blurb A = Blurb(vec3(1, 0, 0), 1);
-Blurb B = Blurb(vec3(2, 0, 0), 2);
-Blurb C = Blurb(vec3(3, 0, 0), 3);
 
 // Is called whenever a key is pressed/released via GLFW
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
@@ -52,7 +52,6 @@ void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, 
 	else if (action == GLFW_RELEASE)
 		Main::keys[key] = false;
 
-	//cout << key << endl;
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -76,7 +75,7 @@ void Main::Setup() {
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	Main::window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+	Main::window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "RogueGL", nullptr, nullptr);
 	glfwMakeContextCurrent(Main::window);
 
 	// Set the required callback functions
@@ -96,22 +95,34 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-	MapFactory MF = MapFactory();
-	MF.LoadMap();
-
-
-	Blurbs.push_back(A);
-	Blurbs.push_back(B);
-	Blurbs.push_back(C);
-
-	/*for (int i = 0; i <= 15; i++) {
-		Blurb B = Blurb(vec3(i, 0, 0), i % 2 + 1);
+	for (int i = 0; i < 5; i++) {
+		Blurb B = Blurb(vec3(i, 0, 0), i % 3 + 1);
 		B.Init();
 		Blurbs.push_back(B);
-	}*/
+	}
 
-
-	//Blurbs.erase(Blurbs.begin());
+	//for (int x = 0; x < MF.w; x++) {
+	//	for (int y = 0; y < MF.h; y++) {
+	//		if (MF.GetPixelAt(x, y) == vec3(0, 0, 0)) {
+	//			Blurb B = Blurb(vec3(x, 0, y), 1);
+	//			Blurbs.push_back(B);
+	//		}
+	//		if (MF.GetPixelAt(x, y) == vec3(255, 0, 0)) {
+	//			Blurb B = Blurb(vec3(x, 0, y), 3);
+	//			Blurbs.push_back(B);
+	//		}
+	//		if (MF.GetPixelAt(x, y) == vec3(255, 255, 255)) {
+	//			{
+	//				Blurb B = Blurb(vec3(x, -1, y), 1);
+	//				Blurbs.push_back(B);
+	//			}
+	//			{
+	//				Blurb B = Blurb(vec3(x, 1, y), 2);
+	//				Blurbs.push_back(B);
+	//			}
+	//		}
+	//	}
+	//}
 
 	cout << "SETUP COMPLETE\n" << endl;
 }
@@ -120,33 +131,26 @@ void Main::Update() {
 	glfwPollEvents();
 	Main::MainCamera.Update();
 
-
-	A.Update();
-	B.Update();
-	C.Update();
-
-
-	//A.Update();
-	//for (int i = 0; i < Blurbs.size(); i++) {
-	//	Blurbs[i].Update();
-	//}
+	for (int i = 0; i < Blurbs.size(); i++) {
+		Blurbs[i].Update();
+	}
 }
 
 void Main::Draw() {
 	glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	//glBindVertexArray(0);
 
-	A.Draw();
-	B.Draw();
-	C.Draw();
+	for (int i = 0; i < Blurbs.size(); i++) {
+		Blurbs[i].Draw();
+	}
 
-	//for (int i = 0; i < Blurbs.size(); i++) {
-	//	Blurbs[i].Draw();
-	//}
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Main::LateUpdate() {

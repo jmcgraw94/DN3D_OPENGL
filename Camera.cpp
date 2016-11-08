@@ -28,6 +28,8 @@ Camera::Camera()
 	cameraUp = glm::vec3(0, 1, 0);
 
 	cout << "Camera Created" << endl;
+
+	rot = 0;
 }
 
 Camera::~Camera()
@@ -38,19 +40,31 @@ void Camera::Update() {
 	view = glm::mat4();
 	projection = glm::mat4();
 
+	float theta = rot;
+	float dx = cos(theta);
+	float dy = sin(theta);
+
+
 	{
-		GLfloat cameraSpeed = 0.15f;
+		float rotSpeed = .025;
+		GLfloat speed = 0.05f;
+
 		if (Main::keys[GLFW_KEY_W])
-			cameraPos += cameraSpeed * cameraFront;
+			//cameraPos += vec3(dx, 0, dy) * speed;
+			cameraPos += speed * cameraFront;
 		if (Main::keys[GLFW_KEY_S])
-			cameraPos -= cameraSpeed * cameraFront;
+			//cameraPos -= vec3(dx, 0, dy) * speed;
+			cameraPos -= speed * cameraFront;
 		if (Main::keys[GLFW_KEY_A])
-			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+			//rot -= rotSpeed;
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 		if (Main::keys[GLFW_KEY_D])
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+			//rot += rotSpeed;
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 	}
 
+	view = glm::rotate(view, -rot, vec3(0, 1, 0));
 	view = glm::translate(view, cameraPos);
 	projection = glm::perspective(45.0f, (float)W_WIDTH / (float)W_HEIGHT, 0.1f, 100.0f);
-
+	//projection *= glm::lookAt(vec3(0,0,0), cameraPos, cameraUp);
 }

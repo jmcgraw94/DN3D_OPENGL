@@ -16,6 +16,8 @@ public:
 	glm::vec3 cameraFront;
 	glm::vec3 cameraUp;
 
+	float rot;
+
 	~Camera();
 };
 

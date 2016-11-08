@@ -1,6 +1,7 @@
 #include "Blurb.h"
 #include "Main.h"
 #include "ContentManager.h"
+#include "MapFactory.h"
 
 #include "..\include\SOIL.h"
 #include "..\include\glfw3.h"
@@ -25,6 +26,7 @@
 
 using namespace std;
 using namespace glm;
+
 
 GLfloat verts[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -92,8 +94,8 @@ Blurb::Blurb(vec3 _pos, int _ID)
 		textureFile = "Content/funDesign.jpg";
 	if (ID == 2)
 		textureFile = "Content/container.png";
-	if (ID == 3)
-		textureFile = "Content/Test.png";
+	//if (ID == 3)
+	//	textureFile = "Content/Test.png";
 
 }
 
@@ -104,17 +106,47 @@ Blurb::~Blurb()
 	glDeleteBuffers(1, &EBO);
 }
 
-void Blurb::SetShaderProgram(GLuint _Program) {
-	shaderProgram = _Program;
-}
+void Blurb::Init() {
+	if (!isInit) {
+		isInit = true;
 
-GLuint Blurb::GetShaderProgram()
-{
-	return shaderProgram;
-}
 
-void Blurb::SetTexture(GLuint _texture) {
-	texture = _texture;
+		cout << "INIT()" << endl;
+
+		shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
+
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		unsigned int w = 512;
+		unsigned int h = 512;
+		float * tex_ptr = Main::CM.GetImage("Content/container.png", &w, &h);
+
+		//Define texture images
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_FLOAT, tex_ptr);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		// Set the texture wrapping parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		// Set the filter parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		//GLboolean b = glIsTexture(textureID);
+		//cout << "isTexture: " << (bool)b << endl;
+
+		//SetTexture(textureID);
+		shaderProgram = shader.GetProgram();
+
+		//cout << "RES: " << res << endl;
+		//if (res) {
+		//	cout << "CLEARING DATA" << endl;
+		//	//SOIL_free_image_data(TexturePixels);
+		//}
+		//cout << "---------" << endl;
+	}
 }
 
 void Blurb::Buffer() {
@@ -133,20 +165,19 @@ void Blurb::Buffer() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 *
-		sizeof(GLfloat), (GLvoid*)0); //Verts
+		sizeof(GLfloat), (GLvoid*)0);
 	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Color
-
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 *
-		sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Texture
+		sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
 	glEnableVertexAttribArray(0); // Position attribute	  
-								  //glEnableVertexAttribArray(1); // Color attribute
+	//glEnableVertexAttribArray(1); // Color attribute
 	glEnableVertexAttribArray(2); // TexCoord attribute
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 	glBindVertexArray(VAO);
 
 }
@@ -178,12 +209,9 @@ void Blurb::UpdateModelMatrix() {
 
 void Blurb::Update() {
 	Init();
-	//cout << Position.x << endl;
 }
 
 void Blurb::Draw() {
-	glEnable(GL_BLEND);
-
 	UpdateModelMatrix();
 
 	Buffer();
@@ -191,52 +219,12 @@ void Blurb::Draw() {
 	SetUniforms();
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	//glBindVertexArray(0);
-
-	//glDisable(GL_BLEND);
-
+	//glDeleteTextures(1, &textureID);
+	//glBindVertexArray(0); //Unbind the vertex Array
 }
 
-void Blurb::Init() {
-	if (!isInit) {
-		cout << "INIT" << endl;
-		isInit = true;
-		shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
 
-		//int w, h;
-		//char _textureFileChar[1024];
-		//strcpy_s(_textureFileChar, textureFile.c_str());
-		//TextureObject = SOIL_load_image(_textureFileChar, &w, &h, 0, SOIL_LOAD_RGBA);
-
-		int w, h;
-		TextureObject = Main::contentManager.LoadTexture(textureFile, &w, &h);
-
-		// All upcoming GL_TEXTURE_2D operations now have effect on this texture object
-		GLuint textures;
-		glGenTextures(1, &textures);
-		glBindTexture(GL_TEXTURE_2D, textures);
-
-		//Define texture images
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, TextureObject);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		// Set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		// Set the filter parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glBindTexture(GL_TEXTURE_2D, 0); //Unbind the texture
-
-		SOIL_free_image_data(TextureObject);
-		SetShaderProgram(shader.GetProgram());
-		SetTexture(textures);
-	}
-}
 
 

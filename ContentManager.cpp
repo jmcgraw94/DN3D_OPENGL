@@ -1,29 +1,38 @@
 #include "ContentManager.h"
+#include "MapFactory.h"
+
 
 ContentManager::ContentManager()
 {
 }
 
-
 ContentManager::~ContentManager()
 {
 }
 
-unsigned char * ContentManager::LoadTexture(string fileName, int * w, int * h) {
-	/*if (ContentManager::Collection_Textures.find(fileName) != ContentManager::Collection_Textures.end()) {
-		cout << fileName << ": GETTING FILE FROM COLLECTION " << endl;
-		return ContentManager::Collection_Textures[fileName];
+float * ContentManager::GetImage(string path, unsigned int * w, unsigned int * h, unsigned int channels) {
+	if (Collection_Textures.find(path) != Collection_Textures.end()) {
+		cout << path << ": GETTING FILE FROM COLLECTION " << endl;
+		return Collection_Textures[path];
 	}
-	else {*/
-		cout << fileName << ": ADDING TO THE COLLECTION" << endl;
+	else {
+		cout << path << ": ADDING NEW FILE TO COLLECTION " << endl;
+		vector<unsigned char> _decodeResult;
+		decode(_decodeResult, (*w), (*h), path);
 
-		char _textureFileChar[1024];
-		strcpy_s(_textureFileChar, fileName.c_str());
-		unsigned char * NewTexture = SOIL_load_image(_textureFileChar, w, h, 0, SOIL_LOAD_RGBA);
+		int size = (*w) * (*h) * channels;
+		cout << "Size: " << size << endl;
+		float * InputArray = new float[size];
 
-		ContentManager::Collection_Textures.insert({ fileName, NewTexture });
-		//SOIL_free_image_data(NewTexture);
+		for (int i = 0; i < size; i++) {
+			InputArray[i] = (_decodeResult[i] / 255.0f);
+		}
 
-		return NewTexture;
-	//}
+		Collection_Textures.insert({ path, InputArray });
+
+		return InputArray;
+	}
 }
+
+
+

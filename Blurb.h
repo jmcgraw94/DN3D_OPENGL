@@ -26,23 +26,27 @@ public:
 	void UpdateModelMatrix();
 	void SetTexture(GLuint Texture);
 	void Draw();
+	int LoadGLTextures();
 	~Blurb();
 
-	glm::vec3 Position;
-	glm::vec3 Rotation;
-	glm::vec3 Scale;
-	
-	Shader shader;
+
+	string Name;
+	float ID = 0;
+
+	vec3 Position;
+	vec3 Rotation;
+	vec3 Scale;
+
+	bool isInit;
+
 	string textureFile;
+	GLuint textureID;
+
+	GLfloat * VertArray;
 
 	mat4 model;
-	bool isInit;
-	float ID = 0;
-	string objName;
-	GLfloat * VertArray;
-	GLuint texture;
-	unsigned char * TextureObject;
-	//int texWidth, texHeight;
+	
+	Shader shader;
 	GLuint shaderProgram;
 	GLuint VBO, VAO, EBO;
 };

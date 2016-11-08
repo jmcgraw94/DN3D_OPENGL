@@ -1,27 +1,10 @@
-#define _USE_MATH_DEFINES
-#include <stdio.h>
-#include <iostream>
-#include <string.h>
-#include <math.h>
-#include <time.h>
-#include <string>
-#include <vector>		
-#include <GL/glew.h>
-#include <GL/glut.h>
-#include <GL/glut.h>
 #include <MapFactory.h>
-#include "math/vect3d.h"
-#include "lodepng.h"
 
-using namespace std;
-using namespace lodepng;
-
-vector<vector<vector<int>>> ColorArray;
 
 MapFactory::MapFactory() {}
 MapFactory::~MapFactory() {}
 
-vector<vector<vector<int>>> CreateGrid(vector<unsigned char> image, int w, int h) {
+vector<vector<vector<int>>> CreateVectorGrid(vector<unsigned char> image, int w, int h) {
 
 	vector<vector<vector<int>>> Grid;
 
@@ -58,11 +41,6 @@ vector<vector<vector<int>>> CreateGrid(vector<unsigned char> image, int w, int h
 			r++;
 		}
 
-		//if (i > 0 && i % step == 0) {
-			//cout << "[" << r + 1 << "," << c + 1 << "] : " << x << endl;
-		//}
-		//cout << i << " : " << x << endl;
-
 		Grid[c][r][x] = (int)image[i];
 		x++;
 	}
@@ -70,31 +48,34 @@ vector<vector<vector<int>>> CreateGrid(vector<unsigned char> image, int w, int h
 	return Grid;
 }
 
-vector<int> GetPixelAt(vector<unsigned char> image, int x, int y, int w, int h) {
-	vector<int> Pixel = vector<int>();
-	return Pixel;
+
+vec3 MapFactory::GetPixelAt(int x, int y) {
+	return vec3(
+		ColorArray[x][y][0],
+		ColorArray[x][y][1],
+		ColorArray[x][y][2]);
 }
 
 void MapFactory::LoadMap()
 {
-	vector <unsigned char> buffer;
 	const string fileName = "Content/Test.png";
 
-	vector<unsigned char> image;
-	unsigned int w, h;
-	unsigned RESULT = decode(image, w, h, fileName);
+	vector<unsigned char> decodeResult;
+
+	unsigned RESULT = decode(decodeResult, w, h, fileName);
 
 	cout << (RESULT == 0 ? "Success!" : "Failure") << endl;
 
 	int x = 2;
 	int y = 0;
 
-	ColorArray = CreateGrid(image, w, h);
+	ColorArray = CreateVectorGrid(decodeResult, w, h);
 
 	cout << ColorArray[x][y][0] << "," <<
 		ColorArray[x][y][1] << "," <<
 		ColorArray[x][y][2] << endl;
 }
+
 
 
 
