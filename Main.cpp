@@ -101,10 +101,12 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-	for (int i = 0; i < 100; i++) {
-		Blurb B = Blurb(vec3(i, 0, 0), i % 3 + 1);
-		B.Init();
-		Blurbs.push_back(B);
+	for (int x = 0; x < 10; x++) {
+		for (int y = 0; y < 10; y++) {
+			Blurb B = Blurb(vec3(x, y, 0), x % 3 + 1);
+			B.Init();
+			Blurbs.push_back(B);
+		}
 	}
 
 	//for (int x = 0; x < MF.w; x++) {
