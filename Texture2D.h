@@ -3,6 +3,7 @@
 #include "lodepng.h"
 #include "Main.h"
 
+#include "..\include\glm\glm.hpp"
 #include <stdlib.h>
 #include <vector>
 #include <stdio.h>
@@ -11,6 +12,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace glm;
 
 class Texture2D
 {
@@ -19,14 +21,14 @@ public:
 
 	Texture2D(string path);
 
-	vec3 GetPixelAt(int x, int y);
+	vec3 GetPixel(int x, int y);
 
 	unsigned int
 		width,
 		height;
 	
 	float * 
-		TextureData;
+		Pixels;
 	
 	~Texture2D();
 

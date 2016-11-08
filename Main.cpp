@@ -43,7 +43,6 @@ MapFactory Main::MF = MapFactory();
 vec2 MousePos, OldMousePos;
 vector<Blurb> Blurbs = vector<Blurb>();
 
-
 // Is called whenever a key is pressed/released via GLFW
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
 {

@@ -2,6 +2,7 @@
 #include "Main.h"
 #include "ContentManager.h"
 #include "MapFactory.h"
+#include "Texture2D.h"
 
 #include "..\include\SOIL.h"
 #include "..\include\glfw3.h"
@@ -118,12 +119,13 @@ void Blurb::Init() {
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		unsigned int w = 512;
-		unsigned int h = 512;
-		float * tex_ptr = Main::CM.GetImage("Content/container.png", &w, &h);
+		/*unsigned int w = 512;
+		unsigned int h = 512;*/
+		//float * tex_ptr = Main::CM.LoadTexture("Content/container.png", &w, &h);
+		Texture2D texture = Texture2D("Content/container.png");
 
 		//Define texture images
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_FLOAT, tex_ptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		// Set the texture wrapping parameters

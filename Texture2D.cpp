@@ -5,7 +5,7 @@ Texture2D::Texture2D(){
 
 Texture2D::Texture2D(string path)
 {
-	TextureData = Main::CM.GetImage(path, &width, &height);
+	Pixels = Main::CM.LoadPixels(path, &width, &height);
 }
 
 
@@ -13,7 +13,7 @@ Texture2D::~Texture2D()
 {
 }
 
-vec3 Texture2D::GetPixelAt(int x, int y) {
+vec3 Texture2D::GetPixel(int x, int y) {
 	return vec3(
 		ColorArray[x][y][0],
 		ColorArray[x][y][1],

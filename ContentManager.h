@@ -16,7 +16,9 @@ class ContentManager
 public:
 	ContentManager();
 
-	float * GetImage(string path, unsigned int * w, unsigned int * h, unsigned int channels = 4);
+	float * LoadPixels(string path, 
+		unsigned int * w, unsigned int * h, 
+		unsigned int channels = 4);
 
 	map<string, float *>
 		Collection_Textures;
