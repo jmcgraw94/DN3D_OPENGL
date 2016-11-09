@@ -24,6 +24,7 @@ public:
 
 	map<string, float *>
 		Textures_Pixels;
+
 	map<string, vec2>
 		Textures_Sizes;
 

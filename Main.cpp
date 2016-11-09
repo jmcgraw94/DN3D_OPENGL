@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Blurb.h"
 #include "ContentManager.h"
+#include "Helper.h"
 
 #include "..\include\SOIL.h"
 #include "..\include\GL\glew.h"
@@ -13,6 +14,7 @@
 #include "..\include\glm\gtc\matrix_transform.hpp"
 #include "..\include\glm\gtc\type_ptr.hpp"
 #include "..\include\MapFactory.h"
+
 
 #include <stdlib.h>
 #include <time.h>
@@ -101,9 +103,9 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-	for (int x = 0; x < 10; x++) {
-		for (int y = 0; y < 10; y++) {
-			Blurb B = Blurb(vec3(x, y, 0), x % 3 + 1);
+	for (int x = -15; x < 15; x++) {
+		for (int y = -15; y < 15; y++) {
+			Blurb B = Blurb(vec3(x, y, 0), abs(x) % 3 + 1);
 			B.Init();
 			Blurbs.push_back(B);
 		}
@@ -154,7 +156,11 @@ void Main::Draw() {
 	glEnable(GL_BLEND);
 
 	for (int i = 0; i < Blurbs.size(); i++) {
-		Blurbs[i].Draw();
+		//cout << Blurbs[i].Position.x << " : " << Dist << endl;
+		float Dist = Helper::Distance(MainCamera.cameraPos, Blurbs[i].Position);
+		if (Dist < 10) {
+			Blurbs[i].Draw();
+		}
 	}
 
 	glDisable(GL_BLEND);

@@ -121,6 +121,7 @@
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glfw3.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Program.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Main.cpp" />

@@ -89,7 +89,7 @@ Blurb::Blurb(vec3 _pos, int _ID)
 
 	ID = _ID;
 
-	cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
+	//cout << "NEW BLURB @X: " << Position.x << " @: " << ID << endl;
 
 	if (ID == 1)
 		textureFile = "Content/funDesign.png";
@@ -110,7 +110,7 @@ void Blurb::Init() {
 	if (!isInit) {
 		isInit = true;
 
-		cout << "INIT()" << endl;
+		//cout << "INIT()" << endl;
 
 		shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
 
@@ -204,12 +204,12 @@ void Blurb::Draw() {
 
 	SetUniforms();
 
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	//glDeleteTextures(1, &textureID);
 	glBindVertexArray(0); //Unbind the vertex Array
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glDeleteTextures(1, &textureID);
 }
 
 

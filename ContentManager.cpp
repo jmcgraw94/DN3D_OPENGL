@@ -12,19 +12,19 @@ ContentManager::~ContentManager()
 
 float * ContentManager::LoadPixels(string path, unsigned int * w, unsigned int * h, unsigned int channels) {
 	if (Textures_Pixels.find(path) != Textures_Pixels.end()) {
-		cout << path << ": GETTING FILE FROM COLLECTION " << endl;
+		//cout << path << ": GETTING FILE FROM COLLECTION " << endl;
 		*w = (unsigned int)Textures_Sizes[path].x;
 		*h = (unsigned int)Textures_Sizes[path].y;
-		cout << "W: " << *w << endl;
+		//cout << "W: " << *w << endl;
 		return Textures_Pixels[path];
 	}
 	else {
-		cout << path << ": ADDING NEW FILE TO COLLECTION " << endl;
+		//cout << path << ": ADDING NEW FILE TO COLLECTION " << endl;
 		vector<unsigned char> _decodeResult;
 		decode(_decodeResult, *w, *h, path);
 
 		int size = (*w) * (*h) * channels;
-		cout << "TOTAL: " << size << endl;
+		//cout << "TOTAL: " << size << endl;
 		float * InputArray = new float[size];
 
 		for (int i = 0; i < size; i++) {

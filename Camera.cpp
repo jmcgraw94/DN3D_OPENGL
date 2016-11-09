@@ -23,7 +23,7 @@ Camera::Camera()
 	view = glm::mat4();
 	projection = glm::mat4();
 
-	cameraPos = glm::vec3(0, 0, -3);
+	cameraPos = glm::vec3(0, 0, 3);
 	cameraFront = glm::vec3(0, 0, 1);
 	cameraUp = glm::vec3(0, 1, 0);
 
@@ -51,20 +51,21 @@ void Camera::Update() {
 
 		if (Main::keys[GLFW_KEY_W])
 			//cameraPos += vec3(dx, 0, dy) * speed;
-			cameraPos += speed * cameraFront;
+			cameraPos -= speed * cameraFront;
 		if (Main::keys[GLFW_KEY_S])
 			//cameraPos -= vec3(dx, 0, dy) * speed;
-			cameraPos -= speed * cameraFront;
+			cameraPos += speed * cameraFront;
 		if (Main::keys[GLFW_KEY_A])
 			//rot -= rotSpeed;
-			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 		if (Main::keys[GLFW_KEY_D])
 			//rot += rotSpeed;
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 	}
 
-	view = glm::rotate(view, -rot, vec3(0, 1, 0));
-	view = glm::translate(view, cameraPos);
+	cout << cameraPos.z << endl;
+	view = glm::rotate(view, glm::radians(rot), vec3(0, 1, 0));
+	view = glm::translate(view, -cameraPos);
 	projection = glm::perspective(45.0f, (float)WIN_W / (float)WIN_H, 0.1f, 100.0f);
 	//projection *= glm::lookAt(vec3(0,0,0), cameraPos, cameraUp);
 }
