@@ -20,6 +20,7 @@ class Main
 {
 public:
 
+	static int FrameCount;
 	static bool keys[1024];
 	static GLFWwindow* window;
 	static Camera MainCamera;
@@ -34,7 +35,6 @@ public:
 	static void Update();
 	static void Draw();
 	static void LateUpdate();
-
 
 };
 

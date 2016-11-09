@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Main.h"
+#include "Helper.h"
 
 #include "..\include\glm\glm.hpp"
 #include "..\include\glm\gtc\matrix_transform.hpp"
@@ -52,18 +53,23 @@ void Camera::Update() {
 		if (Main::keys[GLFW_KEY_W])
 			//cameraPos += vec3(dx, 0, dy) * speed;
 			cameraPos -= speed * cameraFront;
+
 		if (Main::keys[GLFW_KEY_S])
 			//cameraPos -= vec3(dx, 0, dy) * speed;
 			cameraPos += speed * cameraFront;
+
 		if (Main::keys[GLFW_KEY_A])
 			//rot -= rotSpeed;
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		
 		if (Main::keys[GLFW_KEY_D])
 			//rot += rotSpeed;
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 	}
 
-	cout << cameraPos.z << endl;
+	
+	//	Helper::PrintVec3(cameraPos, "Camera Pos");
+	//cout << cameraPos.z << endl;
 	view = glm::rotate(view, glm::radians(rot), vec3(0, 1, 0));
 	view = glm::translate(view, -cameraPos);
 	projection = glm::perspective(45.0f, (float)WIN_W / (float)WIN_H, 0.1f, 100.0f);

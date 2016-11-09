@@ -12,30 +12,32 @@ ContentManager::~ContentManager()
 
 float * ContentManager::LoadPixels(string path, unsigned int * w, unsigned int * h, unsigned int channels) {
 	if (Textures_Pixels.find(path) != Textures_Pixels.end()) {
-		//cout << path << ": GETTING FILE FROM COLLECTION " << endl;
+
 		*w = (unsigned int)Textures_Sizes[path].x;
 		*h = (unsigned int)Textures_Sizes[path].y;
-		//cout << "W: " << *w << endl;
+
 		return Textures_Pixels[path];
 	}
 	else {
-		//cout << path << ": ADDING NEW FILE TO COLLECTION " << endl;
+
 		vector<unsigned char> _decodeResult;
 		decode(_decodeResult, *w, *h, path);
 
 		int size = (*w) * (*h) * channels;
-		//cout << "TOTAL: " << size << endl;
+
 		float * InputArray = new float[size];
 
 		for (int i = 0; i < size; i++) {
 			InputArray[i] = (_decodeResult[i] / 255.0f);
 		}
 
-		Textures_Sizes.insert({ path, vec2((unsigned int)*w,(unsigned int)*h) });
+		Textures_Sizes.insert({ path, vec2((unsigned int) * w,(unsigned int) * h) });
 		Textures_Pixels.insert({ path, InputArray });
 
+		cout << "LOADING NEW ASSET: " << path << endl;
 		return InputArray;
 	}
+	
 }
 
 vector<vector<vector<int>>> CreateVectorGrid(vector<unsigned char> image, int w, int h) {

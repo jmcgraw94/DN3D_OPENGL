@@ -34,11 +34,13 @@ int WIN_W = 800;
 int WIN_H = 600;
 
 //Static
+int Main::FrameCount = 0;
 bool Main::keys[1024];
 GLFWwindow * Main::window;
 Camera Main::MainCamera;
 ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
+//GLuint Main::VBO, Main::VAO;
 
 //Private
 vec2 MousePos, OldMousePos;
@@ -52,15 +54,12 @@ void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, 
 	else if (action == GLFW_RELEASE)
 		Main::keys[key] = false;
 
-
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 	MousePos.x = xpos;
 	MousePos.y = ypos;
-
-	//cout << MousePos.x << "," << MousePos.y << endl;
 }
 
 void Main::resize_callback(GLFWwindow * window, int x, int y) {
@@ -103,13 +102,15 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-	for (int x = -15; x < 15; x++) {
-		for (int y = -15; y < 15; y++) {
+	for (int x = -3; x < 3; x++) {
+		for (int y = -3; y < 3; y++) {
 			Blurb B = Blurb(vec3(x, y, 0), abs(x) % 3 + 1);
 			B.Init();
 			Blurbs.push_back(B);
 		}
 	}
+
+
 
 	//for (int x = 0; x < MF.w; x++) {
 	//	for (int y = 0; y < MF.h; y++) {
@@ -170,6 +171,8 @@ void Main::Draw() {
 void Main::LateUpdate() {
 	glfwSwapBuffers(Main::window);
 	OldMousePos = MousePos;
+	Main::FrameCount++;
+
 }
 
 int main()
