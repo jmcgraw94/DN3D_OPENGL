@@ -30,5 +30,8 @@ public:
 		cout << name << " [" << v.x << ',' << v.y << "," << v.z << "]" << endl;
 	}
 
+	static void ClearConsole() {
+		cout << string(100, '\n');
+	}
 };
 

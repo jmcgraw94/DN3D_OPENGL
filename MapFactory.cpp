@@ -4,8 +4,6 @@
 MapFactory::MapFactory() {}
 MapFactory::~MapFactory() {}
 
-
-
 void MapFactory::LoadMap()
 {
 	const string fileName = "Content/Test.png";

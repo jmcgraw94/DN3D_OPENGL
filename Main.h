@@ -20,7 +20,9 @@ class Main
 {
 public:
 
-	static bool keys[1024];
+	static int FrameCount;
+	static bool PressKeys[1024];
+	static bool TapKeys[1024];
 	static GLFWwindow* window;
 	static Camera MainCamera;
 	static ContentManager CM;
@@ -34,7 +36,6 @@ public:
 	static void Update();
 	static void Draw();
 	static void LateUpdate();
-
 
 };
 
