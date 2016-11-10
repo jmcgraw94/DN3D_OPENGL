@@ -45,6 +45,7 @@ MapFactory Main::MF = MapFactory();
 //Private
 vec2 MousePos, OldMousePos;
 vector<Blurb> Blurbs = vector<Blurb>();
+double Time, OldTime, DeltaTime;
 
 // Is called whenever a key is pressed/released via GLFW
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
@@ -102,8 +103,8 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-	for (int x = -3; x < 3; x++) {
-		for (int y = -3; y < 3; y++) {
+	for (int x = -5; x < 5; x++) {
+		for (int y = -5; y < 5; y++) {
 			Blurb B = Blurb(vec3(x, y, 0), abs(x) % 3 + 1);
 			B.Init();
 			Blurbs.push_back(B);
@@ -139,6 +140,7 @@ void Main::Setup() {
 }
 
 void Main::Update() {
+	Time = glfwGetTime();
 	glfwPollEvents();
 	Main::MainCamera.Update();
 
@@ -171,6 +173,7 @@ void Main::Draw() {
 void Main::LateUpdate() {
 	glfwSwapBuffers(Main::window);
 	OldMousePos = MousePos;
+	OldTime = Time;
 	Main::FrameCount++;
 
 }

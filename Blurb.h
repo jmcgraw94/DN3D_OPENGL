@@ -45,11 +45,11 @@ public:
 	GLfloat * VertArray;
 
 	mat4 model;
-	
+
 	Shader shader;
 	GLuint shaderProgram;
 
-	GLuint VBO, VAO;
+	static GLuint VAO, VBO;
 
 };
 

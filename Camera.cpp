@@ -50,21 +50,25 @@ void Camera::Update() {
 		float rotSpeed = .025;
 		GLfloat speed = 0.05f;
 
-		if (Main::keys[GLFW_KEY_W])
+		if (Main::keys[GLFW_KEY_W]) {
 			//cameraPos += vec3(dx, 0, dy) * speed;
 			cameraPos -= speed * cameraFront;
+		}
 
-		if (Main::keys[GLFW_KEY_S])
+		if (Main::keys[GLFW_KEY_S]) {
 			//cameraPos -= vec3(dx, 0, dy) * speed;
 			cameraPos += speed * cameraFront;
+		}
 
-		if (Main::keys[GLFW_KEY_A])
+		if (Main::keys[GLFW_KEY_A]) {
 			//rot -= rotSpeed;
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		}
 		
-		if (Main::keys[GLFW_KEY_D])
+		if (Main::keys[GLFW_KEY_D]) {
 			//rot += rotSpeed;
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		}
 	}
 
 	
