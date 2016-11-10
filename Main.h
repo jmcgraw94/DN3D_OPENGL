@@ -21,7 +21,8 @@ class Main
 public:
 
 	static int FrameCount;
-	static bool keys[1024];
+	static bool PressKeys[1024];
+	static bool TapKeys[1024];
 	static GLFWwindow* window;
 	static Camera MainCamera;
 	static ContentManager CM;

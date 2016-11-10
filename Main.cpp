@@ -35,7 +35,8 @@ int WIN_H = 600;
 
 //Static
 int Main::FrameCount = 0;
-bool Main::keys[1024];
+bool Main::PressKeys[1024];
+bool Main::TapKeys[1024];
 GLFWwindow * Main::window;
 Camera Main::MainCamera;
 ContentManager Main::CM = ContentManager();
@@ -46,14 +47,19 @@ MapFactory Main::MF = MapFactory();
 vec2 MousePos, OldMousePos;
 vector<Blurb> Blurbs = vector<Blurb>();
 double Time, OldTime, DeltaTime;
+float FrameRate;
 
 // Is called whenever a key is pressed/released via GLFW
-void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode)
-{
-	if (action == GLFW_PRESS)
-		Main::keys[key] = true;
+void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
+	if (action == GLFW_PRESS) {
+		if (!Main::PressKeys[key]) {
+			TapKeys[key] = true;
+		}
+
+		Main::PressKeys[key] = true;
+	}
 	else if (action == GLFW_RELEASE)
-		Main::keys[key] = false;
+		Main::PressKeys[key] = false;
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -111,8 +117,6 @@ void Main::Setup() {
 		}
 	}
 
-
-
 	//for (int x = 0; x < MF.w; x++) {
 	//	for (int y = 0; y < MF.h; y++) {
 	//		if (MF.GetPixelAt(x, y) == vec3(0, 0, 0)) {
@@ -147,6 +151,12 @@ void Main::Update() {
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
 	}
+
+	if (Main::TapKeys[GLFW_KEY_F]) {
+		Blurb B = Blurb(vec3(0, 0, 1), 1);
+		B.Init();
+		Blurbs.push_back(B);
+	}
 }
 
 void Main::Draw() {
@@ -159,7 +169,7 @@ void Main::Draw() {
 	glEnable(GL_BLEND);
 
 	for (int i = 0; i < Blurbs.size(); i++) {
-		//cout << Blurbs[i].Position.x << " : " << Dist << endl;
+
 		float Dist = Helper::Distance(MainCamera.cameraPos, Blurbs[i].Position);
 		if (Dist < 10) {
 			Blurbs[i].Draw();
@@ -171,11 +181,20 @@ void Main::Draw() {
 }
 
 void Main::LateUpdate() {
+
+	FrameRate = (int)(1 / DeltaTime);
 	glfwSwapBuffers(Main::window);
+	DeltaTime = Time - OldTime;
+
 	OldMousePos = MousePos;
 	OldTime = Time;
-	Main::FrameCount++;
 
+	for (int i = 0; i < 1024; i++)
+		TapKeys[i] = false;
+
+
+	Main::FrameCount++;
+	//cout << FrameRate << endl;
 }
 
 int main()

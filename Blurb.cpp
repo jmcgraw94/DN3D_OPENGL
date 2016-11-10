@@ -48,11 +48,11 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	ID = _ID;
 
 	if (ID == 1)
-		textureFile = "Content/funDesign.png";
+		textureFile = "Content/brick.png";
 	if (ID == 2)
-		textureFile = "Content/container.png";
+		textureFile = "Content/planks_birch.png";
 	if (ID == 3)
-		textureFile = "Content/Test.png";
+		textureFile = "Content/emerald_block.png";
 }
 
 Blurb::~Blurb()
@@ -64,8 +64,6 @@ Blurb::~Blurb()
 void Blurb::Init() {
 	if (!isInit) {
 		isInit = true;
-
-		//Buffer();
 
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
@@ -84,18 +82,17 @@ void Blurb::Init() {
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		// Set the texture wrapping parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		// Set the filter parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		shader = Shader("Shaders/VertexShader.vert", "Shaders/FragShader.frag");
+		shader = Shader("Shaders/StandardVert.vert", "Shaders/StandardFrag.frag");
 		shaderProgram = shader.GetProgram();
 
 	}
