@@ -28,13 +28,9 @@
 using namespace std;
 using namespace glm;
 
-GLuint Blurb::VAO;
-GLuint Blurb::VBO;
-
-bool Buffered = false;
-
-
-
+//GLuint Blurb::VAO;
+//GLuint Blurb::VBO;
+//bool Blurb::ClassBuffered = false;
 
 Blurb::Blurb() {
 	cout << "EMPTY BLURB" << endl;
@@ -82,12 +78,12 @@ void Blurb::Init() {
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
 		// Set the filter parameters
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -147,12 +143,12 @@ void Blurb::Buffer() {
 	//---------------------------------
 	if (!Buffered) {
 		Buffered = true;
-		glGenVertexArrays(1, &Blurb::VAO);
-		glGenBuffers(1, &Blurb::VBO);
+		glGenVertexArrays(1, &VAO);
+		glGenBuffers(1, &VBO);
 	}
 
-	glBindVertexArray(Blurb::VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, Blurb::VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
@@ -166,7 +162,7 @@ void Blurb::Buffer() {
 	glEnableVertexAttribArray(0); // Position attribute	  
 	glEnableVertexAttribArray(1); // TexCoord attribute
 
-	
+
 }
 
 void Blurb::SetUniforms() {
@@ -208,10 +204,10 @@ void Blurb::Draw() {
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glDisableVertexAttribArray(0);
+	//glDisableVertexAttribArray(1);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 

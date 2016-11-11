@@ -49,7 +49,9 @@ public:
 	Shader shader;
 	GLuint shaderProgram;
 
-	static GLuint VAO, VBO;
+	bool Buffered;
+
+	GLuint VAO, VBO;
 
 };
 

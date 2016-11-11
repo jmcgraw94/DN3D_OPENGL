@@ -41,12 +41,11 @@ GLFWwindow * Main::window;
 Camera Main::MainCamera;
 ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
-//GLuint Main::VBO, Main::VAO;
+vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos;
+double Main::Time, Main::OldTime, Main::DeltaTime;
 
 //Private
-vec2 MousePos, OldMousePos;
 vector<Blurb> Blurbs = vector<Blurb>();
-double Time, OldTime, DeltaTime;
 float FrameRate;
 
 // Is called whenever a key is pressed/released via GLFW
@@ -109,13 +108,7 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-	for (int x = -5; x < 5; x++) {
-		for (int y = -5; y < 5; y++) {
-			Blurb B = Blurb(vec3(x, y, 0), abs(x) % 3 + 1);
-			B.Init();
-			Blurbs.push_back(B);
-		}
-	}
+
 
 	//for (int x = 0; x < MF.w; x++) {
 	//	for (int y = 0; y < MF.h; y++) {
@@ -144,18 +137,45 @@ void Main::Setup() {
 }
 
 void Main::Update() {
-	Time = glfwGetTime();
 	glfwPollEvents();
+
+	int rate = 5;
+	if (Main::TapKeys[GLFW_KEY_F]) {
+		cout << "TAP" << endl;
+
+		Blurb B = Blurb(MainCamera.cameraPos - vec3(0, 1, 4), abs(FrameCount / rate) % 3 + 1);
+		Blurbs.push_back(B);
+	}
+
+	//cout << Blurbs.size() << endl;
+
+
+	/*if (FrameCount % rate == 0)
+	{
+		Blurb B = Blurb(vec3(FrameCount / rate, abs(FrameCount / rate) % 3 + 1, 0), abs(FrameCount / rate) % 3 + 1);
+		Blurbs.push_back(B);
+	}*/
+
+	/*for (int x = -5; x < 5; x++) {
+		for (int y = -5; y < 5; y++) {
+			Blurb B = Blurb(vec3(x, y, 0), abs(x) % 3 + 1);
+			Blurbs.push_back(B);
+			B.Init();
+		}
+	}*/
+
+
+	//if (Main::TapKeys[GLFW_KEY_F]) {
+
+	//}
+
+	Time = glfwGetTime();
 	Main::MainCamera.Update();
+
+
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
-	}
-
-	if (Main::TapKeys[GLFW_KEY_F]) {
-		Blurb B = Blurb(vec3(0, 0, 1), 1);
-		B.Init();
-		Blurbs.push_back(B);
 	}
 }
 
@@ -171,9 +191,7 @@ void Main::Draw() {
 	for (int i = 0; i < Blurbs.size(); i++) {
 
 		float Dist = Helper::Distance(MainCamera.cameraPos, Blurbs[i].Position);
-		if (Dist < 10) {
-			Blurbs[i].Draw();
-		}
+		Blurbs[i].Draw();
 	}
 
 	glDisable(GL_BLEND);
@@ -185,6 +203,7 @@ void Main::LateUpdate() {
 	FrameRate = (int)(1 / DeltaTime);
 	glfwSwapBuffers(Main::window);
 	DeltaTime = Time - OldTime;
+	DeltaMousePos = MousePos - OldMousePos;
 
 	OldMousePos = MousePos;
 	OldTime = Time;

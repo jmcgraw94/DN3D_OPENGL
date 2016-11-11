@@ -28,6 +28,16 @@ public:
 	static ContentManager CM;
 	static MapFactory MF;
 
+	static vec2 
+		MousePos, 
+		OldMousePos, 
+		DeltaMousePos;
+
+	static double 
+		Time, 
+		OldTime, 
+		DeltaTime;
+
 	static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mode);
 	static void mouse_callback(GLFWwindow * window, double xpos, double ypos);
 	static void resize_callback(GLFWwindow * window, int x, int y);
