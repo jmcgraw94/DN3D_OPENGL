@@ -11,6 +11,7 @@
 #include <map>
 #include <iostream>
 
+
 using namespace std;
 using namespace glm;
 
@@ -21,19 +22,21 @@ public:
 
 	Texture2D(string path);
 
-	vec3 GetPixel(int x, int y);
+	vec4 GetPixel(int x, int y);
 
 	unsigned int
 		width,
 		height;
-	
-	float * 
+
+	float *
 		Pixels;
-	
+	float ***
+		ColorMap;
+
 	~Texture2D();
 
 private:
-	vector<vector<vector<int>>> 
+	vector<vector<vector<int>>>
 		ColorArray;
 };
 

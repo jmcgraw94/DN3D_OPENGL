@@ -12,11 +12,11 @@ public:
 	glm::mat4 view;
 	glm::mat4 projection;
 
-	glm::vec3 cameraPos;
-	glm::vec3 cameraFront;
-	glm::vec3 cameraUp;
+	glm::vec3 Position;
+	glm::vec3 Rotation;
 
-	float rot;
+	glm::vec3 ForwardVec;
+	glm::vec3 UpVec;
 
 	~Camera();
 };

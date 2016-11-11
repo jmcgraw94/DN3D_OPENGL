@@ -14,6 +14,7 @@
 #include "..\include\glm\gtc\matrix_transform.hpp"
 #include "..\include\glm\gtc\type_ptr.hpp"
 #include "..\include\MapFactory.h"
+#include "Texture2D.h"
 
 
 #include <stdlib.h>
@@ -64,6 +65,8 @@ void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
+
+
 	MousePos.x = xpos;
 	MousePos.y = ypos;
 }
@@ -108,30 +111,30 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
+	glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
 
+	Texture2D Map = Texture2D("Content/Map.png");
+	Helper::PrintVec3(Map.GetPixel(0, 0), "COLOR: ");
 
-	//for (int x = 0; x < MF.w; x++) {
-	//	for (int y = 0; y < MF.h; y++) {
-	//		if (MF.GetPixelAt(x, y) == vec3(0, 0, 0)) {
-	//			Blurb B = Blurb(vec3(x, 0, y), 1);
-	//			Blurbs.push_back(B);
-	//		}
-	//		if (MF.GetPixelAt(x, y) == vec3(255, 0, 0)) {
-	//			Blurb B = Blurb(vec3(x, 0, y), 3);
-	//			Blurbs.push_back(B);
-	//		}
-	//		if (MF.GetPixelAt(x, y) == vec3(255, 255, 255)) {
-	//			{
-	//				Blurb B = Blurb(vec3(x, -1, y), 1);
-	//				Blurbs.push_back(B);
-	//			}
-	//			{
-	//				Blurb B = Blurb(vec3(x, 1, y), 2);
-	//				Blurbs.push_back(B);
-	//			}
-	//		}
-	//	}
-	//}
+	for (int x = 0; x < Map.width; x++) {
+		for (int y = 0; y < Map.height; y++) {
+			if (Map.GetPixel(x, y) == vec4(1, 1, 1, 1)) {
+				Blurb B = Blurb(vec3(x, -2, y), 2);
+				Blurbs.push_back(B);
+			}
+			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 1)) {
+				Blurb B = Blurb(vec3(x, -1, y), 1);
+				Blurbs.push_back(B);
+
+				Blurb A = Blurb(vec3(x, 0, y), 1);
+				Blurbs.push_back(A);
+			}
+			if (Map.GetPixel(x, y) == vec4(0, 1, 0, 1)) {
+				Blurb B = Blurb(vec3(x, -1, y), 3);
+				Blurbs.push_back(B);
+			}
+		}
+	}
 
 	cout << "SETUP COMPLETE\n" << endl;
 }
@@ -139,13 +142,30 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
-	int rate = 5;
-	if (Main::TapKeys[GLFW_KEY_F]) {
-		cout << "TAP" << endl;
+	int _rate = 5;
+	if (Main::TapKeys[GLFW_KEY_R]) {
+		cout << "BLURB SPAWNED" << endl;
 
-		Blurb B = Blurb(MainCamera.cameraPos - vec3(0, 1, 4), abs(FrameCount / rate) % 3 + 1);
+		Blurb B = Blurb(MainCamera.Position - vec3(0, 1, 4), abs(FrameCount / _rate) % 3 + 1);
 		Blurbs.push_back(B);
 	}
+	if (Main::TapKeys[GLFW_KEY_L]) {
+		cout << "====== LOG ========" << endl;
+		cout << "FPS: " << FrameRate << endl;
+		cout << "BLURBS: " << Blurbs.size() << endl;
+	}
+
+
+
+	//	for (int x = -5; x < 5; x++) {
+	//		for (int y = -5; y < 5; y++) {
+	//			Blurb B = Blurb(vec3(x, -2, y), 1);
+	//			Blurbs.push_back(B);
+	//		}
+	//	}
+
+	//glutSetCursor(GLUT_CURSOR_NONE);
+	//glfwDisable(GLFW_MOUSE_CURSOR);
 
 	//cout << Blurbs.size() << endl;
 
@@ -165,14 +185,8 @@ void Main::Update() {
 	}*/
 
 
-	//if (Main::TapKeys[GLFW_KEY_F]) {
-
-	//}
-
 	Time = glfwGetTime();
 	Main::MainCamera.Update();
-
-
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
@@ -190,7 +204,7 @@ void Main::Draw() {
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 
-		float Dist = Helper::Distance(MainCamera.cameraPos, Blurbs[i].Position);
+		float Dist = Helper::Distance(MainCamera.Position, Blurbs[i].Position);
 		Blurbs[i].Draw();
 	}
 
@@ -205,15 +219,14 @@ void Main::LateUpdate() {
 	DeltaTime = Time - OldTime;
 	DeltaMousePos = MousePos - OldMousePos;
 
+
 	OldMousePos = MousePos;
 	OldTime = Time;
 
 	for (int i = 0; i < 1024; i++)
 		TapKeys[i] = false;
 
-
 	Main::FrameCount++;
-	//cout << FrameRate << endl;
 }
 
 int main()

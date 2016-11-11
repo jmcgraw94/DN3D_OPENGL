@@ -28,9 +28,6 @@
 using namespace std;
 using namespace glm;
 
-//GLuint Blurb::VAO;
-//GLuint Blurb::VBO;
-//bool Blurb::ClassBuffered = false;
 
 Blurb::Blurb() {
 	cout << "EMPTY BLURB" << endl;
@@ -66,10 +63,10 @@ void Blurb::Init() {
 
 		Texture2D texture = Texture2D(textureFile);
 
-		float t_GridTexture[16] = {
-			1.0f, 0.0f, 1.0f, 1.0f,   1.0f, 1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
-		};
+		//float t_GridTexture[16] = {
+		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
+		//	0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
+		//};
 
 		//Define texture images
 		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, t_GridTexture);
@@ -111,20 +108,21 @@ void Blurb::Buffer() {
 		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
 		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 
+		//Top
 		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
 		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
@@ -132,6 +130,7 @@ void Blurb::Buffer() {
 		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
+		//Bottom
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
 		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
@@ -141,6 +140,7 @@ void Blurb::Buffer() {
 	};
 
 	//---------------------------------
+
 	if (!Buffered) {
 		Buffered = true;
 		glGenVertexArrays(1, &VAO);
@@ -161,7 +161,6 @@ void Blurb::Buffer() {
 
 	glEnableVertexAttribArray(0); // Position attribute	  
 	glEnableVertexAttribArray(1); // TexCoord attribute
-
 
 }
 
@@ -192,8 +191,8 @@ void Blurb::UpdateModelMatrix() {
 
 void Blurb::Update() {
 	Init();
-	Rotation.x += 1.0f;
-	Rotation.z += 1.0f;
+	//Rotation.x += 1.0f;
+	//Rotation.z += 1.0f;
 }
 
 void Blurb::Draw() {

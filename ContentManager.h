@@ -18,6 +18,12 @@ class ContentManager
 public:
 	ContentManager();
 
+
+	vector<vector<vector<int>>> CreateVectorGrid(
+		vector<unsigned char> image, int w, int h);
+
+	float *** CreatePixelGrid(string path, unsigned int * w, unsigned int * h, unsigned int channels = 4);
+
 	float * LoadPixels(string path, 
 		unsigned int * w, unsigned int * h, 
 		unsigned int channels = 4);

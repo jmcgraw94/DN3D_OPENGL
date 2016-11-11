@@ -6,8 +6,6 @@ MapFactory::~MapFactory() {}
 
 void MapFactory::LoadMap()
 {
-	const string fileName = "Content/Test.png";
-
 	//vector<unsigned char> decodeResult;
 
 	//unsigned RESULT = decode(decodeResult, w, h, fileName);

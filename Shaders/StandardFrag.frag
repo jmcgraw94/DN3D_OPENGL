@@ -15,7 +15,7 @@ void main()
 		discard;
 	}
 	else {
-		preColor.gb *= TexCoord;
+		//preColor.gb *= TexCoord;
 		color = preColor;
 	}
 
