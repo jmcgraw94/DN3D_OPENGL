@@ -118,19 +118,19 @@ void Main::Setup() {
 
 	for (int x = 0; x < Map.width; x++) {
 		for (int y = 0; y < Map.height; y++) {
-			if (Map.GetPixel(x, y) == vec4(1, 1, 1, 1)) {
-				Blurb B = Blurb(vec3(x, -2, y), 2);
-				Blurbs.push_back(B);
-			}
-			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 1)) {
+			if (Map.GetPixel(y, x) == vec4(0, 0, 0, 1)) {
 				Blurb B = Blurb(vec3(x, -1, y), 1);
 				Blurbs.push_back(B);
 
 				Blurb A = Blurb(vec3(x, 0, y), 1);
 				Blurbs.push_back(A);
 			}
-			if (Map.GetPixel(x, y) == vec4(0, 1, 0, 1)) {
+			else if (Map.GetPixel(y, x) == vec4(0, 1, 0, 1)) {
 				Blurb B = Blurb(vec3(x, -1, y), 3);
+				Blurbs.push_back(B);
+			}
+			else {
+				Blurb B = Blurb(vec3(x, -2, y), 2);
 				Blurbs.push_back(B);
 			}
 		}

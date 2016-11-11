@@ -58,22 +58,20 @@ float *** ContentManager::CreatePixelGrid(string path, unsigned int * w, unsigne
 	vector<unsigned char> _decodeResult;
 
 	decode(_decodeResult, *w, *h, path);
-
 	int size = (*w) * (*h) * channels;
 
 	float * InputArray = new float[size];
 
-	int i = 0;
-	float *** ColorArray = new float **[*w];
-	for (int x = 0; x < *w; x++) { //For each column
-		ColorArray[x] = new float *[*h]; //The column is a new float array of size h
-		for (int y = 0; y < *h; y++) { //for each row
-			ColorArray[x][y] = new float [channels];
-			for (int v = 0; v < channels; v++) {
-				ColorArray[x][y][v] = (_decodeResult[i] / 255.0f);
-				i++;
+	int i = 0; //Serial decoded index
+	float *** ColorArray = new float **[*h]; //Initialize a 3D pointer array of [2D pointers]
+	for (int y = 0; y < *h; y++) { //For each row of 2D pointers
+		ColorArray[y] = new float *[*w]; //Initlialize a 2D pointer array of [1D pointers]
+		for (int x = 0; x < *w; x++) { //for each column of 2D pointers
+			ColorArray[y][x] = new float [channels]; //Initialize a 1D array of [floats]
+			for (int v = 0; v < channels; v++) { //Iterate each float channel
+				ColorArray[y][x][v] = (_decodeResult[i] / 255.0f); //Assign and convert to [0-1]
+				i++; //Next serial value
 			}
-
 		}
 	}
 

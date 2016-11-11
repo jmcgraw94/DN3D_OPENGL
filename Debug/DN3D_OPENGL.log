@@ -1,3 +1,8 @@
-﻿  Camera.cpp
+﻿  Texture2D.cpp
+  ContentManager.cpp
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\contentmanager.cpp(67): warning C4018: '<': signed/unsigned mismatch
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\contentmanager.cpp(69): warning C4018: '<': signed/unsigned mismatch
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\contentmanager.cpp(71): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)

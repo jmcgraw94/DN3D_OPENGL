@@ -24,10 +24,10 @@ Camera::Camera()
 	view = glm::mat4();
 	projection = glm::mat4();
 
-	Position = glm::vec3(0, 6, 3);
+	Position = glm::vec3(3, 6, 8);
 	Rotation = glm::vec3(0, 0, 0);
 
-	ForwardVec = glm::vec3(0, 0, 1);
+	ForwardVec = glm::vec3(0, 0, -1);
 	UpVec = glm::vec3(0, 1, 0);
 
 
@@ -53,24 +53,24 @@ void Camera::Update() {
 
 		if (Main::PressKeys[GLFW_KEY_W]) {
 			//cameraPos += vec3(dx, 0, dy) * speed;
-			Position -= speed * ForwardVec;
+			Position += speed * ForwardVec;
 		}
 
 		if (Main::PressKeys[GLFW_KEY_S]) {
 			//cameraPos -= vec3(dx, 0, dy) * speed;
-			Position += speed * ForwardVec;
+			Position -= speed * ForwardVec;
 		}
 
 		if (Main::PressKeys[GLFW_KEY_A]) {
 			//rot -= rotSpeed;
 			//Rotation.y -= 4.0f;
-			Position += glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
+			Position -= glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
 		}
 
 		if (Main::PressKeys[GLFW_KEY_D]) {
 			//rot += rotSpeed;
 			//Rotation.y += 4.0f;
-			Position -= glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
+			Position += glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
 		}
 
 		if (Main::PressKeys[GLFW_KEY_RIGHT]) {
