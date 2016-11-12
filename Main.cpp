@@ -5,8 +5,8 @@
 #include "ContentManager.h"
 #include "Helper.h"
 
+
 #include "..\include\SOIL.h"
-#include "..\include\GL\glew.h"
 #include "..\include\math\matrix4d.h"
 #include "..\include\math\vect3d.h"
 #include "..\include\glfw3.h"
@@ -17,6 +17,7 @@
 #include "Texture2D.h"
 
 
+#include <glew.h>
 #include <stdlib.h>
 #include <time.h>
 #include <GL\glut.h>
@@ -44,6 +45,9 @@ ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
 vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos;
 double Main::Time, Main::OldTime, Main::DeltaTime;
+
+vec3 Main::lightPos = vec3(5,2,-5);
+vec3 Main::lightColor = vec3(1, 0, 0);
 
 //Private
 vector<Blurb> Blurbs = vector<Blurb>();
@@ -136,17 +140,26 @@ void Main::Setup() {
 		}
 	}
 
-	cout << "SETUP COMPLETE\n" << endl;
+
+	glEnable(GL_FOG);
+	//GL_FOG_START = 
+	//cout << "VER: " << glGetString(GL_MAJOR_VERSION) << " ::" << glGetString(GL_MINOR_VERSION) << endl;
+	//cout << "SETUP COMPLETE\n" << endl;
 }
 
 void Main::Update() {
 	glfwPollEvents();
 
+	lightPos = MainCamera.Position + vec3(0,1,0);
+
 	int _rate = 5;
 	if (Main::TapKeys[GLFW_KEY_R]) {
 		cout << "BLURB SPAWNED" << endl;
 
-		Blurb B = Blurb(MainCamera.Position - vec3(0, 1, 4), abs(FrameCount / _rate) % 3 + 1);
+		Blurb B = Blurb(
+			vec3((int)MainCamera.Position.x,
+			(int)MainCamera.Position.y,
+				(int)MainCamera.Position.z ) - vec3(0, 4, 4), abs(FrameCount / _rate) % 3 + 1);
 		Blurbs.push_back(B);
 	}
 	if (Main::TapKeys[GLFW_KEY_L]) {
@@ -154,8 +167,6 @@ void Main::Update() {
 		cout << "FPS: " << FrameRate << endl;
 		cout << "BLURBS: " << Blurbs.size() << endl;
 	}
-
-
 
 	//	for (int x = -5; x < 5; x++) {
 	//		for (int y = -5; y < 5; y++) {
@@ -227,6 +238,7 @@ void Main::LateUpdate() {
 		TapKeys[i] = false;
 
 	Main::FrameCount++;
+
 }
 
 int main()

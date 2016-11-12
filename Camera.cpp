@@ -24,7 +24,8 @@ Camera::Camera()
 	view = glm::mat4();
 	projection = glm::mat4();
 
-	Position = glm::vec3(3, 6, 8);
+	//Position = glm::vec3(3, 6, 8);
+	Position = glm::vec3(0, 0, 0);
 	Rotation = glm::vec3(0, 0, 0);
 
 	ForwardVec = glm::vec3(0, 0, -1);
@@ -99,7 +100,7 @@ void Camera::Update() {
 	//cout << cameraPos.z << endl;
 	//view = glm::rotate(view, glm::radians(Rotation.z), vec3(0, 0, 1));
 
-	view = glm::rotate(view, glm::radians(45.0f), vec3(1, 0, 0));
+	//view = glm::rotate(view, glm::radians(45.0f), vec3(1, 0, 0));
 	view = glm::rotate(view, glm::radians(Rotation.y), vec3(0, 1, 0));
 
 

@@ -4,16 +4,6 @@
 #include "MapFactory.h"
 #include "Texture2D.h"
 
-#include "..\include\SOIL.h"
-#include "..\include\glfw3.h"
-#include "..\include\GL\glew.h"
-#include "..\include\math\matrix4d.h"
-#include "..\include\math\vect3d.h"
-#include "..\include\glm\glm.hpp"
-#include "..\include\glfw3.h"
-#include "..\include\glm\gtc\matrix_transform.hpp"
-#include "..\include\glm\gtc\type_ptr.hpp"
-
 #include <stdlib.h>
 #include <GL\glut.h>
 #include <GL\GL.h>
@@ -28,6 +18,7 @@
 using namespace std;
 using namespace glm;
 
+bool Constructed = false;
 
 Blurb::Blurb() {
 	cout << "EMPTY BLURB" << endl;
@@ -37,6 +28,8 @@ Blurb::Blurb(vec3 _pos, int _ID)
 {
 	Position = _pos;
 	Scale = vec3(1, 1, 1);
+
+	Constructed = true;
 
 	ID = _ID;
 
@@ -94,54 +87,58 @@ void Blurb::Init() {
 void Blurb::Buffer() {
 
 	GLfloat verts[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		//Back Face
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		//Front Face
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
 
-		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		//Left Face
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f, 0.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
 
-		0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		//Right Face
+		0.5f,  0.5f,  0.5f, 1.0f, 1.0f,	1.0f, 0.0f, 0.0f,
+		0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 0.0f,	1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f,  0.5f, 1.0f, 0.0f,	1.0f, 0.0f, 0.0f,
+		0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
 
-		//Top
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		//Top Face						 
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 
-		//Bottom
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+		//Bottom Face					  
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
 	};
 
 	//---------------------------------
 
-	if (!Buffered) {
+	if (!Buffered && Constructed) {
 		Buffered = true;
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
@@ -153,32 +150,46 @@ void Blurb::Buffer() {
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 *
+	GLsizei stride = 8;
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride *
 		sizeof(GLfloat), (GLvoid*)0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 *
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride *
 		sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride *
+		sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
 
 	glEnableVertexAttribArray(0); // Position attribute	  
 	glEnableVertexAttribArray(1); // TexCoord attribute
-
+	glEnableVertexAttribArray(2); // Normal attribute
 }
 
 void Blurb::SetUniforms() {
 	glUseProgram(shaderProgram);
 
-	GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"),
+		1, GL_FALSE, glm::value_ptr(model));
 
-	GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(Main::MainCamera.view));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),
+		1, GL_FALSE, glm::value_ptr(Main::MainCamera.view));
 
-	GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
+		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"),
+		Main::lightPos.x, Main::lightPos.y, Main::lightPos.z);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
+		Main::lightColor.x, Main::lightColor.y, Main::lightColor.z);
 
 }
 
 void Blurb::UpdateModelMatrix() {
+	if (!Constructed)
+		return;
+
 	model = mat4();
 	model = glm::translate(model, Position);
 
@@ -190,19 +201,24 @@ void Blurb::UpdateModelMatrix() {
 }
 
 void Blurb::Update() {
+	if (!Constructed)
+		return;
+
 	Init();
 	//Rotation.x += 1.0f;
 	//Rotation.z += 1.0f;
 }
 
 void Blurb::Draw() {
+	if (!Constructed)
+		return;
+
 	UpdateModelMatrix();
 	SetUniforms();
 
 	Buffer();
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-
 	//glDisableVertexAttribArray(0);
 	//glDisableVertexAttribArray(1);
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -74,10 +74,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glut32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3dll.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32s.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glut32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3dll.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -28,6 +28,10 @@ public:
 	static ContentManager CM;
 	static MapFactory MF;
 
+	static vec3
+		lightPos,
+		lightColor;
+
 	static vec2 
 		MousePos, 
 		OldMousePos, 
