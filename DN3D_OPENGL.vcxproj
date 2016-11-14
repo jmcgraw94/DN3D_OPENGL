@@ -117,6 +117,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\MapFactory.h" />
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Blurb.h" />
     <ClInclude Include="Camera.h" />
@@ -126,6 +127,7 @@
     <ClInclude Include="Helper.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Shader.h" />
@@ -133,6 +135,7 @@
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blurb.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -143,6 +146,7 @@
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapFactory.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Wall.cpp" />

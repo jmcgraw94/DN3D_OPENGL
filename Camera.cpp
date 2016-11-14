@@ -5,8 +5,7 @@
 using namespace std;
 
 bool init = false;
-
-float yRot = 0;
+float bobTimer = 0;
 
 Camera::Camera()
 {
@@ -15,7 +14,7 @@ Camera::Camera()
 
 	//Position = glm::vec3(3, 6, 8);
 	Position = glm::vec3(6, .5f, 5);
-	Rotation = glm::vec3(0, 0, 0);
+	Rotation = glm::vec3(-1, 0, 0);
 
 	ForwardVec = glm::vec3(0, 0, -1);
 	UpVec = glm::vec3(0, 1, 0);
@@ -31,10 +30,9 @@ void Camera::Update() {
 	view = glm::mat4();
 	projection = glm::mat4();
 
-	if (Rotation.x > glm::radians(89.f))
-		Rotation.x = glm::radians(89.f);
 
-	Rotation.x = glm::radians(45.0f);
+	Rotation.y += Main::DeltaMousePos.x / 60;
+	Rotation.x += Main::DeltaMousePos.y / 60;
 
 	{
 		float rotSpeed = .075;
@@ -66,14 +64,14 @@ void Camera::Update() {
 
 		if (Main::HeldKeys[GLFW_KEY_D]) {
 			//rot -= rotSpeed;
-			yRot += rotSpeed;
+			//Rotation.y += rotSpeed;
 			//Rotation.y += 4.0f;
 			//Position += glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
 		}
 
 		if (Main::HeldKeys[GLFW_KEY_A]) {
 			//rot += rotSpeed;
-			yRot -= rotSpeed;
+			//Rotation.y -= rotSpeed;
 			//Rotation.y -= 4.0f;
 			//Position -= glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
 		}
@@ -88,8 +86,8 @@ void Camera::Update() {
 		//vec3 NextPos = Position + vec3(0, 0, -1);
 		//Helper::PrintVec3(Main::Map.GetPixel(INT_POS.x, INT_POS.z));
 
-		velocity.x = (cos(yRot) / 10) * curSpeed;
-		velocity.z = (sin(yRot) / 10) * curSpeed;
+		velocity.x = (cos(Rotation.y) / 10) * curSpeed;
+		velocity.z = (sin(Rotation.y) / 10) * curSpeed;
 
 
 		if (Main::Map.GetPixel(
@@ -107,8 +105,8 @@ void Camera::Update() {
 			velocity.z = 0;
 		}
 		//Position.z += velocity.z;
+		Rotation.x = clamp(Rotation.x, -PI / 2, PI / 2);
 		Position += velocity;
-
 	}
 
 	//ForwardVec = Rotation;
@@ -123,10 +121,9 @@ void Camera::Update() {
 	//	Helper::PrintVec3(cameraPos, "Camera Pos");
 	//cout << cameraPos.z << endl;
 	//view = glm::rotate(view, glm::radians(Rotation.z), vec3(0, 0, 1));
-
 	//view = glm::rotate(view, glm::radians(45.0f), vec3(1, 0, 0));
-	view = glm::rotate(view, yRot + glm::radians(90.0f), vec3(0, 1, 0));
-
+	view = glm::rotate(view, Rotation.x, vec3(1, 0, 0));
+	view = glm::rotate(view, Rotation.y + glm::radians(90.0f), vec3(0, 1, 0));
 
 	view = glm::translate(view, -Position);
 	projection = glm::perspective(45.0f, (float)WIN_W / (float)WIN_H, 0.1f, 100.0f);

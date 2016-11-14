@@ -28,6 +28,7 @@ using namespace glm;
 //Extern
 int WIN_W = 800;
 int WIN_H = 600;
+float PI = 3.141592654f;
 
 //Static
 int Main::FrameCount = 0;
@@ -43,7 +44,7 @@ double Main::Time, Main::OldTime, Main::DeltaTime;
 Texture2D Main::Map;
 
 vec3 Main::lightPos = vec3(5, 2, -5);
-vec3 Main::lightColor = vec3(1, 0, 0);
+vec3 Main::lightColor = vec3(1, 1, 1);
 
 //Private
 vector<Blurb> Blurbs = vector<Blurb>();
@@ -65,10 +66,8 @@ void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
-
-
-	MousePos.x = xpos;
-	MousePos.y = ypos;
+		MousePos.x = xpos;
+		MousePos.y = ypos;
 }
 
 void Main::resize_callback(GLFWwindow * window, int x, int y) {
@@ -145,7 +144,7 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
-	lightPos = MainCamera.Position + vec3(0, 1, 0);
+	lightPos = MainCamera.Position + vec3(0, 0, 0);
 
 	int _rate = 5;
 	if (Main::HeldKeys[GLFW_KEY_R]) {
@@ -246,6 +245,7 @@ void Main::LateUpdate() {
 
 	Main::FrameCount++;
 
+	//glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
 }
 
 int main()

@@ -20,6 +20,7 @@
 #include <string>
 
 extern int WIN_W, WIN_H;
+extern float PI;
 
 class Main
 {

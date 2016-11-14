@@ -25,7 +25,7 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	if (ID == 2)
 		textureFile = "Content/planks_birch.png";
 	if (ID == 3)
-		textureFile = "Content/emerald_block.png";
+		textureFile = "Content/bookshelf.png";
 }
 
 Blurb::~Blurb()
