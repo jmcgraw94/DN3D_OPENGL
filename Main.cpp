@@ -26,14 +26,14 @@ using namespace std;
 using namespace glm;
 
 //Extern
-int WIN_W = 800;
-int WIN_H = 600;
+int WIN_W = 1200;
+int WIN_H = 1200;
 float PI = 3.141592654f;
 
 //Static
 int Main::FrameCount = 0;
 bool Main::HeldKeys[1024];
-bool Main::TapKeys[1024];
+bool Main::PressKeys[1024];
 GLFWwindow * Main::window;
 Camera Main::MainCamera;
 ContentManager Main::CM = ContentManager();
@@ -54,7 +54,7 @@ float FrameRate;
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
 		if (!Main::HeldKeys[key]) {
-			TapKeys[key] = true;
+			PressKeys[key] = true;
 		}
 
 		Main::HeldKeys[key] = true;
@@ -135,6 +135,9 @@ void Main::Setup() {
 		}
 	}
 
+	lightPos = vec3(5 + abs(sin(FrameCount / 300.0f)), 1, 5);
+	lightColor = vec3(1, 1, 1) * abs(sin(FrameCount / 100.0f));
+
 	//glEnable(GL_FOG);
 	//GL_FOG_START = 
 	//cout << "VER: " << glGetString(GL_MAJOR_VERSION) << " ::" << glGetString(GL_MINOR_VERSION) << endl;
@@ -144,7 +147,7 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
-	lightPos = MainCamera.Position + vec3(0, 0, 0);
+	
 
 	int _rate = 5;
 	if (Main::HeldKeys[GLFW_KEY_R]) {
@@ -159,13 +162,33 @@ void Main::Update() {
 
 		Blurbs.push_back(B);
 	}
-	if (Main::TapKeys[GLFW_KEY_L]) {
+	if (Main::PressKeys[GLFW_KEY_L]) {
 		cout << "====== LOG ========" << endl;
 		cout << "FPS: " << FrameRate << endl;
 		cout << "BLURBS: " << Blurbs.size() << endl;
 		cout << "====== --- ========" << endl;
 	}
-
+	if (Main::HeldKeys[GLFW_KEY_UP]) {
+		lightPos.z -= .1f;
+	}
+	if (Main::HeldKeys[GLFW_KEY_DOWN]) {
+		lightPos.z += .1f;
+	}
+	if (Main::HeldKeys[GLFW_KEY_LEFT]) {
+		lightPos.x -= .1f;
+	}
+	if (Main::HeldKeys[GLFW_KEY_RIGHT]) {
+		lightPos.x += .1f;
+	}
+	if (Main::PressKeys[GLFW_KEY_I]) {
+		lightColor.r = lightColor.r != 0 ? 0 : 1;
+	}
+	if (Main::PressKeys[GLFW_KEY_O]) {
+		lightColor.g = lightColor.g != 0 ? 0 : 1;
+	}
+	if (Main::PressKeys[GLFW_KEY_P]) {
+		lightColor.b = lightColor.b != 0 ? 0 : 1;
+	}
 	//	for (int x = -5; x < 5; x++) {
 	//		for (int y = -5; y < 5; y++) {
 	//			Blurb B = Blurb(vec3(x, -2, y), 1);
@@ -203,8 +226,8 @@ void Main::Update() {
 }
 
 void Main::Draw() {
-	glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
-	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -241,7 +264,7 @@ void Main::LateUpdate() {
 	OldTime = Time;
 
 	for (int i = 0; i < 1024; i++)
-		TapKeys[i] = false;
+		PressKeys[i] = false;
 
 	Main::FrameCount++;
 

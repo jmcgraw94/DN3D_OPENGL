@@ -30,7 +30,7 @@ public:
 
 
 	string Name;
-	float ID = 0;
+	int ID = 0;
 
 	vec3 Position;
 	vec3 Rotation;

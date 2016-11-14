@@ -87,7 +87,6 @@ float * ContentManager::LoadPixels(string path, unsigned int * w, unsigned int *
 		return Textures_Pixels[path];
 	}
 	else {
-
 		vector<unsigned char> _decodeResult;
 		decode(_decodeResult, *w, *h, path);
 
@@ -97,7 +96,6 @@ float * ContentManager::LoadPixels(string path, unsigned int * w, unsigned int *
 
 		float * ColorGridX = new float[*w];
 		float * ColorGridY = new float[*h];
-
 
 		for (int i = 0; i < size; i++) {
 			InputArray[i] = (_decodeResult[i] / 255.0f);

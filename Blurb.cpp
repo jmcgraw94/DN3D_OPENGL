@@ -25,7 +25,7 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	if (ID == 2)
 		textureFile = "Content/planks_birch.png";
 	if (ID == 3)
-		textureFile = "Content/bookshelf.png";
+		textureFile = "Content/emerald_block.png";
 }
 
 Blurb::~Blurb()
@@ -40,7 +40,7 @@ void Blurb::Init() {
 
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
-
+		cout << (int)textureID << endl;
 		Texture2D texture = Texture2D(textureFile);
 
 		//float t_GridTexture[16] = {

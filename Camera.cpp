@@ -6,6 +6,7 @@ using namespace std;
 
 bool init = false;
 float bobTimer = 0;
+float bobSpeed = 1.5f;
 
 Camera::Camera()
 {
@@ -30,24 +31,26 @@ void Camera::Update() {
 	view = glm::mat4();
 	projection = glm::mat4();
 
-
 	Rotation.y += Main::DeltaMousePos.x / 60;
 	Rotation.x += Main::DeltaMousePos.y / 60;
 
 	{
 		float rotSpeed = .075;
-		GLfloat MaxSpeed = 1.0f;
+		GLfloat MaxSpeed = 0.5f;
 		GLfloat curSpeed = 0;
 		vec3 velocity = vec3(0, 0, 0);
+		bool moved = false;
 
 		if (Main::HeldKeys[GLFW_KEY_W]) {
 			//cameraPos += vec3(dx, 0, dy) * speed;
 			curSpeed = MaxSpeed;// *ForwardVec;
+			moved = true;
 		}
 
 		if (Main::HeldKeys[GLFW_KEY_S]) {
 			//cameraPos -= vec3(dx, 0, dy) * speed;
 			curSpeed = -MaxSpeed;// *ForwardVec;
+			moved = true;
 		}
 
 		//if (Main::PressKeys[GLFW_KEY_A]) {
@@ -85,10 +88,18 @@ void Camera::Update() {
 
 		//vec3 NextPos = Position + vec3(0, 0, -1);
 		//Helper::PrintVec3(Main::Map.GetPixel(INT_POS.x, INT_POS.z));
+		if (Main::HeldKeys[GLFW_KEY_LEFT_SHIFT]) 
+			curSpeed *= 2;
 
 		velocity.x = (cos(Rotation.y) / 10) * curSpeed;
 		velocity.z = (sin(Rotation.y) / 10) * curSpeed;
 
+		if (moved)
+			bobSpeed = 10.0f;
+		else
+			bobSpeed = 2.5f;
+
+		bobTimer += Main::DeltaTime * bobSpeed;
 
 		if (Main::Map.GetPixel(
 			(int)(Position.x + velocity.x * 5.0f),
@@ -126,6 +137,7 @@ void Camera::Update() {
 	view = glm::rotate(view, Rotation.y + glm::radians(90.0f), vec3(0, 1, 0));
 
 	view = glm::translate(view, -Position);
+	view = glm::translate(view, vec3(0, sin(bobTimer * 1.25f) / (1 / bobSpeed * 70), 0));
 	projection = glm::perspective(45.0f, (float)WIN_W / (float)WIN_H, 0.1f, 100.0f);
 	//projection *= glm::lookAt(vec3(0,0,0), cameraPos, cameraUp);
 }
