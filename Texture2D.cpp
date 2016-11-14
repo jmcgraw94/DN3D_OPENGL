@@ -1,6 +1,6 @@
-#include "Texture2D.h"
+#include "Main.h"
 
-Texture2D::Texture2D(){
+Texture2D::Texture2D() {
 }
 
 Texture2D::Texture2D(string path)
@@ -16,9 +16,15 @@ Texture2D::~Texture2D()
 }
 
 vec4 Texture2D::GetPixel(int x, int y) {
+	if (
+		(x < 0 || x >= width) ||
+		(y < 0 || x >= height))
+		return vec4(0, 0, 0, 0);
+
 	return vec4(
-		ColorMap[x][y][0],
-		ColorMap[x][y][1],
-		ColorMap[x][y][2],
-		ColorMap[x][y][3]);
+		ColorMap[y][x][0],
+		ColorMap[y][x][1],
+		ColorMap[y][x][2],
+		ColorMap[y][x][3]);
 }
+

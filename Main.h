@@ -4,6 +4,11 @@
 #include "Blurb.h"
 #include "MapFactory.h"
 #include "ContentManager.h"
+#include "Texture2D.h"
+#include "Shader.h"
+#include "Camera.h"
+#include "Helper.h"
+#include "Texture2D.h"
 
 #include "..\include\glm\glm.hpp"
 #include "..\include\GL\glew.h"
@@ -21,12 +26,14 @@ class Main
 public:
 
 	static int FrameCount;
-	static bool PressKeys[1024];
+	static bool HeldKeys[1024];
 	static bool TapKeys[1024];
 	static GLFWwindow* window;
 	static Camera MainCamera;
 	static ContentManager CM;
 	static MapFactory MF;
+
+	static Texture2D Map;
 
 	static vec3
 		lightPos,

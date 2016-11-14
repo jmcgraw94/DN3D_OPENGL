@@ -1,16 +1,4 @@
 #pragma once
-#include "SOIL.h"
-#include "lodepng.h"
-#include "Main.h"
-
-#include "..\include\glm\glm.hpp"
-#include <stdlib.h>
-#include <vector>
-#include <stdio.h>
-#include <string>
-#include <map>
-#include <iostream>
-
 
 using namespace std;
 using namespace glm;
@@ -30,6 +18,7 @@ public:
 
 	float *
 		Pixels;
+
 	float ***
 		ColorMap;
 

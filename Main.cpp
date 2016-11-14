@@ -1,10 +1,4 @@
 #include "Main.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "Blurb.h"
-#include "ContentManager.h"
-#include "Helper.h"
-
 
 #include "..\include\SOIL.h"
 #include "..\include\math\matrix4d.h"
@@ -37,7 +31,7 @@ int WIN_H = 600;
 
 //Static
 int Main::FrameCount = 0;
-bool Main::PressKeys[1024];
+bool Main::HeldKeys[1024];
 bool Main::TapKeys[1024];
 GLFWwindow * Main::window;
 Camera Main::MainCamera;
@@ -46,7 +40,9 @@ MapFactory Main::MF = MapFactory();
 vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos;
 double Main::Time, Main::OldTime, Main::DeltaTime;
 
-vec3 Main::lightPos = vec3(5,2,-5);
+Texture2D Main::Map;
+
+vec3 Main::lightPos = vec3(5, 2, -5);
 vec3 Main::lightColor = vec3(1, 0, 0);
 
 //Private
@@ -56,14 +52,14 @@ float FrameRate;
 // Is called whenever a key is pressed/released via GLFW
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
-		if (!Main::PressKeys[key]) {
+		if (!Main::HeldKeys[key]) {
 			TapKeys[key] = true;
 		}
 
-		Main::PressKeys[key] = true;
+		Main::HeldKeys[key] = true;
 	}
 	else if (action == GLFW_RELEASE)
-		Main::PressKeys[key] = false;
+		Main::HeldKeys[key] = false;
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -117,19 +113,19 @@ void Main::Setup() {
 
 	glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
 
-	Texture2D Map = Texture2D("Content/Map.png");
+	Map = Texture2D("Content/Map.png");
 	Helper::PrintVec3(Map.GetPixel(0, 0), "COLOR: ");
 
-	for (int x = 0; x < Map.width; x++) {
-		for (int y = 0; y < Map.height; y++) {
-			if (Map.GetPixel(y, x) == vec4(0, 0, 0, 1)) {
+	for (int y = 0; y < Map.height; y++) {
+		for (int x = 0; x < Map.width; x++) {
+			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 1)) {
 				Blurb B = Blurb(vec3(x, -1, y), 1);
 				Blurbs.push_back(B);
 
 				Blurb A = Blurb(vec3(x, 0, y), 1);
 				Blurbs.push_back(A);
 			}
-			else if (Map.GetPixel(y, x) == vec4(0, 1, 0, 1)) {
+			else if (Map.GetPixel(x, y) == vec4(0, 1, 0, 1)) {
 				Blurb B = Blurb(vec3(x, -1, y), 3);
 				Blurbs.push_back(B);
 			}
@@ -140,8 +136,7 @@ void Main::Setup() {
 		}
 	}
 
-
-	glEnable(GL_FOG);
+	//glEnable(GL_FOG);
 	//GL_FOG_START = 
 	//cout << "VER: " << glGetString(GL_MAJOR_VERSION) << " ::" << glGetString(GL_MINOR_VERSION) << endl;
 	//cout << "SETUP COMPLETE\n" << endl;
@@ -150,22 +145,26 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
-	lightPos = MainCamera.Position + vec3(0,1,0);
+	lightPos = MainCamera.Position + vec3(0, 1, 0);
 
 	int _rate = 5;
-	if (Main::TapKeys[GLFW_KEY_R]) {
+	if (Main::HeldKeys[GLFW_KEY_R]) {
 		cout << "BLURB SPAWNED" << endl;
 
 		Blurb B = Blurb(
-			vec3((int)MainCamera.Position.x,
-			(int)MainCamera.Position.y,
-				(int)MainCamera.Position.z ) - vec3(0, 4, 4), abs(FrameCount / _rate) % 3 + 1);
+			vec3(
+			(int)MainCamera.Position.x,
+				(int)MainCamera.Position.y,
+				(int)MainCamera.Position.z) + vec3(0, -1, 1),
+			abs(FrameCount / _rate) % 3 + 1);
+
 		Blurbs.push_back(B);
 	}
 	if (Main::TapKeys[GLFW_KEY_L]) {
 		cout << "====== LOG ========" << endl;
 		cout << "FPS: " << FrameRate << endl;
 		cout << "BLURBS: " << Blurbs.size() << endl;
+		cout << "====== --- ========" << endl;
 	}
 
 	//	for (int x = -5; x < 5; x++) {
@@ -206,6 +205,7 @@ void Main::Update() {
 
 void Main::Draw() {
 	glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -224,6 +224,13 @@ void Main::Draw() {
 }
 
 void Main::LateUpdate() {
+
+	for (int i = 0; i < Blurbs.size(); i++) {
+		if (&Blurbs[i] == nullptr)
+		{
+			cout << i << endl;
+		}
+	}
 
 	FrameRate = (int)(1 / DeltaTime);
 	glfwSwapBuffers(Main::window);

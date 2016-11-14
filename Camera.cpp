@@ -2,22 +2,11 @@
 #include "Main.h"
 #include "Helper.h"
 
-#include "..\include\glm\glm.hpp"
-#include "..\include\glm\gtc\matrix_transform.hpp"
-#include "..\include\glm\gtc\type_ptr.hpp"
-
-#include <stdlib.h>
-#include <time.h>
-#include <GL\glut.h>
-#include <GL\GL.h>
-#include <vector>
-#include <stdio.h>
-#include <string>
-#include <iostream>
-
 using namespace std;
 
 bool init = false;
+
+float yRot = 0;
 
 Camera::Camera()
 {
@@ -25,12 +14,11 @@ Camera::Camera()
 	projection = glm::mat4();
 
 	//Position = glm::vec3(3, 6, 8);
-	Position = glm::vec3(0, 0, 0);
+	Position = glm::vec3(6, .5f, 5);
 	Rotation = glm::vec3(0, 0, 0);
 
 	ForwardVec = glm::vec3(0, 0, -1);
 	UpVec = glm::vec3(0, 1, 0);
-
 
 	cout << "Camera Created" << endl;
 }
@@ -49,42 +37,78 @@ void Camera::Update() {
 	Rotation.x = glm::radians(45.0f);
 
 	{
-		float rotSpeed = .025;
-		GLfloat speed = 0.08f;
+		float rotSpeed = .075;
+		GLfloat MaxSpeed = 1.0f;
+		GLfloat curSpeed = 0;
+		vec3 velocity = vec3(0, 0, 0);
 
-		if (Main::PressKeys[GLFW_KEY_W]) {
+		if (Main::HeldKeys[GLFW_KEY_W]) {
 			//cameraPos += vec3(dx, 0, dy) * speed;
-			Position += speed * ForwardVec;
+			curSpeed = MaxSpeed;// *ForwardVec;
 		}
 
-		if (Main::PressKeys[GLFW_KEY_S]) {
+		if (Main::HeldKeys[GLFW_KEY_S]) {
 			//cameraPos -= vec3(dx, 0, dy) * speed;
-			Position -= speed * ForwardVec;
+			curSpeed = -MaxSpeed;// *ForwardVec;
 		}
 
-		if (Main::PressKeys[GLFW_KEY_A]) {
+		//if (Main::PressKeys[GLFW_KEY_A]) {
+		//	//rot -= rotSpeed;
+		//	//Rotation.y -= 4.0f;
+		//	velocity.x -= curSpeed;// glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
+		//}
+
+		//if (Main::PressKeys[GLFW_KEY_D]) {
+		//	//rot += rotSpeed;
+		//	//Rotation.y += 4.0f;
+		//	velocity.x += curSpeed;// glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
+		//}
+
+		if (Main::HeldKeys[GLFW_KEY_D]) {
 			//rot -= rotSpeed;
-			//Rotation.y -= 4.0f;
-			Position -= glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
-		}
-
-		if (Main::PressKeys[GLFW_KEY_D]) {
-			//rot += rotSpeed;
+			yRot += rotSpeed;
 			//Rotation.y += 4.0f;
-			Position += glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
-		}
-
-		if (Main::PressKeys[GLFW_KEY_RIGHT]) {
-			//rot -= rotSpeed;
-			Rotation.y += 4.0f;
 			//Position += glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
 		}
 
-		if (Main::PressKeys[GLFW_KEY_LEFT]) {
+		if (Main::HeldKeys[GLFW_KEY_A]) {
 			//rot += rotSpeed;
-			Rotation.y -= 4.0f;
+			yRot -= rotSpeed;
+			//Rotation.y -= 4.0f;
 			//Position -= glm::normalize(glm::cross(ForwardVec, UpVec)) * speed;
 		}
+
+		vec3 INT_POS = vec3(
+			(int)Position.x,
+			(int)Position.y,
+			(int)Position.z
+		);
+
+
+		//vec3 NextPos = Position + vec3(0, 0, -1);
+		//Helper::PrintVec3(Main::Map.GetPixel(INT_POS.x, INT_POS.z));
+
+		velocity.x = (cos(yRot) / 10) * curSpeed;
+		velocity.z = (sin(yRot) / 10) * curSpeed;
+
+
+		if (Main::Map.GetPixel(
+			(int)(Position.x + velocity.x * 5.0f),
+			(int)Position.z)
+			!= vec4(1, 1, 1, 1)) {
+			velocity.x = 0;
+		}
+		//Position.x += velocity.x;
+
+		if (Main::Map.GetPixel(
+			(int)Position.x,
+			(int)(Position.z + velocity.z * 5.0f))
+			!= vec4(1, 1, 1, 1)) {
+			velocity.z = 0;
+		}
+		//Position.z += velocity.z;
+		Position += velocity;
+
 	}
 
 	//ForwardVec = Rotation;
@@ -101,7 +125,7 @@ void Camera::Update() {
 	//view = glm::rotate(view, glm::radians(Rotation.z), vec3(0, 0, 1));
 
 	//view = glm::rotate(view, glm::radians(45.0f), vec3(1, 0, 0));
-	view = glm::rotate(view, glm::radians(Rotation.y), vec3(0, 1, 0));
+	view = glm::rotate(view, yRot + glm::radians(90.0f), vec3(0, 1, 0));
 
 
 	view = glm::translate(view, -Position);

@@ -1,3 +1,18 @@
-﻿  Camera.cpp
+﻿cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
+  Blurb.cpp
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\blurb.cpp(21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Camera.cpp
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\camera.cpp(40): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Main.cpp
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(119): warning C4018: '<': signed/unsigned mismatch
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(120): warning C4018: '<': signed/unsigned mismatch
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(201): warning C4018: '<': signed/unsigned mismatch
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(216): warning C4018: '<': signed/unsigned mismatch
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(228): warning C4018: '<': signed/unsigned mismatch
+  Program.cpp
+  Texture2D.cpp
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\texture2d.cpp(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\texture2d.cpp(21): warning C4018: '>=': signed/unsigned mismatch
+  Generating Code...
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)

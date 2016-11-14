@@ -17,12 +17,17 @@ void main()
 	vec4 preColor = imgColor;
 	
 	vec3 normal = normalize(Normal);
-	vec3 lightDir = normalize(lightPos - FragPos);
+	vec3 LightToFragVec = lightPos - FragPos;
+	vec3 lightDir = normalize(LightToFragVec);
 
 	float intensity = max(dot(normal, lightDir), 0.0);
 	
-	float AV = .3f;
+	float AV =  .1f;
 	vec4 ambientColor = vec4(AV, AV, AV, 1);
+
+	float LightRange = 5;
+	float DistFromLight = length(LightToFragVec);
+	float Attenuation = clamp(LightRange / pow(DistFromLight, 2), 0, 1);
 	
 	if (preColor.a < 1f){
 		discard;
@@ -32,7 +37,7 @@ void main()
 		
 		//preColor.rgb *= abs(Normal.xyz);
 		
-		preColor.rgba *= clamp((ambientColor + intensity), 0 ,1);
+		preColor.rgba *= clamp((ambientColor + (intensity * Attenuation)), 0 ,1);
 		
 		color = preColor;
 	}

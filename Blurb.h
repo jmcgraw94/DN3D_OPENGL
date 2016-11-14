@@ -17,17 +17,16 @@ class Blurb : public GameObject
 public:
 	Blurb();
 	Blurb(vec3 _pos, int _mode);
-	//void SetShaderProgram(GLuint Program);
-	//GLuint GetShaderProgram();
+	~Blurb();
+
 	void Buffer();
 	void Init();
 	void Update();
 	void SetUniforms();
 	void UpdateModelMatrix();
-	//void SetTexture(GLuint Texture);
+
 	void Draw();
-	//int LoadGLTextures();
-	~Blurb();
+
 
 
 	string Name;
@@ -52,6 +51,5 @@ public:
 	bool Buffered;
 
 	GLuint VAO, VBO;
-
 };
 
