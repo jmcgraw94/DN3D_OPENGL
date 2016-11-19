@@ -38,6 +38,8 @@ public:
 	vec3 Rotation;
 	vec3 Scale;
 
+	bool Dynamic;
+
 	bool isInit;
 
 	string textureFile;

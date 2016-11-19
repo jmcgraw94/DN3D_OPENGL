@@ -14,6 +14,8 @@ Billboard::Billboard(vec3 _pos, int _ID)
 	Position = _pos;
 	Scale = vec3(1, 1, 1);
 
+	Dynamic = false;
+
 	Constructed = true;
 
 	ID = _ID;
@@ -37,9 +39,9 @@ void Billboard::Init() {
 
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		//cout << (int)textureID << endl; //Texture ID can be shared?
+
 		Texture2D texture = Texture2D(textureFile);
-		
+
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
 		//	0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
@@ -71,13 +73,13 @@ void Billboard::Init() {
 void Billboard::Buffer() {
 
 	GLfloat verts[] = {
-		
-		0, 0,  0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		1, 0,  0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0, 1,  0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0, 0,  0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+		0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		1, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		1, 1, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1, 1, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0, 1, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 	};
 
 	//---------------------------------
@@ -171,10 +173,10 @@ void Billboard::Update() {
 
 	//Blurb * Orange = new Blurb(); //Heap
 	//Orange->ID = 15;
-
-	Rotation.y = Helper::AngleBetween_DEG(
-		vec2(Main::MainCamera.Position.x, Main::MainCamera.Position.z),
-		vec2(Position.x, Position.z));
+	if (Dynamic)
+		Rotation.y = Helper::AngleBetween_DEG(
+			vec2(Main::MainCamera.Position.x, Main::MainCamera.Position.z),
+			vec2(Position.x, Position.z));
 }
 
 void Billboard::Draw() {

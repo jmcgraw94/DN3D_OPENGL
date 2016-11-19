@@ -185,14 +185,6 @@ void Blurb::Buffer() {
 void Blurb::SetUniforms() {
 	glUseProgram(shaderProgram);
 
-	//for (int i = 5; i < 36; i += 8) {
-	//	vec4 newNorm = vec4(verts[i], verts[i + 1], verts[i + 2], 1);
-	//	newNorm = newNorm * model * view;
-	//	verts[i + 0] = newNorm.x;
-	//	verts[i + 1] = newNorm.y;
-	//	verts[i + 2] = newNorm.z;
-	//}
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
