@@ -113,6 +113,10 @@ void Billboard::Buffer() {
 void Billboard::SetUniforms() {
 	glUseProgram(shaderProgram);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
+
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "normalMatrix"),
 		1, GL_FALSE, glm::value_ptr(normalMatrix));
 

@@ -15,7 +15,7 @@ uniform vec3 lightColor;
 void main()
 {
 	vec2 texRev = vec2(TexCoord.x, -TexCoord.y);
-	vec4 imgColor = texture(NormalTexture, texRev);
+	vec4 imgColor = texture(MainTexture, texRev);
 	vec4 preColor = imgColor;
 	
 	vec3 normal = normalize(Normal);
@@ -38,8 +38,10 @@ void main()
 		discard;
 	}
 	else {
+		
 		//preColor.gb *= TexCoord;
 		//preColor.rgb *= abs(Normal.xyz);
+		
 		preColor.rgba *= clamp((ambientColor +  (vec4(lightColor, 1) * 
 			intensity * Attenuation)), 0 , Brightness);
 		
