@@ -33,12 +33,14 @@ float PI = 3.141592654f;
 //Static
 int Main::FrameCount = 0;
 bool Main::HeldKeys[1024];
-bool Main::PressKeys[1024];
+bool Main::TapKeys[1024];
 GLFWwindow * Main::window;
 Camera Main::MainCamera;
 ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
-vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos;
+vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos, Main::QuadraticOldMousePos, Main::QuadraticMousePos,
+Main::QuadraticDeltaMousePos, Main::Q_Delta;
+
 double Main::Time, Main::OldTime, Main::DeltaTime;
 
 Texture2D Main::Map;
@@ -54,7 +56,7 @@ float FrameRate;
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
 		if (!Main::HeldKeys[key]) {
-			PressKeys[key] = true;
+			TapKeys[key] = true;
 		}
 
 		Main::HeldKeys[key] = true;
@@ -162,7 +164,7 @@ void Main::Update() {
 
 		Blurbs.push_back(B);
 	}
-	if (Main::PressKeys[GLFW_KEY_L]) {
+	if (Main::TapKeys[GLFW_KEY_L]) {
 		cout << "====== LOG ========" << endl;
 		cout << "FPS: " << FrameRate << endl;
 		cout << "BLURBS: " << Blurbs.size() << endl;
@@ -180,15 +182,16 @@ void Main::Update() {
 	if (Main::HeldKeys[GLFW_KEY_RIGHT]) {
 		lightPos.x += .1f;
 	}
-	if (Main::PressKeys[GLFW_KEY_I]) {
+	if (Main::TapKeys[GLFW_KEY_I]) {
 		lightColor.r = lightColor.r != 0 ? 0 : 1;
 	}
-	if (Main::PressKeys[GLFW_KEY_O]) {
+	if (Main::TapKeys[GLFW_KEY_O]) {
 		lightColor.g = lightColor.g != 0 ? 0 : 1;
 	}
-	if (Main::PressKeys[GLFW_KEY_P]) {
+	if (Main::TapKeys[GLFW_KEY_P]) {
 		lightColor.b = lightColor.b != 0 ? 0 : 1;
 	}
+
 	//	for (int x = -5; x < 5; x++) {
 	//		for (int y = -5; y < 5; y++) {
 	//			Blurb B = Blurb(vec3(x, -2, y), 1);
@@ -259,16 +262,18 @@ void Main::LateUpdate() {
 	DeltaTime = Time - OldTime;
 	DeltaMousePos = MousePos - OldMousePos;
 
+	QuadraticOldMousePos = QuadraticMousePos;
+	QuadraticDeltaMousePos = (MousePos - QuadraticMousePos);
+	QuadraticMousePos += QuadraticDeltaMousePos * 0.35f;
+	Q_Delta = QuadraticMousePos - QuadraticOldMousePos;
 
 	OldMousePos = MousePos;
 	OldTime = Time;
 
 	for (int i = 0; i < 1024; i++)
-		PressKeys[i] = false;
+		TapKeys[i] = false;
 
 	Main::FrameCount++;
-
-	//glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
 }
 
 int main()

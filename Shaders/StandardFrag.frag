@@ -21,6 +21,7 @@ void main()
 	vec3 lightDir = normalize(LightToFragVec);
 
 	float intensity = max(dot(normal, lightDir), 0.0);
+	float Brightness = 1.125f;
 	
 	vec3 ShadowColor = vec3(56f / 255f, 50f / 255f, 24f / 255f);
 	
@@ -29,17 +30,15 @@ void main()
 
 	float LightRange = 15;
 	float DistFromLight = length(LightToFragVec);
-	float Attenuation = clamp(LightRange / pow(DistFromLight, 2), 0, 1);
+	float Attenuation = clamp(LightRange / pow(DistFromLight, 2), 0, Brightness);
 	
 	if (preColor.a < 1f){
 		discard;
 	}
 	else {
 		//preColor.gb *= TexCoord;
-		
 		//preColor.rgb *= abs(Normal.xyz);
-		
-		preColor.rgba *= clamp((ambientColor +  (vec4(lightColor, 1) * intensity * Attenuation)), 0 ,1);
+		preColor.rgba *= clamp((ambientColor +  (vec4(lightColor, 1) * intensity * Attenuation)), 0 , Brightness);
 		
 		color = preColor;
 	}

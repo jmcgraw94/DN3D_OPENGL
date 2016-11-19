@@ -34,5 +34,9 @@ public:
 	static void ClearConsole() {
 		cout << string(100, '\n');
 	}
+
+	static vec3 Normalize(vec3 v) {
+		return v / (float)v.length();
+	}
 };
 

@@ -1,8 +1,5 @@
-﻿  Main.cpp
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(118): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(119): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(223): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(238): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(250): warning C4018: '<': signed/unsigned mismatch
+﻿  Camera.cpp
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\camera.cpp(54): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\camera.cpp(131): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)

@@ -28,7 +28,7 @@ public:
 
 	static int FrameCount;
 	static bool HeldKeys[1024];
-	static bool PressKeys[1024];
+	static bool TapKeys[1024];
 	static GLFWwindow* window;
 	static Camera MainCamera;
 	static ContentManager CM;
@@ -40,14 +40,19 @@ public:
 		lightPos,
 		lightColor;
 
-	static vec2 
-		MousePos, 
-		OldMousePos, 
-		DeltaMousePos;
+	static vec2
+		MousePos,
+		OldMousePos,
+		DeltaMousePos,
 
-	static double 
-		Time, 
-		OldTime, 
+		QuadraticMousePos,
+		QuadraticOldMousePos,
+		Q_Delta,
+		QuadraticDeltaMousePos;
+
+	static double
+		Time,
+		OldTime,
 		DeltaTime;
 
 	static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mode);
