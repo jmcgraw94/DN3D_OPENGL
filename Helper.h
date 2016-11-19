@@ -38,5 +38,7 @@ public:
 	static vec3 Normalize(vec3 v) {
 		return v / (float)v.length();
 	}
+
+	static int RandomRange(int max);
 };
 

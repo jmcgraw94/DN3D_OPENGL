@@ -180,6 +180,7 @@ void Blurb::UpdateModelMatrix() {
 	model = mat4();
 	model = glm::translate(model, Position);
 
+
 	model = glm::rotate(model, glm::radians(Rotation.z), vec3(0, 0, 1));
 	model = glm::rotate(model, glm::radians(Rotation.y), vec3(0, 1, 0));
 	model = glm::rotate(model, glm::radians(Rotation.x), vec3(1, 0, 0));

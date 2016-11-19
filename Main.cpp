@@ -9,6 +9,7 @@
 #include "..\include\glm\gtc\type_ptr.hpp"
 #include "..\include\MapFactory.h"
 #include "Texture2D.h"
+#include "Billboard.h"
 
 
 #include <glew.h>
@@ -27,7 +28,7 @@ using namespace glm;
 
 //Extern
 int WIN_W = 1200;
-int WIN_H = 1200;
+int WIN_H = 800;
 float PI = 3.141592654f;
 
 //Static
@@ -50,7 +51,12 @@ vec3 Main::lightColor = vec3(1, 1, 1);
 
 //Private
 vector<Blurb> Blurbs = vector<Blurb>();
+vector<Billboard> Billboards = vector<Billboard>();
 float FrameRate;
+
+Blurb * LightSource = new Blurb();
+
+Billboard * Bill;
 
 // Is called whenever a key is pressed/released via GLFW
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
@@ -117,7 +123,12 @@ void Main::Setup() {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	Map = Texture2D("Content/Map.png");
+
 	Helper::PrintVec3(Map.GetPixel(0, 0), "COLOR: ");
+
+	LightSource = new Blurb(vec3(2, 2, -2), 4);
+	Blurbs.push_back(*LightSource);
+	Bill = new Billboard(vec3(2, -1, 3), 1);
 
 	for (int y = 0; y < Map.height; y++) {
 		for (int x = 0; x < Map.width; x++) {
@@ -159,9 +170,10 @@ void Main::Update() {
 	glfwPollEvents();
 
 
+	//Helper::PrintVec3(BB->Position, "BB");
 
 	int _rate = 5;
-	if (Main::HeldKeys[GLFW_KEY_R]) {
+	if (Main::TapKeys[GLFW_KEY_R]) {
 		cout << "BLURB SPAWNED" << endl;
 
 		Blurb B = Blurb(
@@ -232,8 +244,12 @@ void Main::Update() {
 	Time = glfwGetTime();
 	Main::MainCamera.Update();
 
+	Bill->Update();
+
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
+		if (Blurbs[i].ID == 4)
+			Blurbs[i].Position = lightPos - vec3(.5f, .5f, .5f);
 	}
 }
 
@@ -247,9 +263,12 @@ void Main::Draw() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 
+	//BB.Draw();
+	(*LightSource).Position = lightPos;
+	Bill->Draw();
 	for (int i = 0; i < Blurbs.size(); i++) {
 
-		float Dist = Helper::Distance(MainCamera.Position, Blurbs[i].Position);
+		//float Dist = Helper::Distance(MainCamera.Position, Blurbs[i].Position);
 		Blurbs[i].Draw();
 	}
 
@@ -278,8 +297,6 @@ void Main::LateUpdate() {
 
 	OldMousePos = MousePos;
 	OldTime = Time;
-
-
 
 	for (int i = 0; i < 1024; i++)
 		TapKeys[i] = false;

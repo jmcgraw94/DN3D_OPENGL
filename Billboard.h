@@ -28,6 +28,8 @@ public:
 	void Draw();
 
 
+	vec3 Origin = vec3(0, 0, 0);
+
 	bool Constructed = false;
 	string Name;
 	int ID = 0;

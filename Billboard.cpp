@@ -5,9 +5,8 @@ using namespace std;
 using namespace glm;
 
 
-
 Billboard::Billboard() {
-	cout << "EMPTY BLURB" << endl;
+	cout << "EMPTY BILLBOARD" << endl;
 }
 
 Billboard::Billboard(vec3 _pos, int _ID)
@@ -20,13 +19,7 @@ Billboard::Billboard(vec3 _pos, int _ID)
 	ID = _ID;
 
 	if (ID == 1)
-		textureFile = "Content/brick.png";
-	if (ID == 2)
-		textureFile = "Content/planks_birch.png";
-	if (ID == 3)
-		textureFile = "Content/emerald_block.png";
-	if (ID == 4)
-		textureFile = "Content/planks_oak.png";
+		textureFile = "Content/tallgrass.png";
 }
 
 Billboard::~Billboard()
@@ -39,11 +32,15 @@ void Billboard::Init() {
 	if (!isInit) {
 		isInit = true;
 
+		Origin = vec3(-.5f, 0, 0);
+		Rotation.y = Helper::RandomRange(360);
+
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		//cout << (int)textureID << endl; //Texture ID can be shared?
 		Texture2D texture = Texture2D(textureFile);
 
+		
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
 		//	0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
@@ -55,6 +52,7 @@ void Billboard::Init() {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
+
 
 		// Set the filter parameters
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
@@ -74,53 +72,13 @@ void Billboard::Init() {
 void Billboard::Buffer() {
 
 	GLfloat verts[] = {
-		//Back Face
-		0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-		1, 0, 0,  1.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-		1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-		1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-		0, 1, 0,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-		0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-
 		//Front Face
-		0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-		1, 0,  1,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		0, 1,  1,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-
-		//Left Face
-		0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-		0, 1,  0, 0.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-		0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		0, 0,  1, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-
-		//Right Face
-		1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-		1,  1,  0, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-		1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		1,  0,  1, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-
-		//Top Face						 
-		0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		1, 0, 0,  1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		0, 0, 1,  0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-
-		//Bottom Face					  
-		0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		1,  1, 0,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0,  1,  1, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0, 0,  0,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+		1, 0,  0,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+		1, 1,  0,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		1, 1,  0,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		0, 1,  0,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		0, 0,  0,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
 	};
 
 	//---------------------------------
@@ -184,6 +142,8 @@ void Billboard::UpdateModelMatrix() {
 	model = glm::rotate(model, glm::radians(Rotation.y), vec3(0, 1, 0));
 	model = glm::rotate(model, glm::radians(Rotation.x), vec3(1, 0, 0));
 
+	model = glm::translate(model, Origin);
+
 	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
 }
 
@@ -192,7 +152,6 @@ void Billboard::Update() {
 		return;
 
 	Init();
-	//Rotation.x += 1.0f;
 	//Rotation.z += 1.0f;
 }
 
@@ -205,7 +164,7 @@ void Billboard::Draw() {
 
 	Buffer();
 
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	//glDisableVertexAttribArray(0);
 	//glDisableVertexAttribArray(1);

@@ -1,7 +1,4 @@
-﻿  Main.cpp
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(122): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(123): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(235): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(250): warning C4018: '<': signed/unsigned mismatch
+﻿  Billboard.cpp
+c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\billboard.cpp(36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
   DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)
