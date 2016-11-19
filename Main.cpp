@@ -68,8 +68,8 @@ void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
-		MousePos.x = xpos;
-		MousePos.y = ypos;
+	MousePos.x = xpos;
+	MousePos.y = ypos;
 }
 
 void Main::resize_callback(GLFWwindow * window, int x, int y) {
@@ -114,6 +114,8 @@ void Main::Setup() {
 
 	glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
 
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	Map = Texture2D("Content/Map.png");
 	Helper::PrintVec3(Map.GetPixel(0, 0), "COLOR: ");
 
@@ -125,15 +127,22 @@ void Main::Setup() {
 
 				Blurb A = Blurb(vec3(x, 0, y), 1);
 				Blurbs.push_back(A);
+
+				//Blurb C = Blurb(vec3(x, 1, y), 1);
+				//Blurbs.push_back(C);
 			}
 			else if (Map.GetPixel(x, y) == vec4(0, 1, 0, 1)) {
 				Blurb B = Blurb(vec3(x, -1, y), 3);
 				Blurbs.push_back(B);
 			}
 			else {
-				Blurb B = Blurb(vec3(x, -2, y), 2);
-				Blurbs.push_back(B);
+
 			}
+			Blurb B = Blurb(vec3(x, -2, y), 2);
+			Blurbs.push_back(B);
+
+			//Blurb A = Blurb(vec3(x, 2, y), 4);
+			//Blurbs.push_back(A);
 		}
 	}
 
@@ -149,7 +158,7 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
-	
+
 
 	int _rate = 5;
 	if (Main::HeldKeys[GLFW_KEY_R]) {
@@ -250,12 +259,12 @@ void Main::Draw() {
 
 void Main::LateUpdate() {
 
-	for (int i = 0; i < Blurbs.size(); i++) {
-		if (&Blurbs[i] == nullptr)
-		{
-			cout << i << endl;
-		}
-	}
+	//for (int i = 0; i < Blurbs.size(); i++) {
+	//	if (&Blurbs[i] == nullptr)
+	//	{
+	//		cout << i << endl;
+	//	}
+	//}
 
 	FrameRate = (int)(1 / DeltaTime);
 	glfwSwapBuffers(Main::window);
@@ -264,11 +273,13 @@ void Main::LateUpdate() {
 
 	QuadraticOldMousePos = QuadraticMousePos;
 	QuadraticDeltaMousePos = (MousePos - QuadraticMousePos);
-	QuadraticMousePos += QuadraticDeltaMousePos * 0.35f;
+	QuadraticMousePos += QuadraticDeltaMousePos * 0.25f;
 	Q_Delta = QuadraticMousePos - QuadraticOldMousePos;
 
 	OldMousePos = MousePos;
 	OldTime = Time;
+
+
 
 	for (int i = 0; i < 1024; i++)
 		TapKeys[i] = false;

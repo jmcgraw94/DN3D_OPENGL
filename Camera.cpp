@@ -10,12 +10,12 @@ float bobHeight = 1.0f;
 float bobSpeed = 1.5f;
 vec3 RightVec = vec3(0, 0, 0);
 
-float Ysensitivity = 4;
+float Ysensitivity = 3;
 float Xsensitivity = 3;
 
 vec3 transVelocity = vec3(0, 0, 0);
 vec3 velocity = vec3(0, 0, 0);
-GLfloat MaxSpeed = 0.085f;
+GLfloat MaxSpeed = 6.0f;
 GLfloat curSpeed = 0;
 float SlowRate = .89f;
 float SpeedMultiplyer = 1;
@@ -122,14 +122,18 @@ void Camera::Update() {
 		velocity += cross(ForwardVec, vec3(0, 1, 0)) * transVelocity.x * MaxSpeed;
 		velocity.y += transVelocity.y;
 
+		velocity = Helper::Normalize(velocity);
+		velocity *= SpeedMultiplyer * Main::DeltaTime;
+
 		if (moved)
-			bobSpeed *= 1.4f;
+			bobSpeed *= 1.5f;
 		else
 			bobSpeed *= .9f;
-		bobSpeed = clamp(bobSpeed, 0.0f, 10.0f);
 
+		bobSpeed = clamp(bobSpeed, 0.0f, 10.0f);
 		bobTimer += Main::DeltaTime * bobSpeed;
 
+		//X Collision
 		if (Main::Map.GetPixel(
 			(int)(Position.x + velocity.x * 5.0f),
 			(int)Position.z)
@@ -137,20 +141,21 @@ void Camera::Update() {
 			velocity.x = 0;
 		}
 
-		//Position.x += velocity.x;
-
+		//Z Collision
 		if (Main::Map.GetPixel(
 			(int)Position.x,
 			(int)(Position.z + velocity.z * 5.0f))
 			!= vec4(1, 1, 1, 1)) {
 			velocity.z = 0;
 		}
+
+
 		if (Position.y > .5f)
 			Position.y -= .0005f;
 
 		//Position.z += velocity.z;
 		Rotation.x = clamp(Rotation.x, -PI / 2, PI / 2);
-		Position += Helper::Normalize(velocity) * SpeedMultiplyer;
+		Position += velocity;
 	}
 
 	//ForwardVec = Rotation;

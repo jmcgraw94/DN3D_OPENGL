@@ -11,13 +11,13 @@
 using namespace std;
 using namespace glm;
 
-class Blurb : public GameObject
+class Billboard : public GameObject
 {
 
 public:
-	Blurb();
-	Blurb(vec3 _pos, int _mode);
-	~Blurb();
+	Billboard();
+	Billboard(vec3 _pos, int _mode);
+	~Billboard();
 
 	void Buffer();
 	void Init();
@@ -29,7 +29,6 @@ public:
 
 
 	bool Constructed = false;
-
 	string Name;
 	int ID = 0;
 

@@ -1,16 +1,16 @@
-#include "Blurb.h"
+#include "Billboard.h"
 #include "Main.h"
-
 
 using namespace std;
 using namespace glm;
 
 
-Blurb::Blurb() {
+
+Billboard::Billboard() {
 	cout << "EMPTY BLURB" << endl;
 }
 
-Blurb::Blurb(vec3 _pos, int _ID)
+Billboard::Billboard(vec3 _pos, int _ID)
 {
 	Position = _pos;
 	Scale = vec3(1, 1, 1);
@@ -29,13 +29,13 @@ Blurb::Blurb(vec3 _pos, int _ID)
 		textureFile = "Content/planks_oak.png";
 }
 
-Blurb::~Blurb()
+Billboard::~Billboard()
 {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 }
 
-void Blurb::Init() {
+void Billboard::Init() {
 	if (!isInit) {
 		isInit = true;
 
@@ -71,7 +71,7 @@ void Blurb::Init() {
 	}
 }
 
-void Blurb::Buffer() {
+void Billboard::Buffer() {
 
 	GLfloat verts[] = {
 		//Back Face
@@ -153,7 +153,7 @@ void Blurb::Buffer() {
 	glEnableVertexAttribArray(2); // Normal attribute
 }
 
-void Blurb::SetUniforms() {
+void Billboard::SetUniforms() {
 	glUseProgram(shaderProgram);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"),
@@ -173,7 +173,7 @@ void Blurb::SetUniforms() {
 
 }
 
-void Blurb::UpdateModelMatrix() {
+void Billboard::UpdateModelMatrix() {
 	if (!Constructed)
 		return;
 
@@ -187,7 +187,7 @@ void Blurb::UpdateModelMatrix() {
 	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
 }
 
-void Blurb::Update() {
+void Billboard::Update() {
 	if (!Constructed)
 		return;
 
@@ -196,7 +196,7 @@ void Blurb::Update() {
 	//Rotation.z += 1.0f;
 }
 
-void Blurb::Draw() {
+void Billboard::Draw() {
 	if (!Constructed)
 		return;
 
