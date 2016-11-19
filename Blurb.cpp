@@ -5,6 +5,55 @@
 using namespace std;
 using namespace glm;
 
+GLfloat verts[] = {
+	//Back Face
+	0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+	1, 0, 0,  1.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+	0, 1, 0,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+	0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+
+	//Front Face
+	0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+	1, 0,  1,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+	1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+	1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+	0, 1,  1,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+	0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+
+	//Left Face
+	0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+	0, 1,  0, 0.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+	0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+	0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+	0, 0,  1, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+	0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+
+	//Right Face
+	1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+	1,  1,  0, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+	1,  0,  1, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+	1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+
+	//Top Face						 
+	0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+	1, 0, 0,  1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+	1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+	1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+	0, 0, 1,  0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+	0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+
+	//Bottom Face					  
+	0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+	1,  1, 0,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	0,  1,  1, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+};
 
 Blurb::Blurb() {
 	cout << "EMPTY BLURB" << endl;
@@ -73,55 +122,7 @@ void Blurb::Init() {
 
 void Blurb::Buffer() {
 
-	GLfloat verts[] = {
-		//Back Face
-		0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-		1, 0, 0,  1.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-		1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-		1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-		0, 1, 0,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-		0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
 
-		//Front Face
-		0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-		1, 0,  1,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		0, 1,  1,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-
-		//Left Face
-		0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-		0, 1,  0, 0.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-		0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		0, 0,  1, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-
-		//Right Face
-		1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-		1,  1,  0, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-		1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		1,  0,  1, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-
-		//Top Face						 
-		0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		1, 0, 0,  1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-		1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		0, 0, 1,  0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-		0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-
-		//Bottom Face					  
-		0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		1,  1, 0,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0,  1,  1, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	};
 
 	//---------------------------------
 
@@ -130,6 +131,8 @@ void Blurb::Buffer() {
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
 	}
+
+
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -154,7 +157,15 @@ void Blurb::Buffer() {
 }
 
 void Blurb::SetUniforms() {
-	glUseProgram(shaderProgram);
+	glUseProgram(shaderProgram);	
+
+	//for (int i = 5; i < 36; i += 8) {
+	//	vec4 newNorm = vec4(verts[i], verts[i + 1], verts[i + 2], 1);
+	//	newNorm = newNorm * model * view;
+	//	verts[i + 0] = newNorm.x;
+	//	verts[i + 1] = newNorm.y;
+	//	verts[i + 2] = newNorm.z;
+	//}
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"),
 		1, GL_FALSE, glm::value_ptr(model));
@@ -170,6 +181,7 @@ void Blurb::SetUniforms() {
 
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
 		Main::lightColor.x, Main::lightColor.y, Main::lightColor.z);
+
 
 }
 
@@ -193,6 +205,8 @@ void Blurb::Update() {
 		return;
 
 	Init();
+
+	Rotation.y += 0.1f;
 	//Rotation.x += 1.0f;
 	//Rotation.z += 1.0f;
 }

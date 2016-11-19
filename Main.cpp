@@ -128,7 +128,7 @@ void Main::Setup() {
 
 	LightSource = new Blurb(vec3(2, 2, -2), 4);
 	Blurbs.push_back(*LightSource);
-	Bill = new Billboard(vec3(2, -1, 3), 1);
+	Bill = new Billboard(vec3(3, -1, 5), 1);
 
 	for (int y = 0; y < Map.height; y++) {
 		for (int x = 0; x < Map.width; x++) {
