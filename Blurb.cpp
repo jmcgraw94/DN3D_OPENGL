@@ -93,8 +93,11 @@ void Blurb::Init() {
 		GLchar * VertexShaderPath = "Shaders/StandardVert.vert";
 		GLchar * FragmentShaderPath = "Shaders/StandardFrag.frag";
 
-		if (ID == 4)
-			FragmentShaderPath = "Shaders/DoubleSidedFrag.frag";
+		if (ID == 4) {
+			FragmentShaderPath = "Shaders/UnlitFrag.frag";
+			Scale = vec3(.25f, .25f, .25f);
+			Origin = vec3(1, 1, 1) * .5f;
+		}
 
 		shader = Shader(VertexShaderPath, FragmentShaderPath);
 		shaderProgram = shader.GetProgram();
@@ -122,23 +125,6 @@ void Blurb::Init() {
 
 			//glBindTexture(GL_TEXTURE_2D, 0); //Unbind
 		}
-		//Texture2D normalFile = Texture2D(normalFile);
-		//{
-		//	glGenTextures(1, &normalID);
-		//	glBindTexture(GL_TEXTURE_2D, normalID);
-
-		//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, normalFile.width, normalFile.height, 0, GL_RGBA, GL_FLOAT, normalFile.Pixels);
-		//	glGenerateMipmap(GL_TEXTURE_2D);
-
-		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		//	glBindTexture(GL_TEXTURE_2D, 0); //Unbind
-		//}
-
 
 		//glActiveTexture(GL_TEXTURE1);
 		//glBindTexture(GL_TEXTURE_2D, normalID);
@@ -233,6 +219,8 @@ void Blurb::UpdateModelMatrix() {
 	model = glm::rotate(model, glm::radians(Rotation.z), vec3(0, 0, 1));
 	model = glm::rotate(model, glm::radians(Rotation.y), vec3(0, 1, 0));
 	model = glm::rotate(model, glm::radians(Rotation.x), vec3(1, 0, 0));
+
+	model = glm::translate(model, Origin);
 
 	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
 }

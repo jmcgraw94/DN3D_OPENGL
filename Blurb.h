@@ -37,6 +37,8 @@ public:
 	vec3 Rotation;
 	vec3 Scale;
 
+	vec3 Origin;
+
 	bool isInit;
 
 	string textureFile;

@@ -157,7 +157,7 @@ void Main::Setup() {
 		}
 	}
 
-	lightPos = vec3(5 + abs(sin(FrameCount / 300.0f)), 1, 5);
+	lightPos = vec3(5, .5f, 5);
 	lightColor = vec3(1, 1, 1) * abs(sin(FrameCount / 100.0f));
 
 	//glEnable(GL_FOG);
@@ -169,6 +169,7 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
+	lightPos.y += sin(FrameCount / 20.0f) / 170;
 
 	//Helper::PrintVec3(BB->Position, "BB");
 
