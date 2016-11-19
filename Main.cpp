@@ -203,13 +203,13 @@ void Main::Update() {
 	if (Main::HeldKeys[GLFW_KEY_RIGHT]) {
 		lightPos.x += .1f;
 	}
-	if (Main::TapKeys[GLFW_KEY_I]) {
+	if (Main::TapKeys[GLFW_KEY_COMMA]) {
 		lightColor.r = lightColor.r != 0 ? 0 : 1;
 	}
-	if (Main::TapKeys[GLFW_KEY_O]) {
+	if (Main::TapKeys[GLFW_KEY_PERIOD]) {
 		lightColor.g = lightColor.g != 0 ? 0 : 1;
 	}
-	if (Main::TapKeys[GLFW_KEY_P]) {
+	if (Main::TapKeys[GLFW_KEY_SLASH]) {
 		lightColor.b = lightColor.b != 0 ? 0 : 1;
 	}
 

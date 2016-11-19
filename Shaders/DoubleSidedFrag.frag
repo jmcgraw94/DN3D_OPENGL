@@ -6,14 +6,15 @@ in vec3 FragPos;
 
 out vec4 color;
 
-uniform sampler2D ourTexture;
+uniform sampler2D MainTexture;
+
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 
 void main()
 {
 	vec2 texRev = vec2(TexCoord.x, -TexCoord.y);
-	vec4 imgColor = texture(ourTexture, texRev);
+	vec4 imgColor = texture(MainTexture, texRev);
 	vec4 preColor = imgColor;
 	
 	vec3 normal = normalize(Normal);
@@ -44,3 +45,4 @@ void main()
 	}
 
 }
+

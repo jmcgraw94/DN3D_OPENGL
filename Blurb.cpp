@@ -56,7 +56,7 @@ GLfloat verts[] = {
 };
 
 Blurb::Blurb() {
-	cout << "EMPTY BLURB" << endl;
+	cout << "EMPTY BLURB: " << glfwGetTime() << endl;
 }
 
 Blurb::Blurb(vec3 _pos, int _ID)
@@ -75,7 +75,9 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	if (ID == 3)
 		textureFile = "Content/emerald_block.png";
 	if (ID == 4)
-		textureFile = "Content/planks_oak.png";
+		textureFile = "Content/white.png";
+
+	normalFile = "Content/brick_normal.png";
 }
 
 Blurb::~Blurb()
@@ -88,41 +90,64 @@ void Blurb::Init() {
 	if (!isInit) {
 		isInit = true;
 
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		//cout << (int)textureID << endl; //Texture ID can be shared?
-		Texture2D texture = Texture2D(textureFile);
+		GLchar * VertexShaderPath = "Shaders/StandardVert.vert";
+		GLchar * FragmentShaderPath = "Shaders/StandardFrag.frag";
+
+		if (ID == 4)
+			FragmentShaderPath = "Shaders/DoubleSidedFrag.frag";
+
+		shader = Shader(VertexShaderPath, FragmentShaderPath);
+		shaderProgram = shader.GetProgram();
 
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
 		//	0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
 		//};
-
-		//Define texture images
+		//...
 		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, t_GridTexture);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
+		Texture2D texture = Texture2D(textureFile);
+		{
+			glGenTextures(1, &textureID);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+			
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
+			glGenerateMipmap(GL_TEXTURE_2D);
 
-		glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		// Set the filter parameters
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			//glBindTexture(GL_TEXTURE_2D, 0); //Unbind
+		}
+		//Texture2D normalFile = Texture2D(normalFile);
+		//{
+		//	glGenTextures(1, &normalID);
+		//	glBindTexture(GL_TEXTURE_2D, normalID);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, normalFile.width, normalFile.height, 0, GL_RGBA, GL_FLOAT, normalFile.Pixels);
+		//	glGenerateMipmap(GL_TEXTURE_2D);
 
-		shader = Shader("Shaders/StandardVert.vert", "Shaders/StandardFrag.frag");
-		shaderProgram = shader.GetProgram();
+		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		//	glBindTexture(GL_TEXTURE_2D, 0); //Unbind
+		//}
+
+
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_2D, normalID);
+		//glUniform1i(glGetUniformLocation(shader.Program, "NormalTexture"), 1);
+
 	}
 }
 
 void Blurb::Buffer() {
-
-
 
 	//---------------------------------
 
@@ -132,11 +157,10 @@ void Blurb::Buffer() {
 		glGenBuffers(1, &VBO);
 	}
 
-
-
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	//glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 
@@ -157,7 +181,7 @@ void Blurb::Buffer() {
 }
 
 void Blurb::SetUniforms() {
-	glUseProgram(shaderProgram);	
+	glUseProgram(shaderProgram);
 
 	//for (int i = 5; i < 36; i += 8) {
 	//	vec4 newNorm = vec4(verts[i], verts[i + 1], verts[i + 2], 1);
@@ -166,6 +190,17 @@ void Blurb::SetUniforms() {
 	//	verts[i + 1] = newNorm.y;
 	//	verts[i + 2] = newNorm.z;
 	//}
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
+
+	//glActiveTexture(GL_TEXTURE1);
+	//glBindTexture(GL_TEXTURE_2D, normalID);
+	//glUniform1i(glGetUniformLocation(shaderProgram, "NormalTexture"), 1);
+
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "normalMatrix"),
+		1, GL_FALSE, glm::value_ptr(normalMatrix));
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"),
 		1, GL_FALSE, glm::value_ptr(model));
@@ -181,17 +216,19 @@ void Blurb::SetUniforms() {
 
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
 		Main::lightColor.x, Main::lightColor.y, Main::lightColor.z);
-
-
 }
 
 void Blurb::UpdateModelMatrix() {
 	if (!Constructed)
 		return;
 
+	normalMatrix = mat4();
+	normalMatrix = glm::rotate(normalMatrix, glm::radians(Rotation.z), vec3(0, 0, 1));
+	normalMatrix = glm::rotate(normalMatrix, glm::radians(Rotation.y), vec3(0, 1, 0));
+	normalMatrix = glm::rotate(normalMatrix, glm::radians(Rotation.x), vec3(1, 0, 0));
+
 	model = mat4();
 	model = glm::translate(model, Position);
-
 
 	model = glm::rotate(model, glm::radians(Rotation.z), vec3(0, 0, 1));
 	model = glm::rotate(model, glm::radians(Rotation.y), vec3(0, 1, 0));

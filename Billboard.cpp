@@ -33,13 +33,12 @@ void Billboard::Init() {
 		isInit = true;
 
 		Origin = vec3(-.5f, 0, 0);
-		Rotation.y = Helper::RandomRange(360);
+		//Rotation.y = Helper::RandomRange(360);
 
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		//cout << (int)textureID << endl; //Texture ID can be shared?
 		Texture2D texture = Texture2D(textureFile);
-
 		
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
@@ -64,7 +63,7 @@ void Billboard::Init() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		shader = Shader("Shaders/StandardVert.vert", "Shaders/StandardFrag.frag");
+		shader = Shader("Shaders/StandardVert.vert", "Shaders/DoubleSidedFrag.frag");
 		shaderProgram = shader.GetProgram();
 	}
 }
@@ -72,13 +71,13 @@ void Billboard::Init() {
 void Billboard::Buffer() {
 
 	GLfloat verts[] = {
-		//Front Face
-		0, 0,  0,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-		1, 0,  0,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  0,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		1, 1,  0,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		0, 1,  0,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		0, 0,  0,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+		
+		0, 0,  0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		1, 0,  0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		1, 1,  0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1, 1,  0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0, 1,  0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0, 0,  0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 	};
 
 	//---------------------------------
@@ -114,6 +113,9 @@ void Billboard::Buffer() {
 void Billboard::SetUniforms() {
 	glUseProgram(shaderProgram);
 
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "normalMatrix"),
+		1, GL_FALSE, glm::value_ptr(normalMatrix));
+
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"),
 		1, GL_FALSE, glm::value_ptr(model));
 
@@ -135,6 +137,11 @@ void Billboard::UpdateModelMatrix() {
 	if (!Constructed)
 		return;
 
+	normalMatrix = mat4();
+	normalMatrix = glm::rotate(normalMatrix, glm::radians(Rotation.z), vec3(0, 0, 1));
+	normalMatrix = glm::rotate(normalMatrix, glm::radians(Rotation.y), vec3(0, 1, 0));
+	normalMatrix = glm::rotate(normalMatrix, glm::radians(Rotation.x), vec3(1, 0, 0));
+
 	model = mat4();
 	model = glm::translate(model, Position);
 
@@ -145,6 +152,8 @@ void Billboard::UpdateModelMatrix() {
 	model = glm::translate(model, Origin);
 
 	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
+
+
 }
 
 void Billboard::Update() {
@@ -152,7 +161,16 @@ void Billboard::Update() {
 		return;
 
 	Init();
-	//Rotation.z += 1.0f;
+
+	//Blurb Apple = Blurb(); //Stack
+	//Apple.ID = 10;
+
+	//Blurb * Orange = new Blurb(); //Heap
+	//Orange->ID = 15;
+
+	Rotation.y = Helper::AngleBetween_DEG(
+		vec2(Main::MainCamera.Position.x, Main::MainCamera.Position.z),
+		vec2(Position.x, Position.z));
 }
 
 void Billboard::Draw() {

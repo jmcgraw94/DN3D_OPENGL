@@ -42,8 +42,12 @@ public:
 	string textureFile;
 	GLuint textureID;
 
+	string normalFile;
+	GLuint normalID;
+
 	GLfloat * VertArray;
 
+	mat4 normalMatrix;
 	mat4 model;
 
 	Shader shader;

@@ -47,6 +47,8 @@ public:
 
 	mat4 model;
 
+	mat4 normalMatrix;
+
 	Shader shader;
 	GLuint shaderProgram;
 
