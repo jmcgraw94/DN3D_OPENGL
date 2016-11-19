@@ -206,7 +206,7 @@ void Blurb::Update() {
 
 	Init();
 
-	Rotation.y += 0.1f;
+	//Rotation.y += 0.1f;
 	//Rotation.x += 1.0f;
 	//Rotation.z += 1.0f;
 }
