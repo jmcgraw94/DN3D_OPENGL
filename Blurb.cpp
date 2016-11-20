@@ -7,12 +7,12 @@ using namespace glm;
 
 GLfloat verts[] = {
 	//Back Face
-	0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
 	1, 0, 0,  1.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-	0, 1, 0,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
 	0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+	0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+	0, 1, 0,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
 
 	//Front Face
 	0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
@@ -31,14 +31,14 @@ GLfloat verts[] = {
 	0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
 
 	//Right Face
-	1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 	1,  1,  0, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-	1,  0,  1, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 	1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+	1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+	1,  0,  1, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 
-	//Top Face						 
+	//Bottom Face						 
 	0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 	1, 0, 0,  1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 	1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
@@ -46,13 +46,13 @@ GLfloat verts[] = {
 	0, 0, 1,  0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
 	0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 
-	//Bottom Face					  
-	0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+	//Top Face					  
+	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 	1,  1, 0,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-	0,  1,  1, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 	0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+	0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+	0,  1,  1, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 };
 
 Blurb::Blurb() {
@@ -182,6 +182,15 @@ void Blurb::Buffer() {
 	glEnableVertexAttribArray(2); // Normal attribute
 }
 
+int fast_atoi(const char * str)
+{
+	int val = 0;
+	while (*str) {
+		val = val * 10 + (*str++ - '0');
+	}
+	return val;
+}
+
 void Blurb::SetUniforms() {
 	glUseProgram(shaderProgram);
 
@@ -205,17 +214,50 @@ void Blurb::SetUniforms() {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
 		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
 
+	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
+
+	/*for (int i = 0; i < Main::PointLights.size(); i++) {
+		string _i = std::to_string(i);
+
+		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
+			Main::PointLights[i].Position.x, Main::PointLights[i].Position.y, Main::PointLights[i].Position.z);
+
+		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Color").c_str()),
+			Main::PointLights[i].Color.x, Main::PointLights[i].Color.y, Main::PointLights[i].Color.z);
+
+		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Range").c_str()),
+			Main::PointLights[i].Range);
+
+		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
+			Main::PointLights[i].Brightness);
+	}*/
+	// ----
+
 	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
 		Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
 
 	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
 		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
 
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
+		Main::P_Light1->Range);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
+		Main::P_Light1->Brightness);
+
+	//// ------------
+
 	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Position"),
 		Main::P_Light2->Position.x, Main::P_Light2->Position.y, Main::P_Light2->Position.z);
 
 	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Color"),
 		Main::P_Light2->Color.x, Main::P_Light2->Color.y, Main::P_Light2->Color.z);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Range"),
+		Main::P_Light2->Range);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Brightness"),
+		Main::P_Light2->Brightness);
 }
 
 void Blurb::UpdateModelMatrix() {
@@ -259,8 +301,12 @@ void Blurb::Draw() {
 
 	Buffer();
 
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
+	glDisable(GL_CULL_FACE);
 	//glDisableVertexAttribArray(0);
 	//glDisableVertexAttribArray(1);
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);

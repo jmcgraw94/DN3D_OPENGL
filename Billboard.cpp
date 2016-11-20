@@ -14,7 +14,7 @@ Billboard::Billboard(vec3 _pos, int _ID)
 	Position = _pos;
 	Scale = vec3(1, 1, 1);
 
-	Dynamic = true;
+	//Dynamic = true;
 
 	Constructed = true;
 
@@ -131,11 +131,29 @@ void Billboard::SetUniforms() {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
 		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
 
+	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
+
+	glUniform1f(glGetUniformLocation(shaderProgram, "DSL"), 1);
+
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"),
 		Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
 
 	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
 		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+
+	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
+	//	Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
+
+	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
+	//	Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+
+	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
+	//	Main::P_Light1->Range);
+
+	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
+	//	Main::P_Light1->Brightness);
+
+
 
 }
 

@@ -122,6 +122,7 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
+
 	glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -134,8 +135,11 @@ void Main::Setup() {
 	GlowBlurb2 = new Blurb(vec3(2, 2, -2), 4);
 	Blurbs.push_back(*GlowBlurb2);
 
-	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 1.0f, 1.0f);
-	P_Light2 = new PointLight(vec3(5, .5f, 5), vec3(1, 0, 0), 1.0f, 1.0f);
+	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 4.0f, 1.0f);
+	P_Light2 = new PointLight(vec3(10, .5f, 5), vec3(1, 0, 0), 3.0f, 1.0f);
+
+	PointLights.push_back(*P_Light1);
+	PointLights.push_back(*P_Light2);
 
 	Bill = new Billboard(vec3(3, -1, 5), 1);
 

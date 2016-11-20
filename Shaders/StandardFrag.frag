@@ -1,5 +1,4 @@
 #version 330 core
-#define NUM_POINT_LIGHTS 2
 
 in vec3 ourColor;
 in vec2 TexCoord;
@@ -11,14 +10,25 @@ out vec4 color;
 struct PointLight {    
     vec3 Position;
 	vec3 Color;
+	float Range;
+	float Brightness;
 };
 
 
+uniform int DSL = 0; //Double Side Lighting
+uniform int LightCount;
 uniform sampler2D MainTexture;
 uniform sampler2D NormalTexture;
-uniform PointLight PointLights[NUM_POINT_LIGHTS];
+uniform PointLight PointLights[128];
+
 
 vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
+
+//float Brightness = 1.0f;
+//float LightRange = 10;
+
+float AV =  .3f;
+vec4 AmbientColor = vec4(AV,AV,AV, 1);
 
 void main()
 {
@@ -34,10 +44,16 @@ void main()
 		discard;
 	}
 	else {
-		//preColor.rgba *= CalculateAmbientLight();
-		for (int i = 0; i < NUM_POINT_LIGHTS; i++){
-			preColor.rgba *= CalculatePointLight(PointLights[i], normal, FragPos);
+		for (int i = 0; i < LightCount; i++){
+			vec4 LightResult = CalculatePointLight(PointLights[i], normal, FragPos);
+			
+			LightResult.rgb = clamp(LightResult.rbg, 0, PointLights[i].Brightness);
+			
+			preColor.rgb *= (AmbientColor.rgb + (LightResult.rgb));
+			
+			preColor.rgb = clamp(preColor.rbg, 0, PointLights[i].Brightness);
 		}
+		
 		
 		color = preColor;
 	}
@@ -49,22 +65,20 @@ vec4 CalculatePointLight(PointLight P, vec3 _normal, vec3 FragPos){
 	vec3 lightDir = normalize(LightToFragVec);
 	
 	float DistFromLight = length(LightToFragVec);
-	float LightRange = 5;
-		
 	
-	
-	float intensity = max(dot(_normal, lightDir), 0.0);
-	float Brightness = 1.125f;
-	
+	float intensity = 0;
+	if (DSL == 1)
+		intensity = abs(dot(_normal, lightDir));
+	else
+		intensity = max(dot(_normal, lightDir), 0.0);
+	intensity = 1.0f;
+	//float Brightness = 1.125f;
 	//vec3 ShadowColor = vec3(56f / 255f, 50f / 255f, 24f / 255f);
 	
-	float AV =  .3f;
-	vec4 ambientColor = vec4(AV,AV,AV, 1);
+	float Attenuation = clamp(P.Range / pow(DistFromLight, 2), 0, P.Brightness);
 	
-	float Attenuation = clamp(LightRange / pow(DistFromLight, 2), 0, Brightness);
-	
-	vec4 Result = clamp((ambientColor +  (vec4(P.Color, 1) * 
-			intensity * Attenuation)), 0 , Brightness);
+	vec4 Result = (vec4(P.Color, 1) * 
+			intensity * Attenuation);
 	
 	return Result;
 }
