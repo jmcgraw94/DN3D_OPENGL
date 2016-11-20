@@ -29,7 +29,7 @@ void main()
 	float AV =  .3f;
 	vec4 ambientColor = vec4(AV,AV,AV, 1);
 
-	float LightRange = 15;
+	float LightRange = 5;
 	float DistFromLight = length(LightToFragVec);
 	float Attenuation = clamp(LightRange / pow(DistFromLight, 2), 0, Brightness);
 	

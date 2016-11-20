@@ -6,7 +6,7 @@ using namespace std;
 
 bool init = false;
 float bobTimer = 0;
-float bobHeight = 1.0f;
+float bobHeight = 0.5f;
 float bobSpeed = 1.5f;
 vec3 RightVec = vec3(0, 0, 0);
 

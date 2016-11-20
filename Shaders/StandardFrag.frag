@@ -1,4 +1,6 @@
 #version 330 core
+#define NUM_POINT_LIGHTS 1
+
 in vec3 ourColor;
 in vec2 TexCoord;
 in vec3 Normal;
@@ -6,15 +8,17 @@ in vec3 FragPos;
 
 out vec4 color;
 
-uniform sampler2D MainTexture;
-uniform sampler2D NormalTexture;
-
-uniform vec3 lightPos;
-uniform vec3 lightColor;
-
 struct PointLight {    
     vec3 Position;
-}; 
+	vec3 Color;
+};
+
+
+uniform sampler2D MainTexture;
+uniform sampler2D NormalTexture;
+uniform PointLight PointLights[NUM_POINT_LIGHTS];
+
+vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
 
 void main()
 {
@@ -25,34 +29,45 @@ void main()
 	vec4 preColor = imgColor;
 	
 	vec3 normal = normalize(Normal);
-		
-	vec3 LightToFragVec = lightPos - FragPos;
-	vec3 lightDir = normalize(LightToFragVec);
-	
-	float intensity = max(dot(normal, lightDir), 0.0);
-	float Brightness = 1.125f;
-	
-	vec3 ShadowColor = vec3(56f / 255f, 50f / 255f, 24f / 255f);
-	
-	float AV =  .3f;
-	vec4 ambientColor = vec4(AV,AV,AV, 1);
-
-	float LightRange = 15;
-	float DistFromLight = length(LightToFragVec);
-	float Attenuation = clamp(LightRange / pow(DistFromLight, 2), 0, Brightness);
 	
 	if (preColor.a < 1f){
 		discard;
 	}
 	else {
-				
-		preColor.rgba *= clamp((ambientColor +  (vec4(lightColor, 1) * 
-			intensity * Attenuation)), 0 , Brightness);
+		//preColor.rgba *= CalculateAmbientLight();
+		for (int i = 0; i < NUM_POINT_LIGHTS; i++){
+			preColor.rgba *= CalculatePointLight(PointLights[i], normal, FragPos);
+		}
+		
 		
 		color = preColor;
 	}
 
 }
 
+vec4 CalculatePointLight(PointLight P, vec3 _normal, vec3 FragPos){
+	vec3 LightToFragVec = P.Position - FragPos;
+	vec3 lightDir = normalize(LightToFragVec);
+	
+	float DistFromLight = length(LightToFragVec);
+	float LightRange = 5;
+		
+	
+	
+	float intensity = max(dot(_normal, lightDir), 0.0);
+	float Brightness = 1.125f;
+	
+	//vec3 ShadowColor = vec3(56f / 255f, 50f / 255f, 24f / 255f);
+	
+	float AV =  .3f;
+	vec4 ambientColor = vec4(AV,AV,AV, 1);
+	
+	float Attenuation = clamp(LightRange / pow(DistFromLight, 2), 0, Brightness);
+	
+	vec4 Result = clamp((ambientColor +  (vec4(P.Color, 1) * 
+			intensity * Attenuation)), 0 , Brightness);
+	
+	return Result;
+}
 //preColor.gb *= TexCoord; //Adds pretty gradient
 //preColor.rgb *= abs(Normal.xyz); //Illustrates face normals

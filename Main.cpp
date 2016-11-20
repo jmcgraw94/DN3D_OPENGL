@@ -43,6 +43,8 @@ MapFactory Main::MF = MapFactory();
 vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos, Main::QuadraticOldMousePos, Main::QuadraticMousePos,
 Main::QuadraticDeltaMousePos, Main::Q_Delta;
 
+vector<PointLight> Main::PointLights;
+
 double Main::Time, Main::OldTime, Main::DeltaTime;
 
 Texture2D Main::Map;
@@ -53,11 +55,11 @@ vector<Billboard> Billboards = vector<Billboard>();
 float FrameRate;
 
 Blurb * GlowBlurb = new Blurb();
-PointLight * Main::P_Light;
+PointLight * Main::P_Light1;
+PointLight * Main::P_Light2;
 
 Billboard * Bill;
 
-// Is called whenever a key is pressed/released via GLFW
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
 		if (!Main::HeldKeys[key]) {
@@ -72,6 +74,7 @@ void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
+
 void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 	MousePos.x = xpos;
 	MousePos.y = ypos;
@@ -126,7 +129,7 @@ void Main::Setup() {
 	GlowBlurb = new Blurb(vec3(2, 2, -2), 4);
 	Blurbs.push_back(*GlowBlurb);
 
-	P_Light = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 1.0f, 1.0f);
+	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 1.0f, 1.0f);
 
 	Bill = new Billboard(vec3(3, -1, 5), 1);
 
@@ -166,7 +169,7 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
-	P_Light->Update();
+	P_Light1->Update();
 
 	int _rate = 5;
 	if (Main::TapKeys[GLFW_KEY_R]) {
@@ -188,25 +191,25 @@ void Main::Update() {
 		cout << "====== --- ========" << endl;
 	}
 	if (Main::HeldKeys[GLFW_KEY_UP]) {
-		Main::P_Light->Position.z -= .1f;
+		Main::P_Light1->Position.z -= .1f;
 	}
 	if (Main::HeldKeys[GLFW_KEY_DOWN]) {
-		Main::P_Light->Position.z += .1f;
+		Main::P_Light1->Position.z += .1f;
 	}
 	if (Main::HeldKeys[GLFW_KEY_LEFT]) {
-		Main::P_Light->Position.x -= .1f;
+		Main::P_Light1->Position.x -= .1f;
 	}
 	if (Main::HeldKeys[GLFW_KEY_RIGHT]) {
-		Main::P_Light->Position.x += .1f;
+		Main::P_Light1->Position.x += .1f;
 	}
 	if (Main::TapKeys[GLFW_KEY_COMMA]) {
-		Main::P_Light->Color.r = Main::P_Light->Color.r != 0 ? 0 : 1;
+		Main::P_Light1->Color.r = Main::P_Light1->Color.r != 0 ? 0 : 1;
 	}
 	if (Main::TapKeys[GLFW_KEY_PERIOD]) {
-		Main::P_Light->Color.g = Main::P_Light->Color.g != 0 ? 0 : 1;
+		Main::P_Light1->Color.g = Main::P_Light1->Color.g != 0 ? 0 : 1;
 	}
 	if (Main::TapKeys[GLFW_KEY_SLASH]) {
-		Main::P_Light->Color.b = Main::P_Light->Color.b != 0 ? 0 : 1;
+		Main::P_Light1->Color.b = Main::P_Light1->Color.b != 0 ? 0 : 1;
 	}
 
 	//	for (int x = -5; x < 5; x++) {
@@ -245,7 +248,7 @@ void Main::Update() {
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
 		if (Blurbs[i].ID == 4)
-			Blurbs[i].Position = Main::P_Light->Position - vec3(.5f, .5f, .5f);
+			Blurbs[i].Position = Main::P_Light1->Position - vec3(.5f, .5f, .5f);
 	}
 }
 
@@ -260,7 +263,7 @@ void Main::Draw() {
 	glEnable(GL_BLEND);
 
 	//BB.Draw();
-	(*GlowBlurb).Position = Main::P_Light->Position;
+	(*GlowBlurb).Position = Main::P_Light1->Position;
 	Bill->Draw();
 
 	for (int i = 0; i < Blurbs.size(); i++) {

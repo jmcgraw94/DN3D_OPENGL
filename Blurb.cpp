@@ -205,11 +205,11 @@ void Blurb::SetUniforms() {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
 		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"),
-		Main::P_Light->Position.x, Main::P_Light->Position.y, Main::P_Light->Position.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
+		Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
-		Main::P_Light->Color.x, Main::P_Light->Color.y, Main::P_Light->Color.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
+		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
 }
 
 void Blurb::UpdateModelMatrix() {

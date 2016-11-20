@@ -37,7 +37,12 @@ public:
 
 	static Texture2D Map;
 
-	static PointLight * P_Light;
+	static vector<PointLight> PointLights;
+
+	static PointLight 
+		* P_Light1, 
+		* P_Light2;
+
 
 	static vec2
 		MousePos,
