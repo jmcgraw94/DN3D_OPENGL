@@ -33,7 +33,7 @@ vec4 AmbientColor = vec4(AV,AV,AV, 1);
 void main()
 {
 	vec2 curPixel = vec2(TexCoord.x, -TexCoord.y);
-	vec4 normalColor = texture(NormalTexture, curPixel);
+	//vec4 normalColor = texture(NormalTexture, curPixel);
 
 	vec4 imgColor = texture(MainTexture, curPixel);
 	vec4 preColor = imgColor;

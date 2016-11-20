@@ -216,6 +216,11 @@ void Blurb::SetUniforms() {
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
 
+	if (ID == 4) {
+		glUniform3f(glGetUniformLocation(shaderProgram, "Tint"),
+			Main::P_Light1->Color.r, Main::P_Light1->Color.b, Main::P_Light1->Color.g);
+	}
+
 	/*for (int i = 0; i < Main::PointLights.size(); i++) {
 		string _i = std::to_string(i);
 
@@ -307,10 +312,11 @@ void Blurb::Draw() {
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	glDisable(GL_CULL_FACE);
-	//glDisableVertexAttribArray(0);
-	//glDisableVertexAttribArray(1);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 

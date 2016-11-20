@@ -14,7 +14,7 @@ Billboard::Billboard(vec3 _pos, int _ID)
 	Position = _pos;
 	Scale = vec3(1, 1, 1);
 
-	//Dynamic = true;
+	Dynamic = true;
 
 	Constructed = true;
 
@@ -65,7 +65,7 @@ void Billboard::Init() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		shader = Shader("Shaders/StandardVert.vert", "Shaders/DoubleSidedFrag.frag");
+		shader = Shader("Shaders/StandardVert.vert", "Shaders/StandardFrag.frag");
 		shaderProgram = shader.GetProgram();
 	}
 }
@@ -112,12 +112,17 @@ void Billboard::Buffer() {
 	glEnableVertexAttribArray(2); // Normal attribute
 }
 
+
 void Billboard::SetUniforms() {
 	glUseProgram(shaderProgram);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
+
+	//glActiveTexture(GL_TEXTURE1);
+	//glBindTexture(GL_TEXTURE_2D, normalID);
+	//glUniform1i(glGetUniformLocation(shaderProgram, "NormalTexture"), 1);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "normalMatrix"),
 		1, GL_FALSE, glm::value_ptr(normalMatrix));
@@ -133,29 +138,95 @@ void Billboard::SetUniforms() {
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
 
-	glUniform1f(glGetUniformLocation(shaderProgram, "DSL"), 1);
+	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"),
+	/*for (int i = 0; i < Main::PointLights.size(); i++) {
+	string _i = std::to_string(i);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
+	Main::PointLights[i].Position.x, Main::PointLights[i].Position.y, Main::PointLights[i].Position.z);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Color").c_str()),
+	Main::PointLights[i].Color.x, Main::PointLights[i].Color.y, Main::PointLights[i].Color.z);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Range").c_str()),
+	Main::PointLights[i].Range);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
+	Main::PointLights[i].Brightness);
+	}*/
+	// ----
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
 		Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
 		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
 
-	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
-	//	Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
+		Main::P_Light1->Range);
 
-	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
-	//	Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
+		Main::P_Light1->Brightness);
 
-	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
-	//	Main::P_Light1->Range);
+	//// ------------
 
-	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
-	//	Main::P_Light1->Brightness);
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Position"),
+		Main::P_Light2->Position.x, Main::P_Light2->Position.y, Main::P_Light2->Position.z);
 
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Color"),
+		Main::P_Light2->Color.x, Main::P_Light2->Color.y, Main::P_Light2->Color.z);
 
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Range"),
+		Main::P_Light2->Range);
 
+	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Brightness"),
+		Main::P_Light2->Brightness);
 }
+//void Billboard::SetUniforms() {
+//	glUseProgram(shaderProgram);
+//
+//	glActiveTexture(GL_TEXTURE0);
+//	glBindTexture(GL_TEXTURE_2D, textureID);
+//	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "normalMatrix"),
+//		1, GL_FALSE, glm::value_ptr(normalMatrix));
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"),
+//		1, GL_FALSE, glm::value_ptr(model));
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),
+//		1, GL_FALSE, glm::value_ptr(Main::MainCamera.view));
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
+//		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
+//
+//	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
+//
+//	glUniform1f(glGetUniformLocation(shaderProgram, "DSL"), 1);
+//
+//	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"),
+//		Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
+//
+//	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
+//		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+//
+//	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
+//	//	Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
+//
+//	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
+//	//	Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+//
+//	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
+//	//	Main::P_Light1->Range);
+//
+//	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
+//	//	Main::P_Light1->Brightness);
+//
+//
+//
+//}
 
 void Billboard::UpdateModelMatrix() {
 	if (!Constructed)
@@ -186,11 +257,6 @@ void Billboard::Update() {
 
 	Init();
 
-	//Blurb Apple = Blurb(); //Stack
-	//Apple.ID = 10;
-
-	//Blurb * Orange = new Blurb(); //Heap
-	//Orange->ID = 15;
 	if (Dynamic)
 		Rotation.y = Helper::AngleBetween_DEG(
 			vec2(Main::MainCamera.Position.x, Main::MainCamera.Position.z),
