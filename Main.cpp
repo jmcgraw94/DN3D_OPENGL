@@ -10,7 +10,7 @@
 #include "..\include\MapFactory.h"
 #include "Texture2D.h"
 #include "Billboard.h"
-
+#include "PointLight.h"
 
 #include <glew.h>
 #include <stdlib.h>
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 
 using namespace std;
@@ -46,15 +47,13 @@ double Main::Time, Main::OldTime, Main::DeltaTime;
 
 Texture2D Main::Map;
 
-vec3 Main::lightPos = vec3(5, 2, -5);
-vec3 Main::lightColor = vec3(1, 1, 1);
-
 //Private
 vector<Blurb> Blurbs = vector<Blurb>();
 vector<Billboard> Billboards = vector<Billboard>();
 float FrameRate;
 
-Blurb * LightSource = new Blurb();
+Blurb * GlowBlurb = new Blurb();
+PointLight * Main::P_Light;
 
 Billboard * Bill;
 
@@ -124,10 +123,11 @@ void Main::Setup() {
 
 	Map = Texture2D("Content/Map.png");
 
-	Helper::PrintVec3(Map.GetPixel(0, 0), "COLOR: ");
+	GlowBlurb = new Blurb(vec3(2, 2, -2), 4);
+	Blurbs.push_back(*GlowBlurb);
 
-	LightSource = new Blurb(vec3(2, 2, -2), 4);
-	Blurbs.push_back(*LightSource);
+	P_Light = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 1.0f, 1.0f);
+
 	Bill = new Billboard(vec3(3, -1, 5), 1);
 
 	for (int y = 0; y < Map.height; y++) {
@@ -157,9 +157,6 @@ void Main::Setup() {
 		}
 	}
 
-	lightPos = vec3(5, .5f, 5);
-	lightColor = vec3(1, 1, 1) * abs(sin(FrameCount / 100.0f));
-
 	//glEnable(GL_FOG);
 	//GL_FOG_START = 
 	//cout << "VER: " << glGetString(GL_MAJOR_VERSION) << " ::" << glGetString(GL_MINOR_VERSION) << endl;
@@ -169,9 +166,7 @@ void Main::Setup() {
 void Main::Update() {
 	glfwPollEvents();
 
-	lightPos.y += sin(FrameCount / 20.0f) / 170;
-
-	//Helper::PrintVec3(BB->Position, "BB");
+	P_Light->Update();
 
 	int _rate = 5;
 	if (Main::TapKeys[GLFW_KEY_R]) {
@@ -193,25 +188,25 @@ void Main::Update() {
 		cout << "====== --- ========" << endl;
 	}
 	if (Main::HeldKeys[GLFW_KEY_UP]) {
-		lightPos.z -= .1f;
+		Main::P_Light->Position.z -= .1f;
 	}
 	if (Main::HeldKeys[GLFW_KEY_DOWN]) {
-		lightPos.z += .1f;
+		Main::P_Light->Position.z += .1f;
 	}
 	if (Main::HeldKeys[GLFW_KEY_LEFT]) {
-		lightPos.x -= .1f;
+		Main::P_Light->Position.x -= .1f;
 	}
 	if (Main::HeldKeys[GLFW_KEY_RIGHT]) {
-		lightPos.x += .1f;
+		Main::P_Light->Position.x += .1f;
 	}
 	if (Main::TapKeys[GLFW_KEY_COMMA]) {
-		lightColor.r = lightColor.r != 0 ? 0 : 1;
+		Main::P_Light->Color.r = Main::P_Light->Color.r != 0 ? 0 : 1;
 	}
 	if (Main::TapKeys[GLFW_KEY_PERIOD]) {
-		lightColor.g = lightColor.g != 0 ? 0 : 1;
+		Main::P_Light->Color.g = Main::P_Light->Color.g != 0 ? 0 : 1;
 	}
 	if (Main::TapKeys[GLFW_KEY_SLASH]) {
-		lightColor.b = lightColor.b != 0 ? 0 : 1;
+		Main::P_Light->Color.b = Main::P_Light->Color.b != 0 ? 0 : 1;
 	}
 
 	//	for (int x = -5; x < 5; x++) {
@@ -250,7 +245,7 @@ void Main::Update() {
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
 		if (Blurbs[i].ID == 4)
-			Blurbs[i].Position = lightPos - vec3(.5f, .5f, .5f);
+			Blurbs[i].Position = Main::P_Light->Position - vec3(.5f, .5f, .5f);
 	}
 }
 
@@ -265,10 +260,10 @@ void Main::Draw() {
 	glEnable(GL_BLEND);
 
 	//BB.Draw();
-	(*LightSource).Position = lightPos;
+	(*GlowBlurb).Position = Main::P_Light->Position;
 	Bill->Draw();
-	for (int i = 0; i < Blurbs.size(); i++) {
 
+	for (int i = 0; i < Blurbs.size(); i++) {
 		//float Dist = Helper::Distance(MainCamera.Position, Blurbs[i].Position);
 		Blurbs[i].Draw();
 	}

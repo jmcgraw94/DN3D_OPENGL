@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Helper.h"
 #include "Texture2D.h"
+#include "PointLight.h"
 
 #include "..\include\glm\glm.hpp"
 #include "..\include\GL\glew.h"
@@ -36,9 +37,7 @@ public:
 
 	static Texture2D Map;
 
-	static vec3
-		lightPos,
-		lightColor;
+	static PointLight * P_Light;
 
 	static vec2
 		MousePos,
@@ -63,6 +62,5 @@ public:
 	static void Update();
 	static void Draw();
 	static void LateUpdate();
-
 };
 

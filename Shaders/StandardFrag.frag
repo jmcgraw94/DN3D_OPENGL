@@ -12,17 +12,20 @@ uniform sampler2D NormalTexture;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 
+struct PointLight {    
+    vec3 Position;
+}; 
+
 void main()
 {
 	vec2 curPixel = vec2(TexCoord.x, -TexCoord.y);
-	
 	vec4 normalColor = texture(NormalTexture, curPixel);
-	float height = (normalColor / 3.0f).x / 255.0f;
-	
+
 	vec4 imgColor = texture(MainTexture, curPixel);
-	vec4 preColor = mix(imgColor, normalColor, .5f);
+	vec4 preColor = imgColor;
 	
 	vec3 normal = normalize(Normal);
+		
 	vec3 LightToFragVec = lightPos - FragPos;
 	vec3 lightDir = normalize(LightToFragVec);
 	
@@ -42,10 +45,7 @@ void main()
 		discard;
 	}
 	else {
-		
-		//preColor.gb *= TexCoord;
-		//preColor.rgb *= abs(Normal.xyz);
-		
+				
 		preColor.rgba *= clamp((ambientColor +  (vec4(lightColor, 1) * 
 			intensity * Attenuation)), 0 , Brightness);
 		
@@ -53,3 +53,6 @@ void main()
 	}
 
 }
+
+//preColor.gb *= TexCoord; //Adds pretty gradient
+//preColor.rgb *= abs(Normal.xyz); //Illustrates face normals
