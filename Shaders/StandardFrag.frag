@@ -1,5 +1,5 @@
 #version 330 core
-#define NUM_POINT_LIGHTS 1
+#define NUM_POINT_LIGHTS 2
 
 in vec3 ourColor;
 in vec2 TexCoord;
@@ -38,7 +38,6 @@ void main()
 		for (int i = 0; i < NUM_POINT_LIGHTS; i++){
 			preColor.rgba *= CalculatePointLight(PointLights[i], normal, FragPos);
 		}
-		
 		
 		color = preColor;
 	}

@@ -54,7 +54,9 @@ vector<Blurb> Blurbs = vector<Blurb>();
 vector<Billboard> Billboards = vector<Billboard>();
 float FrameRate;
 
-Blurb * GlowBlurb = new Blurb();
+Blurb * GlowBlurb1 = new Blurb();
+Blurb * GlowBlurb2 = new Blurb();
+
 PointLight * Main::P_Light1;
 PointLight * Main::P_Light2;
 
@@ -126,10 +128,14 @@ void Main::Setup() {
 
 	Map = Texture2D("Content/Map.png");
 
-	GlowBlurb = new Blurb(vec3(2, 2, -2), 4);
-	Blurbs.push_back(*GlowBlurb);
+	GlowBlurb1 = new Blurb(vec3(2, 2, -2), 4);
+	Blurbs.push_back(*GlowBlurb1);
+
+	GlowBlurb2 = new Blurb(vec3(2, 2, -2), 4);
+	Blurbs.push_back(*GlowBlurb2);
 
 	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 1.0f, 1.0f);
+	P_Light2 = new PointLight(vec3(5, .5f, 5), vec3(1, 0, 0), 1.0f, 1.0f);
 
 	Bill = new Billboard(vec3(3, -1, 5), 1);
 
@@ -159,17 +165,13 @@ void Main::Setup() {
 			//Blurbs.push_back(A);
 		}
 	}
-
-	//glEnable(GL_FOG);
-	//GL_FOG_START = 
-	//cout << "VER: " << glGetString(GL_MAJOR_VERSION) << " ::" << glGetString(GL_MINOR_VERSION) << endl;
-	//cout << "SETUP COMPLETE\n" << endl;
 }
 
 void Main::Update() {
 	glfwPollEvents();
 
 	P_Light1->Update();
+	P_Light2->Update();
 
 	int _rate = 5;
 	if (Main::TapKeys[GLFW_KEY_R]) {
@@ -263,7 +265,9 @@ void Main::Draw() {
 	glEnable(GL_BLEND);
 
 	//BB.Draw();
-	(*GlowBlurb).Position = Main::P_Light1->Position;
+	(*GlowBlurb1).Position = Main::P_Light1->Position;
+	(*GlowBlurb2).Position = Main::P_Light2->Position;
+
 	Bill->Draw();
 
 	for (int i = 0; i < Blurbs.size(); i++) {

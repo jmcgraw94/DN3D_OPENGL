@@ -210,6 +210,12 @@ void Blurb::SetUniforms() {
 
 	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
 		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Position"),
+		Main::P_Light2->Position.x, Main::P_Light2->Position.y, Main::P_Light2->Position.z);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Color"),
+		Main::P_Light2->Color.x, Main::P_Light2->Color.y, Main::P_Light2->Color.z);
 }
 
 void Blurb::UpdateModelMatrix() {
