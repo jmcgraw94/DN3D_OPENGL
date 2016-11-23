@@ -139,7 +139,7 @@ void Billboard::SetUniforms() {
 	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
-
+	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
 	/*for (int i = 0; i < Main::PointLights.size(); i++) {
 	string _i = std::to_string(i);
 
