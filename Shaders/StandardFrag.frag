@@ -16,11 +16,10 @@ struct PointLight {
 
 
 uniform int DSL = 0; //Double Side Lighting
-uniform int DistanceLighting = 0;
-//uniform int LightCount;
+uniform int LightCount;
 uniform sampler2D MainTexture;
 uniform sampler2D NormalTexture;
-uniform PointLight PointLights[2];
+uniform PointLight PointLights[128];
 
 
 vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
@@ -33,8 +32,6 @@ vec4 AmbientColor = vec4(AV,AV,AV, 1);
 
 void main()
 {
-	int LightCount = 2;
-	
 	vec2 curPixel = vec2(TexCoord.x, -TexCoord.y);
 	//vec4 normalColor = texture(NormalTexture, curPixel);
 
@@ -74,8 +71,7 @@ vec4 CalculatePointLight(PointLight P, vec3 _normal, vec3 FragPos){
 		intensity = abs(dot(_normal, lightDir));
 	else
 		intensity = max(dot(_normal, lightDir), 0.0);
-	if (DistanceLighting == 1)
-		intensity = .8f;
+	intensity = 1.0f;
 	//float Brightness = 1.125f;
 	//vec3 ShadowColor = vec3(56f / 255f, 50f / 255f, 24f / 255f);
 	
