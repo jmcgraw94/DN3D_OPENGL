@@ -40,7 +40,7 @@ public:
 
 	static vector<PointLight> PointLights;
 
-	static FrameBuffer FrameBufferObject;
+	static FrameBuffer ScreenFBO;
 
 	static PointLight 
 		* P_Light1, 
@@ -58,8 +58,8 @@ public:
 		QuadraticDeltaMousePos;
 
 	static double
-		Time,
-		OldTime,
+		StartFrameTime,
+		EndFrameTime,
 		DeltaTime;
 
 	static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mode);

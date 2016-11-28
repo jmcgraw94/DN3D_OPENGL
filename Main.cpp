@@ -42,10 +42,10 @@ ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
 vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos, Main::QuadraticOldMousePos, Main::QuadraticMousePos,
 Main::QuadraticDeltaMousePos, Main::Q_Delta;
-FrameBuffer Main::FrameBufferObject;
+FrameBuffer Main::ScreenFBO;
 vector<PointLight> Main::PointLights;
 
-double Main::Time, Main::OldTime, Main::DeltaTime;
+double Main::StartFrameTime, Main::EndFrameTime, Main::DeltaTime;
 
 Texture2D Main::Map;
 
@@ -63,6 +63,7 @@ PointLight * Main::P_Light2;
 Billboard * Bill1;
 Billboard * Bill2;
 
+FrameBuffer ShadowMap;
 
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
@@ -148,6 +149,9 @@ void Main::Setup() {
 	Bill1 = new Billboard(vec3(3, -1, 5), 1);
 	Bill2 = new Billboard(vec3(5, -1, 5), 1);
 
+	MousePos = vec2(WINW, WINH) / 2.0f;
+	OldMousePos = vec2(WINW, WINH) / 2.0f;
+
 	for (int y = 0; y < Map.height; y++) {
 		for (int x = 0; x < Map.width; x++) {
 			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 1)) {
@@ -175,7 +179,7 @@ void Main::Setup() {
 		}
 	}
 
-	FrameBufferObject.Setup();
+	ScreenFBO.Setup();
 }
 
 void Main::Update() {
@@ -252,7 +256,7 @@ void Main::Update() {
 		}
 	}*/
 
-	Time = glfwGetTime();
+	StartFrameTime = glfwGetTime();
 	Main::MainCamera.Update();
 
 	Bill1->Update();
@@ -266,7 +270,7 @@ void Main::Update() {
 }
 
 void Main::Draw() {
-	FrameBufferObject.BindFrameBuffer();
+	ScreenFBO.BindFrameBuffer();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -289,15 +293,15 @@ void Main::Draw() {
 
 	glDisable(GL_BLEND);
 
-	FrameBufferObject.CleanseBuffer();
-	FrameBufferObject.DrawFrameBuffer();
+	ScreenFBO.CleanseBuffer();
+	ScreenFBO.DrawFrameBuffer();
 }
 
 void Main::LateUpdate() {
 	glfwSwapBuffers(Main::window);
 
 	FrameRate = (int)(1 / DeltaTime);
-	DeltaTime = Time - OldTime;
+	DeltaTime = StartFrameTime - EndFrameTime;
 	DeltaMousePos = MousePos - OldMousePos;
 
 	QuadraticOldMousePos = QuadraticMousePos;
@@ -306,7 +310,7 @@ void Main::LateUpdate() {
 	Q_Delta = QuadraticMousePos - QuadraticOldMousePos;
 
 	OldMousePos = MousePos;
-	OldTime = Time;
+	EndFrameTime = StartFrameTime;
 
 	for (int i = 0; i < 1024; i++)
 		TapKeys[i] = false;
@@ -327,7 +331,7 @@ int main()
 		Main::LateUpdate();
 	}
 
-	Main::FrameBufferObject.Dispose();
+	Main::ScreenFBO.Dispose();
 	glfwTerminate();
 
 	return 0;

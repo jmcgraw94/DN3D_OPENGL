@@ -21,7 +21,7 @@ public:
 	GLuint quadVAO, quadVBO;
 	GLuint texture;
 
-	GLfloat quadVertices[36] = {
+	GLfloat ScreenVertices[36] = {
 		-1.0f,  1.0f,  0.0f, 1.0f,
 		-1.0f, -1.0f,  0.0f, 0.0f,
 		1.0f, -1.0f,  1.0f, 0.0f,
@@ -31,7 +31,7 @@ public:
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	GLuint generateAttachmentTexture();
+	GLuint ReserveScreenRectTexture();
 
 	void Dispose();
 

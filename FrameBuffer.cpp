@@ -18,9 +18,8 @@ ShaderPipeline ScreenShader;
 GLuint quadVAO, quadVBO;
 GLuint texture;
 
-GLuint FrameBuffer::generateAttachmentTexture()
+GLuint FrameBuffer::ReserveScreenRectTexture()
 {
-	//Generate texture ID and load texture data 
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -63,13 +62,13 @@ void FrameBuffer::Setup() {
 	ScreenShader = ShaderPipeline(ScreenVertexShaderPath, ScreenFragmentShaderPath);
 
 
-	// Framebuffers
+	// Generate Arrays and Buffers
 	glGenFramebuffers(1, &FrameBufferObject);
 	glGenRenderbuffers(1, &RenderBufferObject);
 	glGenVertexArrays(1, &quadVAO);
 	glGenBuffers(1, &quadVBO);
-	// Create a color attachment texture
-	TextureColorbuffer = generateAttachmentTexture();
+
+	TextureColorbuffer = ReserveScreenRectTexture();
 	glBindFramebuffer(GL_FRAMEBUFFER, FrameBufferObject);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, TextureColorbuffer, 0);
 	// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
@@ -87,7 +86,7 @@ void FrameBuffer::Setup() {
 	glBindVertexArray(quadVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ScreenVertices), &ScreenVertices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
