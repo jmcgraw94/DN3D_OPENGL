@@ -28,8 +28,8 @@ using namespace std;
 using namespace glm;
 
 //Extern
-int WIN_W = 1200;
-int WIN_H = 800;
+int WINW = 1200;
+int WINH = 800;
 float PI = 3.141592654f;
 
 //Static
@@ -42,7 +42,7 @@ ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
 vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos, Main::QuadraticOldMousePos, Main::QuadraticMousePos,
 Main::QuadraticDeltaMousePos, Main::Q_Delta;
-
+FrameBuffer Main::FrameBufferObject;
 vector<PointLight> Main::PointLights;
 
 double Main::Time, Main::OldTime, Main::DeltaTime;
@@ -60,7 +60,9 @@ Blurb * GlowBlurb2 = new Blurb();
 PointLight * Main::P_Light1;
 PointLight * Main::P_Light2;
 
-Billboard * Bill;
+Billboard * Bill1;
+Billboard * Bill2;
+
 
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
@@ -83,11 +85,13 @@ void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 }
 
 void Main::resize_callback(GLFWwindow * window, int x, int y) {
-	WIN_W = x;
-	WIN_H = y;
+	WINW = x;
+	WINH = y;
 
 	cout << x << "," << y << endl;
 }
+
+
 
 void Main::Setup() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -101,7 +105,7 @@ void Main::Setup() {
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	Main::window = glfwCreateWindow(WIN_W, WIN_H, "RogueGL", nullptr, nullptr);
+	Main::window = glfwCreateWindow(WINW, WINH, "RogueGL", nullptr, nullptr);
 	glfwSetFramebufferSizeCallback(window, resize_callback);
 	glfwMakeContextCurrent(Main::window);
 
@@ -123,7 +127,7 @@ void Main::Setup() {
 	MainCamera = Camera();
 
 
-	glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
+	glfwSetCursorPos(window, WINW / 2, WINH / 2);
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -136,12 +140,13 @@ void Main::Setup() {
 	Blurbs.push_back(*GlowBlurb2);
 
 	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 8.0f, 1.0f);
-	P_Light2 = new PointLight(vec3(10, .5f, 6), vec3(1, 0, 0), 3.0f, 1.0f);
+	P_Light2 = new PointLight(vec3(10, .5f, 6), vec3(0, 1, 1), 3.0f, 1.0f);
 
 	PointLights.push_back(*P_Light1);
 	PointLights.push_back(*P_Light2);
 
-	Bill = new Billboard(vec3(3, -1, 5), 1);
+	Bill1 = new Billboard(vec3(3, -1, 5), 1);
+	Bill2 = new Billboard(vec3(5, -1, 5), 1);
 
 	for (int y = 0; y < Map.height; y++) {
 		for (int x = 0; x < Map.width; x++) {
@@ -169,6 +174,8 @@ void Main::Setup() {
 			//Blurbs.push_back(A);
 		}
 	}
+
+	FrameBufferObject.Setup();
 }
 
 void Main::Update() {
@@ -245,11 +252,11 @@ void Main::Update() {
 		}
 	}*/
 
-
 	Time = glfwGetTime();
 	Main::MainCamera.Update();
 
-	Bill->Update();
+	Bill1->Update();
+	Bill2->Update();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
@@ -259,7 +266,8 @@ void Main::Update() {
 }
 
 void Main::Draw() {
-	//glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
+	FrameBufferObject.BindFrameBuffer();
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -270,23 +278,25 @@ void Main::Draw() {
 
 	//BB.Draw();
 	(*GlowBlurb1).Position = Main::P_Light1->Position;
-	(*GlowBlurb2).Position = Main::P_Light2->Position;
+	//(*GlowBlurb2).Position = Main::P_Light2->Position;
 
-	Bill->Draw();
+	Bill1->Draw();
+	Bill2->Draw();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
-		//float Dist = Helper::Distance(MainCamera.Position, Blurbs[i].Position);
 		Blurbs[i].Draw();
 	}
 
 	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
+
+	FrameBufferObject.CleanseBuffer();
+	FrameBufferObject.DrawFrameBuffer();
 }
 
 void Main::LateUpdate() {
+	glfwSwapBuffers(Main::window);
 
 	FrameRate = (int)(1 / DeltaTime);
-	glfwSwapBuffers(Main::window);
 	DeltaTime = Time - OldTime;
 	DeltaMousePos = MousePos - OldMousePos;
 
@@ -317,6 +327,7 @@ int main()
 		Main::LateUpdate();
 	}
 
+	Main::FrameBufferObject.Dispose();
 	glfwTerminate();
 
 	return 0;

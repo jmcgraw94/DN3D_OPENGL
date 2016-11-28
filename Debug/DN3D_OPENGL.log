@@ -1,4 +1,21 @@
-﻿  Blurb.cpp
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\blurb.cpp(228): warning C4018: '<': signed/unsigned mismatch
-  DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
-  DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)
+﻿  Texture2D.cpp
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\texture2d.cpp(20): warning C4018: '>=': signed/unsigned mismatch
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\texture2d.cpp(21): warning C4018: '>=': signed/unsigned mismatch
+  Program.cpp
+  PointLight.cpp
+  Main.cpp
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(151): warning C4018: '<': signed/unsigned mismatch
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(152): warning C4018: '<': signed/unsigned mismatch
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(261): warning C4018: '<': signed/unsigned mismatch
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(286): warning C4018: '<': signed/unsigned mismatch
+  Helper.cpp
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\helper.cpp(15): warning C4244: 'argument': conversion from 'uint64_t' to 'unsigned int', possible loss of data
+  FrameBuffer.cpp
+  Camera.cpp
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\camera.cpp(54): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\mcgrawj\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\camera.cpp(134): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  Blurb.cpp
+  Billboard.cpp
+  Generating Code...
+  DN3D_OPENGL.vcxproj -> C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
+  DN3D_OPENGL.vcxproj -> C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)

@@ -1,5 +1,5 @@
 #pragma once
-#include "Shader.h"
+#include "ShaderPipeline.h"
 
 #include "..\include\math\vect3d.h"
 #include "..\include\GL\glew.h"
