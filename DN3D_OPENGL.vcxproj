@@ -123,6 +123,7 @@
     <ClInclude Include="Blurb.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />
+    <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glfw3.h" />
     <ClInclude Include="Helper.h" />
@@ -132,7 +133,7 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderPipeline.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>
@@ -143,6 +144,7 @@
     <ClCompile Include="Blurb.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Level.cpp" />

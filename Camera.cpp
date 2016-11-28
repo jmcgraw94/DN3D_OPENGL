@@ -1,6 +1,6 @@
 #include "Camera.h"
-#include "Main.h"
 #include "Helper.h"
+#include "Main.h"
 
 using namespace std;
 

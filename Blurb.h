@@ -1,5 +1,5 @@
 #pragma once
-#include "Shader.h"
+#include "ShaderPipeline.h"
 #include "GameObject.h"
 
 #include "..\include\math\vect3d.h"
@@ -52,7 +52,7 @@ public:
 	mat4 normalMatrix;
 	mat4 model;
 
-	Shader shader;
+	ShaderPipeline shader;
 	GLuint shaderProgram;
 
 	bool Buffered;

@@ -55,7 +55,7 @@ void Blurb::Init() {
 			Origin = vec3(1, 1, 1) * .5f;
 		}
 
-		shader = Shader(VertexShaderPath, FragmentShaderPath);
+		shader = ShaderPipeline(VertexShaderPath, FragmentShaderPath);
 		shaderProgram = shader.GetProgram();
 
 		glGenTextures(1, &textureID);

@@ -42,7 +42,7 @@ ContentManager Main::CM = ContentManager();
 MapFactory Main::MF = MapFactory();
 vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos, Main::QuadraticOldMousePos, Main::QuadraticMousePos,
 Main::QuadraticDeltaMousePos, Main::Q_Delta;
-
+FrameBuffer Main::FrameBufferObject;
 vector<PointLight> Main::PointLights;
 
 double Main::Time, Main::OldTime, Main::DeltaTime;
@@ -63,24 +63,6 @@ PointLight * Main::P_Light2;
 Billboard * Bill1;
 Billboard * Bill2;
 
-//Framebuffer Stuff
-GLuint rbo;
-GLuint framebuffer;
-GLuint textureColorbuffer;
-Shader ScreenShader;
-GLuint quadVAO, quadVBO;
-GLuint texture;
-
-GLfloat quadVertices[] = {   // Vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-							 // Positions   // TexCoords
-	-1.0f,  1.0f,  0.0f, 1.0f,
-	-1.0f, -1.0f,  0.0f, 0.0f,
-	1.0f, -1.0f,  1.0f, 0.0f,
-
-	-1.0f,  1.0f,  0.0f, 1.0f,
-	1.0f, -1.0f,  1.0f, 0.0f,
-	1.0f,  1.0f,  1.0f, 1.0f
-};
 
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
@@ -109,20 +91,7 @@ void Main::resize_callback(GLFWwindow * window, int x, int y) {
 	cout << x << "," << y << endl;
 }
 
-GLuint generateAttachmentTexture()
-{
-	//Generate texture ID and load texture data 
-	GLuint textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WINW, WINH, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	return textureID;
-}
 
 void Main::Setup() {
 	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -206,44 +175,7 @@ void Main::Setup() {
 		}
 	}
 
-	GLchar * ScreenVertexShaderPath = "Shaders/ScreenVert.vert";
-	GLchar * ScreenFragmentShaderPath = "Shaders/ScreenFrag.frag";
-	ScreenShader = Shader(ScreenVertexShaderPath, ScreenFragmentShaderPath);
-
-
-	// Framebuffers
-	glGenFramebuffers(1, &framebuffer);
-	glGenRenderbuffers(1, &rbo);
-	glGenVertexArrays(1, &quadVAO);
-	glGenBuffers(1, &quadVBO);
-	// Create a color attachment texture
-	textureColorbuffer = generateAttachmentTexture();
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
-	// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINW, WINH); // Use a single renderbuffer object for both a depth AND stencil buffer.
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // Now actually attach it
-																								  // Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-	glBindVertexArray(quadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
-
-	glBindVertexArray(0);
+	FrameBufferObject.Setup();
 }
 
 void Main::Update() {
@@ -334,8 +266,7 @@ void Main::Update() {
 }
 
 void Main::Draw() {
-	//glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	FrameBufferObject.BindFrameBuffer();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -357,18 +288,9 @@ void Main::Draw() {
 	}
 
 	glDisable(GL_BLEND);
-	 ////Clear all relevant buffers
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(0, 0, 0, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
-	glClear(GL_COLOR_BUFFER_BIT);
-	glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
 
-	ScreenShader.Use();
-	glUseProgram(ScreenShader.Program);
-	glBindVertexArray(quadVAO);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// Use the color attachment texture as the texture of the quad plane
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	FrameBufferObject.CleanseBuffer();
+	FrameBufferObject.DrawFrameBuffer();
 }
 
 void Main::LateUpdate() {
@@ -405,8 +327,7 @@ int main()
 		Main::LateUpdate();
 	}
 
-	glDeleteFramebuffers(1, &framebuffer);
-
+	Main::FrameBufferObject.Dispose();
 	glfwTerminate();
 
 	return 0;

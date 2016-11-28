@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Shader.h"
+#include "ShaderPipeline.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -8,16 +8,16 @@
 
 #include <GL/glew.h>
 
-class Shader
+class ShaderPipeline
 {
 public:
 	GLuint Program;
-	Shader() {
+	ShaderPipeline() {
 
 	}
 
 	// Constructor generates the shader on the fly
-	Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+	ShaderPipeline(const GLchar* vertexPath, const GLchar* fragmentPath)
 	{
 		// 1. Retrieve the vertex/fragment source code from filePath
 		std::string vertexCode;
