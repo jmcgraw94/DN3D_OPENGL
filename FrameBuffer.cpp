@@ -11,13 +11,6 @@ FrameBuffer::~FrameBuffer()
 {
 }
 
-GLuint RenderBufferObject;
-GLuint FrameBufferObject;
-GLuint TextureColorbuffer;
-ShaderPipeline ScreenShader;
-GLuint quadVAO, quadVBO;
-GLuint texture;
-
 GLuint FrameBuffer::ReserveScreenRectTexture()
 {
 	GLuint textureID;
@@ -33,6 +26,7 @@ GLuint FrameBuffer::ReserveScreenRectTexture()
 }
 
 void FrameBuffer::Dispose() {
+	//Release memory
 	glDeleteFramebuffers(1, &FrameBufferObject);
 }
 
@@ -41,6 +35,7 @@ void FrameBuffer::BindFrameBuffer() {
 }
 
 void FrameBuffer::CleanseBuffer() {
+	//Clear any unnecessary buffer information
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0, 0, 0, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -48,19 +43,22 @@ void FrameBuffer::CleanseBuffer() {
 }
 
 void FrameBuffer::DrawFrameBuffer() {
+	//Switch to the Screen Shader
 	ScreenShader.Use();
 	glUseProgram(ScreenShader.Program);
 	glBindVertexArray(quadVAO);
-	glBindTexture(GL_TEXTURE_2D, TextureColorbuffer);	// Use the color attachment texture as the texture of the quad plane
+	//Activate the current 
+	glBindTexture(GL_TEXTURE_2D, TextureColorBuffer);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 }
 
+//Perform any setup necessary for each buffer
 void FrameBuffer::Setup() {
+
 	GLchar * ScreenVertexShaderPath = "Shaders/ScreenVert.vert";
 	GLchar * ScreenFragmentShaderPath = "Shaders/ScreenFrag.frag";
 	ScreenShader = ShaderPipeline(ScreenVertexShaderPath, ScreenFragmentShaderPath);
-
 
 	// Generate Arrays and Buffers
 	glGenFramebuffers(1, &FrameBufferObject);
@@ -68,31 +66,42 @@ void FrameBuffer::Setup() {
 	glGenVertexArrays(1, &quadVAO);
 	glGenBuffers(1, &quadVBO);
 
-	TextureColorbuffer = ReserveScreenRectTexture();
+	//Reserve space for a screen rect buffer
+	TextureColorBuffer = ReserveScreenRectTexture();
+	//Activate the Framebuffer for next operations
 	glBindFramebuffer(GL_FRAMEBUFFER, FrameBufferObject);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, TextureColorbuffer, 0);
-	// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+	//Attach the recently reserved color buffer 
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, TextureColorBuffer, 0);
 
+	//Render Buffer Object Setup
 	glBindRenderbuffer(GL_RENDERBUFFER, RenderBufferObject);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINW, WINH); // Use a single renderbuffer object for both a depth AND stencil buffer.
+	//Place into storage
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINW, WINH);
+	//Unbind unneeded Render Buffer Object
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RenderBufferObject); // Now actually attach it
-																												 // Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+
+	//Provide Render Buffer Object
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RenderBufferObject); 
+	//Check for completion
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
+		cout << "ERROR: Incomplete FrameBuffer" << endl;
+	//Finally Release the Framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
+	//Bind the Quad's Vertex Array Object
 	glBindVertexArray(quadVAO);
+	//Bind the Vertex Buffer Object
 	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-
+	//Buffer object
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ScreenVertices), &ScreenVertices, GL_STATIC_DRAW);
-
+	//Vec2 Stride
+	int Stride = 2;
+	//Enable Position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-
+	//Enable TextCoords 
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
-
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(Stride * sizeof(GLfloat)));
+	//Unbind active Vertex Array Object
 	glBindVertexArray(0);
 }

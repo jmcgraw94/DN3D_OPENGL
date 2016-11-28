@@ -23,7 +23,6 @@
 #include <iostream>
 #include <algorithm>
 
-
 using namespace std;
 using namespace glm;
 
@@ -46,7 +45,6 @@ FrameBuffer Main::ScreenFBO;
 vector<PointLight> Main::PointLights;
 
 double Main::StartFrameTime, Main::EndFrameTime, Main::DeltaTime;
-
 Texture2D Main::Map;
 
 //Private
@@ -63,7 +61,7 @@ PointLight * Main::P_Light2;
 Billboard * Bill1;
 Billboard * Bill2;
 
-FrameBuffer ShadowMap;
+FrameBuffer GeometryFrameBuffer;
 
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
@@ -180,6 +178,8 @@ void Main::Setup() {
 	}
 
 	ScreenFBO.Setup();
+
+	printf("%s\n", glGetString(GL_VERSION));
 }
 
 void Main::Update() {

@@ -16,7 +16,11 @@ public:
 
 	GLuint RenderBufferObject;
 	GLuint FrameBufferObject;
-	GLuint TextureColorbuffer;
+
+	GLuint 
+		TextureColorBuffer,
+		PositionColorBuffer;
+
 	ShaderPipeline ScreenShader;
 	GLuint quadVAO, quadVBO;
 	GLuint texture;
