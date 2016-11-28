@@ -20,7 +20,7 @@
 
 #include <string>
 
-extern int WIN_W, WIN_H;
+extern int WINW, WINH;
 extern float PI;
 
 class Main

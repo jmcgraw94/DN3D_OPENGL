@@ -28,8 +28,8 @@ using namespace std;
 using namespace glm;
 
 //Extern
-int WIN_W = 1200;
-int WIN_H = 800;
+int WINW = 1200;
+int WINH = 800;
 float PI = 3.141592654f;
 
 //Static
@@ -62,6 +62,24 @@ PointLight * Main::P_Light2;
 
 Billboard * Bill;
 
+//Framebuffer Stuff
+GLuint rbo;
+GLuint framebuffer;
+GLuint textureColorbuffer;
+Shader ScreenShader;
+GLuint quadVAO, quadVBO;
+
+GLfloat quadVertices[] = {   // Vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+							 // Positions   // TexCoords
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	-1.0f, -1.0f,  0.0f, 0.0f,
+	1.0f, -1.0f,  1.0f, 0.0f,
+
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	1.0f, -1.0f,  1.0f, 0.0f,
+	1.0f,  1.0f,  1.0f, 1.0f
+};
+
 void Main::key_callback(GLFWwindow * window, int key, int scancode, int action, int mode) {
 	if (action == GLFW_PRESS) {
 		if (!Main::HeldKeys[key]) {
@@ -83,10 +101,37 @@ void Main::mouse_callback(GLFWwindow * window, double xpos, double ypos) {
 }
 
 void Main::resize_callback(GLFWwindow * window, int x, int y) {
-	WIN_W = x;
-	WIN_H = y;
+	WINW = x;
+	WINH = y;
 
 	cout << x << "," << y << endl;
+}
+
+GLuint generateAttachmentTexture(GLboolean depth, GLboolean stencil)
+{
+	// What enum to use?
+	GLenum attachment_type;
+	if (!depth && !stencil)
+		attachment_type = GL_RGB;
+	else if (depth && !stencil)
+		attachment_type = GL_DEPTH_COMPONENT;
+	else if (!depth && stencil)
+		attachment_type = GL_STENCIL_INDEX;
+
+	//Generate texture ID and load texture data 
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	if (!depth && !stencil)
+		glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, WINW, WINH, 0, attachment_type, GL_UNSIGNED_BYTE, NULL);
+	else // Using both a stencil and depth test, needs special format arguments
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, WINW, WINH, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return textureID;
 }
 
 void Main::Setup() {
@@ -101,7 +146,7 @@ void Main::Setup() {
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	Main::window = glfwCreateWindow(WIN_W, WIN_H, "RogueGL", nullptr, nullptr);
+	Main::window = glfwCreateWindow(WINW, WINH, "RogueGL", nullptr, nullptr);
 	glfwSetFramebufferSizeCallback(window, resize_callback);
 	glfwMakeContextCurrent(Main::window);
 
@@ -123,7 +168,7 @@ void Main::Setup() {
 	MainCamera = Camera();
 
 
-	glfwSetCursorPos(window, WIN_W / 2, WIN_H / 2);
+	glfwSetCursorPos(window, WINW / 2, WINH / 2);
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -169,6 +214,45 @@ void Main::Setup() {
 			//Blurbs.push_back(A);
 		}
 	}
+
+
+	// Framebuffers
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	// Create a color attachment texture
+	textureColorbuffer = generateAttachmentTexture(false, false);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+	// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINW, WINH); // Use a single renderbuffer object for both a depth AND stencil buffer.
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // Now actually attach it
+																								  // Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	GLchar * ScreenVertexShaderPath = "Shaders/ScreenVert.vert";
+	GLchar * ScreenFragmentShaderPath = "Shaders/ScreenFrag.frag";
+	ScreenShader = Shader(ScreenVertexShaderPath, ScreenFragmentShaderPath);
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+
+	glBindVertexArray(0);
 }
 
 void Main::Update() {
@@ -245,7 +329,6 @@ void Main::Update() {
 		}
 	}*/
 
-
 	Time = glfwGetTime();
 	Main::MainCamera.Update();
 
@@ -260,6 +343,8 @@ void Main::Update() {
 
 void Main::Draw() {
 	//glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -280,13 +365,22 @@ void Main::Draw() {
 	}
 
 	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
+
+	ScreenShader.Use();
+	glBindVertexArray(quadVAO);
+	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// Use the color attachment texture as the texture of the quad plane
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }
 
 void Main::LateUpdate() {
+	glfwSwapBuffers(Main::window);
 
 	FrameRate = (int)(1 / DeltaTime);
-	glfwSwapBuffers(Main::window);
 	DeltaTime = Time - OldTime;
 	DeltaMousePos = MousePos - OldMousePos;
 
@@ -316,6 +410,8 @@ int main()
 
 		Main::LateUpdate();
 	}
+
+	glDeleteFramebuffers(1, &framebuffer);
 
 	glfwTerminate();
 

@@ -177,6 +177,6 @@ void Camera::Update() {
 
 	view = glm::translate(view, -Position);
 	view = glm::translate(view, vec3(0, sin(bobTimer * bobHeight) / (1 / bobSpeed * 70), 0));
-	projection = glm::perspective(45.0f, (float)WIN_W / (float)WIN_H, 0.1f, 100.0f);
+	projection = glm::perspective(45.0f, (float)WINW / (float)WINH, 0.1f, 100.0f);
 	//projection *= glm::lookAt(vec3(0,0,0), cameraPos, cameraUp);
 }
