@@ -135,8 +135,8 @@ void Main::Setup() {
 	GlowBlurb2 = new Blurb(vec3(2, 2, -2), 4);
 	Blurbs.push_back(*GlowBlurb2);
 
-	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 4.0f, 1.0f);
-	P_Light2 = new PointLight(vec3(10, .5f, 5), vec3(1, 0, 0), 3.0f, 1.0f);
+	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 8.0f, 1.0f);
+	P_Light2 = new PointLight(vec3(10, .5f, 6), vec3(1, 0, 0), 3.0f, 1.0f);
 
 	PointLights.push_back(*P_Light1);
 	PointLights.push_back(*P_Light2);
@@ -149,8 +149,8 @@ void Main::Setup() {
 				Blurb B = Blurb(vec3(x, -1, y), 1);
 				Blurbs.push_back(B);
 
-				Blurb A = Blurb(vec3(x, 0, y), 1);
-				Blurbs.push_back(A);
+				//Blurb A = Blurb(vec3(x, 0, y), 1);
+				//Blurbs.push_back(A);
 
 				//Blurb C = Blurb(vec3(x, 1, y), 1);
 				//Blurbs.push_back(C);
@@ -284,13 +284,6 @@ void Main::Draw() {
 }
 
 void Main::LateUpdate() {
-
-	//for (int i = 0; i < Blurbs.size(); i++) {
-	//	if (&Blurbs[i] == nullptr)
-	//	{
-	//		cout << i << endl;
-	//	}
-	//}
 
 	FrameRate = (int)(1 / DeltaTime);
 	glfwSwapBuffers(Main::window);
