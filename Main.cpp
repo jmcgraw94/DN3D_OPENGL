@@ -60,7 +60,8 @@ Blurb * GlowBlurb2 = new Blurb();
 PointLight * Main::P_Light1;
 PointLight * Main::P_Light2;
 
-Billboard * Bill;
+Billboard * Bill1;
+Billboard * Bill2;
 
 //Framebuffer Stuff
 GLuint rbo;
@@ -68,6 +69,7 @@ GLuint framebuffer;
 GLuint textureColorbuffer;
 Shader ScreenShader;
 GLuint quadVAO, quadVBO;
+GLuint texture;
 
 GLfloat quadVertices[] = {   // Vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 							 // Positions   // TexCoords
@@ -107,25 +109,13 @@ void Main::resize_callback(GLFWwindow * window, int x, int y) {
 	cout << x << "," << y << endl;
 }
 
-GLuint generateAttachmentTexture(GLboolean depth, GLboolean stencil)
+GLuint generateAttachmentTexture()
 {
-	// What enum to use?
-	GLenum attachment_type;
-	if (!depth && !stencil)
-		attachment_type = GL_RGB;
-	else if (depth && !stencil)
-		attachment_type = GL_DEPTH_COMPONENT;
-	else if (!depth && stencil)
-		attachment_type = GL_STENCIL_INDEX;
-
 	//Generate texture ID and load texture data 
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	if (!depth && !stencil)
-		glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, WINW, WINH, 0, attachment_type, GL_UNSIGNED_BYTE, NULL);
-	else // Using both a stencil and depth test, needs special format arguments
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, WINW, WINH, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WINW, WINH, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -181,12 +171,13 @@ void Main::Setup() {
 	Blurbs.push_back(*GlowBlurb2);
 
 	P_Light1 = new PointLight(vec3(5, .5f, 5), vec3(1, 1, 1), 8.0f, 1.0f);
-	P_Light2 = new PointLight(vec3(10, .5f, 6), vec3(1, 0, 0), 3.0f, 1.0f);
+	P_Light2 = new PointLight(vec3(10, .5f, 6), vec3(0, 1, 1), 3.0f, 1.0f);
 
 	PointLights.push_back(*P_Light1);
 	PointLights.push_back(*P_Light2);
 
-	Bill = new Billboard(vec3(3, -1, 5), 1);
+	Bill1 = new Billboard(vec3(3, -1, 5), 1);
+	Bill2 = new Billboard(vec3(5, -1, 5), 1);
 
 	for (int y = 0; y < Map.height; y++) {
 		for (int x = 0; x < Map.width; x++) {
@@ -215,16 +206,22 @@ void Main::Setup() {
 		}
 	}
 
+	GLchar * ScreenVertexShaderPath = "Shaders/ScreenVert.vert";
+	GLchar * ScreenFragmentShaderPath = "Shaders/ScreenFrag.frag";
+	ScreenShader = Shader(ScreenVertexShaderPath, ScreenFragmentShaderPath);
+
 
 	// Framebuffers
 	glGenFramebuffers(1, &framebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glGenRenderbuffers(1, &rbo);
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
 	// Create a color attachment texture
-	textureColorbuffer = generateAttachmentTexture(false, false);
+	textureColorbuffer = generateAttachmentTexture();
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
 	// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
 
-	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINW, WINH); // Use a single renderbuffer object for both a depth AND stencil buffer.
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -234,12 +231,6 @@ void Main::Setup() {
 		cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	GLchar * ScreenVertexShaderPath = "Shaders/ScreenVert.vert";
-	GLchar * ScreenFragmentShaderPath = "Shaders/ScreenFrag.frag";
-	ScreenShader = Shader(ScreenVertexShaderPath, ScreenFragmentShaderPath);
-
-	glGenVertexArrays(1, &quadVAO);
-	glGenBuffers(1, &quadVBO);
 
 	glBindVertexArray(quadVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
@@ -332,7 +323,8 @@ void Main::Update() {
 	Time = glfwGetTime();
 	Main::MainCamera.Update();
 
-	Bill->Update();
+	Bill1->Update();
+	Bill2->Update();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i].Update();
@@ -355,22 +347,24 @@ void Main::Draw() {
 
 	//BB.Draw();
 	(*GlowBlurb1).Position = Main::P_Light1->Position;
-	(*GlowBlurb2).Position = Main::P_Light2->Position;
+	//(*GlowBlurb2).Position = Main::P_Light2->Position;
 
-	Bill->Draw();
+	Bill1->Draw();
+	Bill2->Draw();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
-		//float Dist = Helper::Distance(MainCamera.Position, Blurbs[i].Position);
 		Blurbs[i].Draw();
 	}
 
 	glDisable(GL_BLEND);
+	 ////Clear all relevant buffers
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
+	glClearColor(0, 0, 0, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
 
 	ScreenShader.Use();
+	glUseProgram(ScreenShader.Program);
 	glBindVertexArray(quadVAO);
 	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// Use the color attachment texture as the texture of the quad plane
 	glDrawArrays(GL_TRIANGLES, 0, 6);

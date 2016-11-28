@@ -1,68 +1,20 @@
-#include "Blurb.h"
+#include "Billboard.h"
 #include "Main.h"
-
 
 using namespace std;
 using namespace glm;
 
-GLfloat verts[] = {
-	//Back Face
-	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-	1, 0, 0,  1.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-	0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-	0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
-	0, 1, 0,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-	1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
-
-	//Front Face
-	0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-	1, 0,  1,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-	1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-	1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-	0, 1,  1,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-	0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
-
-	//Left Face
-	0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-	0, 1,  0, 0.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-	0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-	0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-	0, 0,  1, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-	0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
-
-	//Right Face
-	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-	1,  1,  0, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-	1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-	1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-	1,  0,  1, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-	1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-
-	//Bottom Face						 
-	0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-	1, 0, 0,  1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-	1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-	1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-	0, 0, 1,  0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-	0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-
-	//Top Face					  
-	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-	1,  1, 0,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	0,  1,  1, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-	1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-};
 
 Blurb::Blurb() {
-	cout << "EMPTY BLURB: " << glfwGetTime() << endl;
+	cout << "EMPTY BILLBOARD" << endl;
 }
 
 Blurb::Blurb(vec3 _pos, int _ID)
 {
 	Position = _pos;
 	Scale = vec3(1, 1, 1);
+
+	//Dynamic = true;
 
 	Constructed = true;
 
@@ -90,6 +42,10 @@ void Blurb::Init() {
 	if (!isInit) {
 		isInit = true;
 
+
+		Origin = vec3(-.5f, 0, 0);
+		//Rotation.y = Helper::RandomRange(360);
+
 		GLchar * VertexShaderPath = "Shaders/StandardVert.vert";
 		GLchar * FragmentShaderPath = "Shaders/StandardFrag.frag";
 
@@ -102,54 +58,89 @@ void Blurb::Init() {
 		shader = Shader(VertexShaderPath, FragmentShaderPath);
 		shaderProgram = shader.GetProgram();
 
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		Texture2D texture = Texture2D(textureFile);
+
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
 		//	0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
 		//};
-		//...
+
+		//Define texture images
 		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, t_GridTexture);
 
-		Texture2D texture = Texture2D(textureFile);
-		{
-			glGenTextures(1, &textureID);
-			glBindTexture(GL_TEXTURE_2D, textureID);
-			
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
-			glGenerateMipmap(GL_TEXTURE_2D);
+		// Set the filter parameters
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
-			glBindTexture(GL_TEXTURE_2D, 0); //Unbind
-		}
-		Texture2D norm = Texture2D(normalFile);
-		{
-			glGenTextures(1, &normalID);
-			glBindTexture(GL_TEXTURE_2D, normalID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, norm.width, norm.height, 0, GL_RGBA, GL_FLOAT, norm.Pixels);
-			glGenerateMipmap(GL_TEXTURE_2D);
-
-			glBindTexture(GL_TEXTURE_2D, 0); //Unbind
-		}
-
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, normalID);
-		//glUniform1i(glGetUniformLocation(shader.Program, "NormalTexture"), 1);
-
+		//shader = Shader("Shaders/StandardVert.vert", "Shaders/StandardFrag.frag");
+		//shaderProgram = shader.GetProgram();
 	}
 }
 
 void Blurb::Buffer() {
+
+	GLfloat verts[] = {
+		//Back Face
+		1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+		1, 0, 0,  1.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+		0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+		0, 0, 0,  0.0f,  0.0f,  0.0f, 0.0f,	-1.0f,
+		0, 1, 0,  0.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+		1, 1, 0,  1.0f,  1.0f,  0.0f, 0.0f,	-1.0f,
+
+		//Front Face
+		0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+		1, 0,  1,  1.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+		1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		1, 1,  1,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		0, 1,  1,  0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		0, 0,  1,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f,
+
+		//Left Face
+		0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+		0, 1,  0, 0.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+		0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+		0, 0,  0, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+		0, 0,  1, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f,
+		0, 1,  1, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
+
+		//Right Face
+		1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		1,  1,  0, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+		1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+		1,  1,  1, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+		1,  0,  1, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		1,  0,  0, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+
+		//Bottom Face						 
+		0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+		1, 0, 0,  1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+		1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+		1, 0, 1,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+		0, 0, 1,  0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+		0, 0, 0,  0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+
+		//Top Face					  
+		1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		1,  1, 0,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0,  1, 0,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0,  1,  1, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		1,  1,  1, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	};
 
 	//---------------------------------
 
@@ -161,8 +152,7 @@ void Blurb::Buffer() {
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	//glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 
@@ -182,14 +172,6 @@ void Blurb::Buffer() {
 	glEnableVertexAttribArray(2); // Normal attribute
 }
 
-int fast_atoi(const char * str)
-{
-	int val = 0;
-	while (*str) {
-		val = val * 10 + (*str++ - '0');
-	}
-	return val;
-}
 
 void Blurb::SetUniforms() {
 	glUseProgram(shaderProgram);
@@ -198,9 +180,14 @@ void Blurb::SetUniforms() {
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
 
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, normalID);
-	glUniform1i(glGetUniformLocation(shaderProgram, "NormalTexture"), 1);
+	if (ID == 4) {
+		glUniform3f(glGetUniformLocation(shaderProgram, "Tint"),
+			Main::P_Light1->Color.r, Main::P_Light1->Color.b, Main::P_Light1->Color.g);
+	}
+
+	//glActiveTexture(GL_TEXTURE1);
+	//glBindTexture(GL_TEXTURE_2D, normalID);
+	//glUniform1i(glGetUniformLocation(shaderProgram, "NormalTexture"), 1);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "normalMatrix"),
 		1, GL_FALSE, glm::value_ptr(normalMatrix));
@@ -216,30 +203,22 @@ void Blurb::SetUniforms() {
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
 
-	if (ID == 4) {
-		glUniform3f(glGetUniformLocation(shaderProgram, "Tint"),
-			Main::P_Light1->Color.r, Main::P_Light1->Color.b, Main::P_Light1->Color.g);
-	}
-
-	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 0);
-	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 0);
-
-
+	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
+	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
 	/*for (int i = 0; i < Main::PointLights.size(); i++) {
-		string _i = std::to_string(i);
-		cout << _i << endl;
+	string _i = std::to_string(i);
 
-		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
-			Main::PointLights[i].Position.x, Main::PointLights[i].Position.y, Main::PointLights[i].Position.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
+	Main::PointLights[i].Position.x, Main::PointLights[i].Position.y, Main::PointLights[i].Position.z);
 
-		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Color").c_str()),
-			Main::PointLights[i].Color.x, Main::PointLights[i].Color.y, Main::PointLights[i].Color.z);
+	glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Color").c_str()),
+	Main::PointLights[i].Color.x, Main::PointLights[i].Color.y, Main::PointLights[i].Color.z);
 
-		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Range").c_str()),
-			Main::PointLights[i].Range);
+	glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Range").c_str()),
+	Main::PointLights[i].Range);
 
-		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
-			Main::PointLights[i].Brightness);
+	glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
+	Main::PointLights[i].Brightness);
 	}*/
 	// ----
 
@@ -269,6 +248,50 @@ void Blurb::SetUniforms() {
 	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Brightness"),
 		Main::P_Light2->Brightness);
 }
+//void Billboard::SetUniforms() {
+//	glUseProgram(shaderProgram);
+//
+//	glActiveTexture(GL_TEXTURE0);
+//	glBindTexture(GL_TEXTURE_2D, textureID);
+//	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "normalMatrix"),
+//		1, GL_FALSE, glm::value_ptr(normalMatrix));
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"),
+//		1, GL_FALSE, glm::value_ptr(model));
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),
+//		1, GL_FALSE, glm::value_ptr(Main::MainCamera.view));
+//
+//	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
+//		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
+//
+//	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
+//
+//	glUniform1f(glGetUniformLocation(shaderProgram, "DSL"), 1);
+//
+//	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"),
+//		Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
+//
+//	glUniform3f(glGetUniformLocation(shaderProgram, "lightColor"),
+//		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+//
+//	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
+//	//	Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
+//
+//	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
+//	//	Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+//
+//	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
+//	//	Main::P_Light1->Range);
+//
+//	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
+//	//	Main::P_Light1->Brightness);
+//
+//
+//
+//}
 
 void Blurb::UpdateModelMatrix() {
 	if (!Constructed)
@@ -289,6 +312,8 @@ void Blurb::UpdateModelMatrix() {
 	model = glm::translate(model, Origin);
 
 	model = glm::scale(model, glm::vec3(Scale.x, Scale.y, Scale.z));
+
+
 }
 
 void Blurb::Update() {
@@ -297,9 +322,10 @@ void Blurb::Update() {
 
 	Init();
 
-	//Rotation.y += 0.1f;
-	//Rotation.x += 1.0f;
-	//Rotation.z += 1.0f;
+	//if (Dynamic)
+	//	Rotation.y = Helper::AngleBetween_DEG(
+	//		vec2(Main::MainCamera.Position.x, Main::MainCamera.Position.z),
+	//		vec2(Position.x, Position.z));
 }
 
 void Blurb::Draw() {
@@ -311,17 +337,12 @@ void Blurb::Draw() {
 
 	Buffer();
 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	glDisable(GL_CULL_FACE);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glDisableVertexAttribArray(0);
+	//glDisableVertexAttribArray(1);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
