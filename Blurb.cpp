@@ -28,6 +28,10 @@ Blurb::Blurb(vec3 _pos, int _ID)
 		textureFile = "Content/emerald_block.png";
 	if (ID == 4)
 		textureFile = "Content/white.png";
+	if (ID == 5)
+		textureFile = "Content/cobblestone_mossy.png";
+	if (ID == 6)
+		textureFile = "Content/stone.png";
 
 	normalFile = "Content/brick_normal.png";
 }
@@ -43,7 +47,7 @@ void Blurb::Init() {
 		isInit = true;
 
 
-		Origin = vec3(-.5f, 0, 0);
+		Origin = vec3(0, 0, 0);
 		//Rotation.y = Helper::RandomRange(360);
 
 		GLchar * VertexShaderPath = "Shaders/StandardVert.vert";

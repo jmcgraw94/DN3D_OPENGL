@@ -145,7 +145,7 @@ void Main::Setup() {
 	PointLights.push_back(*P_Light2);
 
 	Bill1 = new Billboard(vec3(3, -1, 5), 1);
-	Bill2 = new Billboard(vec3(5, -1, 5), 1);
+	Bill2 = new Billboard(vec3(9, -1, 7), 1);
 
 	MousePos = vec2(WINW, WINH) / 2.0f;
 	OldMousePos = vec2(WINW, WINH) / 2.0f;
@@ -166,11 +166,23 @@ void Main::Setup() {
 				Blurb B = Blurb(vec3(x, -1, y), 3);
 				Blurbs.push_back(B);
 			}
-			else {
+			else if (Map.GetPixel(x, y) == vec4(0, 0, 1, 1)) {
+				Blurb B = Blurb(vec3(x, -1, y), 5);
+				Blurbs.push_back(B);
+
+				Blurb A = Blurb(vec3(x, 0, y), 5);
+				Blurbs.push_back(A);
 
 			}
-			Blurb B = Blurb(vec3(x, -2, y), 2);
-			Blurbs.push_back(B);
+			else if (Map.GetPixel(x, y) == vec4(1, 0, 0, 1)) {
+				Blurb B = Blurb(vec3(x, -2, y), 6);
+				Blurbs.push_back(B);
+			}
+			else {
+				Blurb B = Blurb(vec3(x, -2, y), 2);
+				Blurbs.push_back(B);
+			}
+			
 
 			//Blurb A = Blurb(vec3(x, 2, y), 4);
 			//Blurbs.push_back(A);
