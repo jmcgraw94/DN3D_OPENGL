@@ -57,6 +57,8 @@ public:
 		Q_Delta,
 		QuadraticDeltaMousePos;
 
+	static int ColorBitDepth;
+
 	static double
 		StartFrameTime,
 		EndFrameTime,

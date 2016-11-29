@@ -26,7 +26,7 @@ Camera::Camera()
 	projection = glm::mat4();
 
 	//Position = glm::vec3(3, 6, 8);
-	Position = glm::vec3(6, .5f, 5);
+	Position = glm::vec3(6, 2.5f, 5);
 	Rotation = glm::vec3(-1, 0, 0);
 
 	ForwardVec = glm::vec3(0, 0, -1);
@@ -150,7 +150,7 @@ void Camera::Update() {
 		}
 
 
-		if (Position.y > .5f)
+		if (Position.y > 2.5f)
 			Position.y -= .0005f;
 
 		//Position.z += velocity.z;

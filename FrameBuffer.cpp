@@ -47,6 +47,10 @@ void FrameBuffer::DrawFrameBuffer() {
 	ScreenShader.Use();
 	glUseProgram(ScreenShader.Program);
 	glBindVertexArray(quadVAO);
+
+	//Uniforms
+	glUniform1i(glGetUniformLocation(ScreenShader.Program, "BitDepth"), Main::ColorBitDepth);
+
 	//Activate the current 
 	glBindTexture(GL_TEXTURE_2D, TextureColorBuffer);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

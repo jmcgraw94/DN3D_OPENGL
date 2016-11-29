@@ -31,7 +31,11 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	if (ID == 5)
 		textureFile = "Content/cobblestone_mossy.png";
 	if (ID == 6)
-		textureFile = "Content/stone.png";
+		textureFile = "Content/trapdoor.png";
+	if (ID == 7)
+		textureFile = "Content/bookshelf.png";
+	if (ID == 8)
+		textureFile = "Content/stonebrick.png";
 
 	normalFile = "Content/brick_normal.png";
 }
