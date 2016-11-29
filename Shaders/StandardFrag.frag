@@ -28,7 +28,7 @@ vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
 //float Brightness = 1.0f;
 //float LightRange = 10;
 
-float AV =  .3f;
+float AV =  .2f;
 vec4 AmbientColor = vec4(AV,AV,AV, 1);
 
 void main()

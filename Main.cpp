@@ -156,8 +156,8 @@ void Main::Setup() {
 				Blurb B = Blurb(vec3(x, -1, y), 1);
 				Blurbs.push_back(B);
 
-				//Blurb A = Blurb(vec3(x, 0, y), 1);
-				//Blurbs.push_back(A);
+				Blurb A = Blurb(vec3(x, 0, y), 1);
+				Blurbs.push_back(A);
 
 				//Blurb C = Blurb(vec3(x, 1, y), 1);
 				//Blurbs.push_back(C);

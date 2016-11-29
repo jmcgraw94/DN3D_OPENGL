@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
@@ -96,10 +96,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32.lib;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32s.lib;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glut32.lib;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3.lib;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3dll.lib;C:\Users\mcgrawj\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
