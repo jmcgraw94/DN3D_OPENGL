@@ -337,6 +337,7 @@ void Blurb::Draw() {
 
 	Buffer();
 
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 	//glDisableVertexAttribArray(0);
 	//glDisableVertexAttribArray(1);
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
