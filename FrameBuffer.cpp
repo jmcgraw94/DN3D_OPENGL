@@ -6,7 +6,6 @@ FrameBuffer::FrameBuffer()
 {
 }
 
-
 FrameBuffer::~FrameBuffer()
 {
 }
@@ -89,7 +88,8 @@ void FrameBuffer::Setup() {
 	//Check for completion
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "ERROR: Incomplete FrameBuffer" << endl;
-	//Finally Release the Framebuffer
+
+	//Finally unbind the framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//Bind the Quad's Vertex Array Object

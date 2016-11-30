@@ -37,7 +37,7 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	if (ID == 8)
 		textureFile = "Content/stonebrick.png";
 
-	normalFile = "Content/brick_normal.png";
+	normalFile = "Content/emerald_block_spec.png";
 }
 
 Blurb::~Blurb()
@@ -190,7 +190,7 @@ void Blurb::SetUniforms() {
 
 	if (ID == 4) {
 		glUniform3f(glGetUniformLocation(shaderProgram, "Tint"),
-			Main::P_Light1->Color.r, Main::P_Light1->Color.b, Main::P_Light1->Color.g);
+			Main::PointLights[0]->Color.r, Main::PointLights[0]->Color.b, Main::PointLights[0]->Color.g);
 	}
 
 	//glActiveTexture(GL_TEXTURE1);
@@ -214,48 +214,49 @@ void Blurb::SetUniforms() {
 	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
 	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
 
+	for (int i = 0; i < Main::PointLights.size(); i++) {
+		string _i = std::to_string(i);
+		//cout << _i << endl;
 
-	//for (int i = 0; i < Main::PointLights.size(); i++) {
-	//	string _i = std::to_string(i);
-	//	glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
-	//	Main::PointLights[i].Position.x, Main::PointLights[i].Position.y, Main::PointLights[i].Position.z);
+		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
+		Main::PointLights[i]->Position.x, Main::PointLights[i]->Position.y, Main::PointLights[i]->Position.z);
 
-	//	glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Color").c_str()),
-	//	Main::PointLights[i].Color.x, Main::PointLights[i].Color.y, Main::PointLights[i].Color.z);
+		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Color").c_str()),
+		Main::PointLights[i]->Color.x, Main::PointLights[i]->Color.y, Main::PointLights[i]->Color.z);
 
-	//	glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Range").c_str()),
-	//	Main::PointLights[i].Range);
+		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Range").c_str()),
+		Main::PointLights[i]->Range);
 
-	//	glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
-	//	Main::PointLights[i].Brightness);
-	//}
+		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
+		Main::PointLights[i]->Brightness);
+	}
 	// ----
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
-		Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
+	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Position"),
+	//	Main::P_Light1->Position.x, Main::P_Light1->Position.y, Main::P_Light1->Position.z);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
-		Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
+	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[0].Color"),
+	//	Main::P_Light1->Color.x, Main::P_Light1->Color.y, Main::P_Light1->Color.z);
 
-	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
-		Main::P_Light1->Range);
+	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Range"),
+	//	Main::P_Light1->Range);
 
-	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
-		Main::P_Light1->Brightness);
+	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[0].Brightness"),
+	//	Main::P_Light1->Brightness);
 
 	//// ------------
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Position"),
-		Main::P_Light2->Position.x, Main::P_Light2->Position.y, Main::P_Light2->Position.z);
+	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Position"),
+	//	Main::P_Light2->Position.x, Main::P_Light2->Position.y, Main::P_Light2->Position.z);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Color"),
-		Main::P_Light2->Color.x, Main::P_Light2->Color.y, Main::P_Light2->Color.z);
+	//glUniform3f(glGetUniformLocation(shaderProgram, "PointLights[1].Color"),
+	//	Main::P_Light2->Color.x, Main::P_Light2->Color.y, Main::P_Light2->Color.z);
 
-	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Range"),
-		Main::P_Light2->Range);
+	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Range"),
+	//	Main::P_Light2->Range);
 
-	glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Brightness"),
-		Main::P_Light2->Brightness);
+	//glUniform1f(glGetUniformLocation(shaderProgram, "PointLights[1].Brightness"),
+	//	Main::P_Light2->Brightness);
 }
 
 void Blurb::UpdateModelMatrix() {

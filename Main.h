@@ -38,14 +38,9 @@ public:
 
 	static Texture2D Map;
 
-	static vector<PointLight> PointLights;
+	static vector<PointLight * > PointLights;
 
 	static FrameBuffer ScreenFBO;
-
-	static PointLight 
-		* P_Light1, 
-		* P_Light2;
-
 
 	static vec2
 		MousePos,
