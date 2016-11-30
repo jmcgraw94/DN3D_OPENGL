@@ -1,7 +1,6 @@
 #include "FrameBuffer.h"
 #include "Main.h"
 
-
 FrameBuffer::FrameBuffer()
 {
 }
@@ -9,6 +8,8 @@ FrameBuffer::FrameBuffer()
 FrameBuffer::~FrameBuffer()
 {
 }
+
+float rot = 0;
 
 GLuint FrameBuffer::ReserveScreenRectTexture()
 {
@@ -47,8 +48,21 @@ void FrameBuffer::DrawFrameBuffer() {
 	glUseProgram(ScreenShader.Program);
 	glBindVertexArray(quadVAO);
 
+	mat4 model = mat4();
+
+	//rot += Main::DeltaTime * 10;
+
+	//model = glm::rotate(model, glm::radians(0.f), vec3(0, 0, 1));
+	//model = glm::rotate(model, glm::radians(rot), vec3(0, 1, 0));
+	//model = glm::rotate(model, glm::radians(rot), vec3(1, 0, 0));
+
+	//model = glm::scale(model, glm::vec3(1, 1, 1));
+
 	//Uniforms
 	glUniform1i(glGetUniformLocation(ScreenShader.Program, "BitDepth"), Main::ColorBitDepth);
+
+	glUniformMatrix4fv(glGetUniformLocation(ScreenShader.Program, "model"),
+		1, GL_FALSE, glm::value_ptr(model));
 
 	//Activate the current 
 	glBindTexture(GL_TEXTURE_2D, TextureColorBuffer);
@@ -71,7 +85,7 @@ void FrameBuffer::Setup() {
 
 	//Reserve space for a screen rect buffer
 	TextureColorBuffer = ReserveScreenRectTexture();
-	//Activate the Framebuffer for next operations
+	//Activate the Framebuffer for following operations
 	glBindFramebuffer(GL_FRAMEBUFFER, FrameBufferObject);
 	//Attach the recently reserved color buffer 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, TextureColorBuffer, 0);

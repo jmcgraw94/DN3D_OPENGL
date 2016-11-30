@@ -71,13 +71,13 @@ void Blurb::Init() {
 
 		Texture2D texture = Texture2D(textureFile);
 
-		//float t_GridTexture[16] = {
-		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
-		//	0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
-		//};
+		float t_GridTexture[16] = {
+			1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
+			0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
+		};
 
 		//Define texture images
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, t_GridTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, t_GridTexture);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
 
@@ -190,7 +190,7 @@ void Blurb::SetUniforms() {
 
 	if (ID == 4) {
 		glUniform3f(glGetUniformLocation(shaderProgram, "Tint"),
-			Main::PointLights[0]->Color.r, Main::PointLights[0]->Color.b, Main::PointLights[0]->Color.g);
+			Main::PointLights[0]->Color.r, Main::PointLights[0]->Color.g, Main::PointLights[0]->Color.b);
 	}
 
 	//glActiveTexture(GL_TEXTURE1);
@@ -212,6 +212,7 @@ void Blurb::SetUniforms() {
 	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
+
 	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
 
 	for (int i = 0; i < Main::PointLights.size(); i++) {
@@ -289,9 +290,9 @@ void Blurb::Update() {
 	Init();
 
 	//if (Dynamic)
-	//	Rotation.y = Helper::AngleBetween_DEG(
-	//		vec2(Main::MainCamera.Position.x, Main::MainCamera.Position.z),
-	//		vec2(Position.x, Position.z));
+		//Rotation.y = Helper::AngleBetween_DEG(
+		//	vec2(Main::MainCamera.Position.x, Main::MainCamera.Position.z),
+		//	vec2(Position.x, Position.z));
 }
 
 void Blurb::Draw() {
@@ -304,7 +305,8 @@ void Blurb::Draw() {
 	Buffer();
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 1, 36);
+
+	//glDrawArraysInstanced(GL_TRIANGLES, 0, 1, 36);
 
 	//glDisableVertexAttribArray(0);
 	//glDisableVertexAttribArray(1);

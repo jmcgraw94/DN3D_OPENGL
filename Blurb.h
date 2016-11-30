@@ -27,7 +27,6 @@ public:
 
 	void Draw();
 
-
 	bool Constructed = false;
 
 	string Name;

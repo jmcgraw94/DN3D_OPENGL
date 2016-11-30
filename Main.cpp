@@ -43,12 +43,12 @@ vec2 Main::MousePos, Main::OldMousePos, Main::DeltaMousePos, Main::QuadraticOldM
 Main::QuadraticDeltaMousePos, Main::Q_Delta;
 FrameBuffer Main::ScreenFBO;
 vector<PointLight * > Main::PointLights;
-int Main::ColorBitDepth = 256;//24;
+int Main::ColorBitDepth = 24;
 double Main::StartFrameTime, Main::EndFrameTime, Main::DeltaTime;
 Texture2D Main::Map;
 
 //Private
-vector<Blurb> Blurbs = vector<Blurb>();
+vector<Blurb * > Blurbs = vector<Blurb * >();
 vector<Billboard> Billboards = vector<Billboard>();
 float FrameRate;
 
@@ -126,21 +126,21 @@ void Main::Setup() {
 	Map = Texture2D("Content/Map.png");
 
 	GlowBlurb1 = new Blurb(vec3(2, 4, -2), 4);
-	Blurbs.push_back(*GlowBlurb1);
+	Blurbs.push_back(GlowBlurb1);
 
 	GlowBlurb2 = new Blurb(vec3(2, 4, -2), 4);
-	Blurbs.push_back(*GlowBlurb2);
+	Blurbs.push_back(GlowBlurb2);
 
-	PointLight * P_Light1 = new PointLight(vec3(5, 2.5f, 5), vec3(1, 1, 1), 2.0f, 1.0f);
-	PointLight * P_Light2 = new PointLight(vec3(10, 2.5f, 6), vec3(0, 1, 1), 5.0f, 1.0f);
-	PointLight * P_Light3 = new PointLight(vec3(15, 2.5f, 6), vec3(1, 1, 1), 5.0f, 1.0f);
+	PointLight * P_Light1 = new PointLight(vec3(05, 2.5f, 5), vec3(1, 1, 1), 6.0f, 1.0f);
+	PointLight * P_Light2 = new PointLight(vec3(10, 2.5f, 4), vec3(0, 1, 1), 6.0f, 1.0f);
+	PointLight * P_Light3 = new PointLight(vec3(15, 2.5f, 6), vec3(1, 1, 1), 6.0f, 1.0f);
 
 	PointLights.push_back(P_Light1);
 	PointLights.push_back(P_Light2);
 	PointLights.push_back(P_Light3);
-
-	Bill1 = new Billboard(vec3(3, 1, 5), 1);
-	Bill2 = new Billboard(vec3(9, 1, 7), 1);
+	
+	Bill1 = new Billboard(vec3(3, 1, 5), 3);
+	Bill2 = new Billboard(vec3(1.15f, 2.25f, 6), 2);
 
 	MousePos = vec2(WINW, WINH) / 2.0f;
 	OldMousePos = vec2(WINW, WINH) / 2.0f;
@@ -148,41 +148,41 @@ void Main::Setup() {
 	for (int y = 0; y < Map.height; y++) {
 		for (int x = 0; x < Map.width; x++) {
 			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 1)) {
-				Blurb B = Blurb(vec3(x, 1, y), 7);
+				Blurb * B = new Blurb(vec3(x, 1, y), 7);
 				Blurbs.push_back(B);
 
-				Blurb A = Blurb(vec3(x, 2, y), 1);
+				Blurb * A = new Blurb(vec3(x, 2, y), 1);
 				Blurbs.push_back(A);
 
-				Blurb C = Blurb(vec3(x, 3, y), 1);
+				Blurb * C = new Blurb(vec3(x, 3, y), 1);
 				Blurbs.push_back(C);
 			}
 			else if (Map.GetPixel(x, y) == vec4(0, 1, 0, 1)) {
-				Blurb B = Blurb(vec3(x, 1, y), 3);
+				Blurb * B = new Blurb(vec3(x, 1, y), 3);
 				Blurbs.push_back(B);
 			}
 			else if (Map.GetPixel(x, y) == vec4(0, 0, 1, 1)) {
-				Blurb A = Blurb(vec3(x, 1, y), 8);
+				Blurb * A = new Blurb(vec3(x, 1, y), 8);
 				Blurbs.push_back(A);
 
-				Blurb B = Blurb(vec3(x, 2, y), 5);
+				Blurb * B = new Blurb(vec3(x, 2, y), 5);
 				Blurbs.push_back(B);
 
-				Blurb C = Blurb(vec3(x, 3, y), 5);
+				Blurb * C = new Blurb(vec3(x, 3, y), 5);
 				Blurbs.push_back(C);
 
 			}
 			else if (Map.GetPixel(x, y) == vec4(1, 0, 0, 1)) {
-				Blurb B = Blurb(vec3(x, 0, y), 6);
+				Blurb * B = new Blurb(vec3(x, 0, y), 6);
 				Blurbs.push_back(B);
 			}
 			else {
-				Blurb B = Blurb(vec3(x, 0, y), 2);
+				Blurb * B = new Blurb(vec3(x, 0, y), 2);
 				Blurbs.push_back(B);
 
 				
 			}
-			Blurb A = Blurb(vec3(x, 4, y), 6);
+			Blurb * A = new Blurb(vec3(x, 4, y), 6);
 			Blurbs.push_back(A);
 		}
 	}
@@ -204,21 +204,24 @@ void Main::Update() {
 	if (Main::TapKeys[GLFW_KEY_R]) {
 		cout << "BLURB SPAWNED" << endl;
 
-		Blurb B = Blurb(
-			vec3(
+		vec3 clampPos = vec3(
 			(int)MainCamera.Position.x,
-				(int)MainCamera.Position.y,
-				(int)MainCamera.Position.z) + vec3(0, -1, 1),
-			abs(FrameCount / _rate) % 3 + 1);
+			(int)MainCamera.Position.y,
+			(int)MainCamera.Position.z);
 
-		Blurbs.push_back(B);
+		PointLight * P = new PointLight(clampPos, vec3(1, 1, 1), 8.0f, 1.1f);
+		PointLights.push_back(P);
+
+		//Blurb * B = new Blurb(clampPos, 1);
+		//Blurbs.push_back(B);
 	}
 	if (Main::TapKeys[GLFW_KEY_L]) {
 		cout << "====== LOG ========" << endl;
 		cout << "FPS: " << FrameRate << endl;
 		cout << "BLURBS: " << Blurbs.size() << endl;
-		cout << "COLOR DEPTH: " << ColorBitDepth / 3 << endl;
+		cout << "COLOR DEPTH: " << ColorBitDepth / 3 << " bits" << " (" << ColorBitDepth << " bits total)" << endl;
 		cout << "LIGHTS: " << PointLights.size() << endl;
+		cout << "RENDER TIME: " << DeltaTime << "ms" << endl;
 		cout << "====== --- ========" << endl;
 	}
 	if (Main::HeldKeys[GLFW_KEY_UP]) {
@@ -248,10 +251,10 @@ void Main::Update() {
 	}
 
 	if (Main::TapKeys[GLFW_KEY_P]) {
-		ColorBitDepth += 4;
+		ColorBitDepth += 2;
 	}
 	if (Main::TapKeys[GLFW_KEY_O]) {
-		ColorBitDepth -= 4;
+		ColorBitDepth -= 2;
 	}
 
 	StartFrameTime = glfwGetTime();
@@ -261,9 +264,9 @@ void Main::Update() {
 	Bill2->Update();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
-		Blurbs[i].Update();
-		if (Blurbs[i].ID == 4)
-			Blurbs[i].Position = Main::Main::PointLights[0]->Position - vec3(.5f, .5f, .5f);
+		Blurbs[i]->Update();
+		if (Blurbs[i]->ID == 4)
+			Blurbs[i]->Position = Main::Main::PointLights[0]->Position - vec3(.5f, .5f, .5f);
 	}
 }
 
@@ -278,14 +281,14 @@ void Main::Draw() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 
-	(*GlowBlurb1).Position = Main::Main::PointLights[0]->Position;
-	//(*GlowBlurb2).Position = Main::P_Light2->Position;
+	GlowBlurb1->Position = Main::PointLights[0]->Position;
+	GlowBlurb2->Position = Main::PointLights[1]->Position;
 
 	Bill1->Draw();
 	Bill2->Draw();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
-		Blurbs[i].Draw();
+		Blurbs[i]->Draw();
 	}
 
 	glDisable(GL_BLEND);
