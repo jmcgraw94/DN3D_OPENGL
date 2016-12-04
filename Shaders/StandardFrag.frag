@@ -1,12 +1,15 @@
 #version 330 core
 
+//Input variables
 in vec3 ourColor;
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
 
+//Output variables
 out vec4 color;
 
+//Structs
 struct PointLight {    
     vec3 Position;
 	vec3 Color;
@@ -14,22 +17,23 @@ struct PointLight {
 	float Brightness;
 };
 
-
+//Uniforms
 uniform int DSL = 0; //Double Side Lighting
 uniform int DistanceLighting = 0;
+
 uniform int LightCount;
+uniform PointLight PointLights[36];
+
 uniform sampler2D MainTexture;
 uniform sampler2D NormalTexture;
-uniform PointLight PointLights[36];
 
 uniform int SourceFrames = 1;
 uniform int CurrentFrame = 1;
 
+//Functions
 vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
 
-//float Brightness = 1.0f;
-//float LightRange = 10;
-
+//Local Variables
 float AV =  .05f;
 vec4 AmbientColor = vec4(AV,AV,AV, 1);
 vec4 ShadowColor = vec4(56f / 255f, 50f / 255f, 24f / 255f, 1.0f);
@@ -37,14 +41,18 @@ vec4 specColor = vec4(0,0,0,1);
 
 void main()
 {
+	vec3 normal = normalize(Normal);
 	//specColor = texture(NormalTexture, curPixel);
 	
-	vec2 curPixel = vec2( (CurrentFrame / float(SourceFrames)) + (TexCoord.x / SourceFrames), -TexCoord.y);
+	vec2 curPixel = vec2(
+		(CurrentFrame / float(SourceFrames)) + (TexCoord.x / SourceFrames), 
+		-TexCoord.y);
 	
 	vec4 imgColor = texture(MainTexture, curPixel);
 	
 	vec4 preColor = imgColor;
-	vec3 normal = normalize(Normal);
+	
+	
 	
 	if (preColor.a < 1f){
 		discard;
@@ -64,7 +72,6 @@ void main()
 		}
 
 		//preColor.rgb = specColor.rgb;
-		
 		color = preColor;
 	}
 
