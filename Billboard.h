@@ -43,6 +43,7 @@ public:
 
 	bool isInit;
 
+	//Texture2D MainTexture;
 
 	AnimationTimer * AnimTimer;
 

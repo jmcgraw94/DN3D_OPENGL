@@ -4,6 +4,8 @@
 using namespace std;
 using namespace glm;
 
+Texture2D MainTexture;
+
 Billboard::Billboard() {
 	cout << "EMPTY BILLBOARD" << endl;
 }
@@ -17,16 +19,22 @@ Billboard::Billboard(vec3 _pos, int _ID)
 
 	Constructed = true;
 
+	AnimTimer = new AnimationTimer(1);
+
 	ID = _ID;
 
-	//if (ID == 1)
-	textureFilePath = "Content/FlameSheet.png";
-	//if (ID == 2)
-		//textureFilePath = "Content/torch.png";
-	//if (ID == 3)
-		//textureFilePath = "Content/guy.png";
-
-	//textureFilePath2 = "Content/FlameSheet.png";
+	if (ID == 1)
+		textureFilePath = "Content/guy.png";
+	if (ID == 2)
+		textureFilePath = "Content/torch.png";
+	if (ID == 3)
+		textureFilePath = "Content/guy.png";
+	if (ID == 4) {
+		textureFilePath = "Content/FlameSheet.png";
+		AnimTimer->SourceFrames = 7;
+		Scale = vec3(2, 2, 2);
+	}
+	Origin = vec3(-.5f, 0, 0) * Scale;
 }
 
 Billboard::~Billboard()
@@ -39,12 +47,13 @@ void Billboard::Init() {
 	if (!isInit) {
 		isInit = true;
 
-		Origin = vec3(-1.0f, 0, 0);
-
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		Texture2D texture = Texture2D(textureFilePath);
+		MainTexture = Texture2D(textureFilePath);
+
+		PointLight * P = new PointLight(Position, vec3(238, 181, 128) / 255.0f, 02, 1.1f);
+		Main::PointLights.push_back(P);
 
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
@@ -54,7 +63,7 @@ void Billboard::Init() {
 		//Define texture images
 		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, t_GridTexture);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_FLOAT, texture.Pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MainTexture.width, MainTexture.height, 0, GL_RGBA, GL_FLOAT, MainTexture.Pixels);
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -108,10 +117,10 @@ void Billboard::Buffer() {
 	GLfloat verts[] = {
 
 		0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		2, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		2, 2, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		2, 2, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0, 2, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		1, 1, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1, 1, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0, 1, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 		0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 	};
 
@@ -171,11 +180,18 @@ void Billboard::SetUniforms() {
 	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
+
 	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
 
-	glUniform1i(glGetUniformLocation(shaderProgram, "SourceFrames"), SourceFrames);
+	glUniform1i(glGetUniformLocation(shaderProgram, "SourceFrames"), AnimTimer->SourceFrames);
 
-	glUniform1i(glGetUniformLocation(shaderProgram, "CurrentFrame"), CurrentFrame);
+	glUniform1i(glGetUniformLocation(shaderProgram, "CurrentFrame"), AnimTimer->CurrentFrame);
+
+	glUniform1i(glGetUniformLocation(shaderProgram, "SelfIlluminated"), 1);
+
+	cout << MainTexture.width << endl;
+	glUniform2f(glGetUniformLocation(shaderProgram, "TextureSize"), 
+		MainTexture.width, MainTexture.height);
 
 	for (int i = 0; i < Main::PointLights.size(); i++) {
 		string _i = std::to_string(i);
@@ -222,14 +238,7 @@ void Billboard::Update() {
 		return;
 
 	Init();
-
-	ActiveFrameTimer -= Main::DeltaTime;
-	if (ActiveFrameTimer < 0) {
-		CurrentFrame++;
-		ActiveFrameTimer = (1 / AnimationFrameRate);
-		if (CurrentFrame >= SourceFrames)
-			CurrentFrame = 0;
-	}
+	AnimTimer->Update();
 
 	if (Dynamic)
 		Rotation.y = Helper::AngleBetween_DEG(
