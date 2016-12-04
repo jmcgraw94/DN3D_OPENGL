@@ -74,13 +74,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\DN3D_OPENGL\include;$(SolutionDir)..\DN3D_OPENGL\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <AdditionalUsingDirectories>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalUsingDirectories>$(SolutionDir)..\DN3D_OPENGL\glm;$(SolutionDir)..\DN3D_OPENGL\include;$(SolutionDir)..\DN3D_OPENGL\include\GL;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32s.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glut32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3dll.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\glew32.lib;$(SolutionDir)lib\glew32s.lib;$(SolutionDir)lib\glut32.lib;$(SolutionDir)lib\glfw3.lib;$(SolutionDir)lib\glfw3dll.lib;$(SolutionDir)lib\SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -97,13 +97,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalUsingDirectories>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\glm;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\include\GL;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\DN3D_OPENGL\include;$(SolutionDir)..\DN3D_OPENGL\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>$(SolutionDir)..\DN3D_OPENGL\glm;$(SolutionDir)..\DN3D_OPENGL\include;$(SolutionDir)..\DN3D_OPENGL\include\GL;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glew32s.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glut32.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\glfw3dll.lib;C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\lib\SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\glew32.lib;$(SolutionDir)lib\glew32s.lib;$(SolutionDir)lib\glut32.lib;$(SolutionDir)lib\glfw3.lib;$(SolutionDir)lib\glfw3dll.lib;$(SolutionDir)lib\SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

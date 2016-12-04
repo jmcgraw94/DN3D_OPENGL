@@ -9,7 +9,7 @@ FrameBuffer::~FrameBuffer()
 {
 }
 
-http://www.mathopenref.com/index.html
+//http://www.mathopenref.com/index.html
 
 float rot = 0;
 

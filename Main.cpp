@@ -46,11 +46,12 @@ vector<PointLight * > Main::PointLights;
 int Main::ColorBitDepth = 24;
 double Main::StartFrameTime, Main::EndFrameTime, Main::DeltaTime;
 Texture2D Main::Map;
+float Main::FrameRate;
 
 //Private
 vector<Blurb * > Blurbs = vector<Blurb * >();
 vector<Billboard> Billboards = vector<Billboard>();
-float FrameRate;
+
 
 Blurb * GlowBlurb1 = new Blurb();
 Blurb * GlowBlurb2 = new Blurb();
@@ -131,9 +132,9 @@ void Main::Setup() {
 	GlowBlurb2 = new Blurb(vec3(2, 4, -2), 4);
 	Blurbs.push_back(GlowBlurb2);
 
-	PointLight * P_Light1 = new PointLight(vec3(05, 2.5f, 5), vec3(1, 1, 1), 6.0f, 1.0f);
-	PointLight * P_Light2 = new PointLight(vec3(10, 2.5f, 4), vec3(0, 1, 1), 6.0f, 1.0f);
-	PointLight * P_Light3 = new PointLight(vec3(15, 2.5f, 6), vec3(1, 1, 1), 6.0f, 1.0f);
+	PointLight * P_Light1 = new PointLight(vec3(05, 2.5f, 5), vec3(1, 1, 1), 15.0f, 1.0f);
+	PointLight * P_Light2 = new PointLight(vec3(10, 2.5f, 4), vec3(0, 1, 1), 15.0f, 1.0f);
+	PointLight * P_Light3 = new PointLight(vec3(15, 2.5f, 6), vec3(1, 1, 1), 15.0f, 1.0f);
 
 	PointLights.push_back(P_Light1);
 	PointLights.push_back(P_Light2);
