@@ -13,6 +13,9 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform vec2 SourceRect = vec2(0,0);
+uniform int SourceFrame = 1;
+
 void main()
 {
 	

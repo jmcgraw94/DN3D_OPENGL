@@ -54,6 +54,9 @@ public:
 
 	static int ColorBitDepth;
 
+	static float
+		FrameRate;
+
 	static double
 		StartFrameTime,
 		EndFrameTime,

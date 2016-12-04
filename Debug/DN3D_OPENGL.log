@@ -1,25 +1,2 @@
-﻿  Main.cpp
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(149): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(150): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(261): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\main.cpp(285): warning C4018: '<': signed/unsigned mismatch
-  FrameBuffer.cpp
-  ContentManager.cpp
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\contentmanager.cpp(67): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\contentmanager.cpp(69): warning C4018: '<': signed/unsigned mismatch
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\contentmanager.cpp(71): warning C4018: '<': signed/unsigned mismatch
-  Camera.cpp
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\camera.cpp(54): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\camera.cpp(134): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  Blurb.cpp
-c:\users\jmcgraw\documents\visual studio 2015\projects\dn3d_opengl\dn3d_opengl\blurb.cpp(217): warning C4018: '<': signed/unsigned mismatch
-  Billboard.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Texture2D.cpp
-  Program.cpp
-  PointLight.cpp
-  Helper.cpp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
-  DN3D_OPENGL.vcxproj -> C:\Users\jmcgraw\Documents\Visual Studio 2015\Projects\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)
+﻿  DN3D_OPENGL.vcxproj -> C:\Users\renderminion\Desktop\DN3D_OPENGL\DN3D_OPENGL\Debug\DN3D_OPENGL.exe
+  DN3D_OPENGL.vcxproj -> C:\Users\renderminion\Desktop\DN3D_OPENGL\DN3D_OPENGL\Debug\DN3D_OPENGL.pdb (Partial PDB)

@@ -22,6 +22,8 @@ uniform sampler2D MainTexture;
 uniform sampler2D NormalTexture;
 uniform PointLight PointLights[36];
 
+uniform int SourceFrames = 1;
+uniform int CurrentFrame = 1;
 
 vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
 
@@ -35,12 +37,12 @@ vec4 specColor = vec4(0,0,0,1);
 
 void main()
 {
-
+	//specColor = texture(NormalTexture, curPixel);
 	
-	vec2 curPixel = vec2(TexCoord.x, -TexCoord.y);
+	vec2 curPixel = vec2( (CurrentFrame / float(SourceFrames)) + (TexCoord.x / SourceFrames), -TexCoord.y);
 	
-	specColor = texture(NormalTexture, curPixel);
 	vec4 imgColor = texture(MainTexture, curPixel);
+	
 	vec4 preColor = imgColor;
 	vec3 normal = normalize(Normal);
 	

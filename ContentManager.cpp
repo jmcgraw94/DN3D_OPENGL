@@ -1,6 +1,6 @@
 #include "ContentManager.h"
 #include "MapFactory.h"
-
+#include "Helper.h"
 
 ContentManager::ContentManager()
 {
@@ -12,22 +12,22 @@ ContentManager::~ContentManager()
 
 vector<vector<vector<int>>> ContentManager::CreateVectorGrid(vector<unsigned char> image, int w, int h) {
 
-	vector<vector<vector<int>>> Grid;
+	vector<vector<vector<int>>> Grid; //NEW GRID
 
 	for (int i = 0; i < h; i++) {
-		vector<vector<int>> Row;
+		vector<vector<int>> Row; //NEW ROW
 
 		for (int k = 0; k < w; k++) {
-			vector<int> DefColors;
+			vector<int> ColorComponents; //NEW COMPONENTS
 
-			DefColors.push_back(0);
-			DefColors.push_back(0);
-			DefColors.push_back(0);
-			DefColors.push_back(0);
+			ColorComponents.push_back(0);
+			ColorComponents.push_back(0);
+			ColorComponents.push_back(0);
+			ColorComponents.push_back(0);
 
-			Row.push_back(DefColors);
+			Row.push_back(ColorComponents); //ADD COMPONENTS TO ROW
 		}
-		Grid.push_back(Row);
+		Grid.push_back(Row); //ADD ROW TO GRID
 	}
 
 	int Area = w * h;
@@ -42,10 +42,12 @@ vector<vector<vector<int>>> ContentManager::CreateVectorGrid(vector<unsigned cha
 			x = 0;
 			c++;
 		}
-		if (c >= w) {
+
+		if (c >= h) {
 			c = 0;
 			r++;
 		}
+
 
 		Grid[c][r][x] = (int)image[i];
 		x++;

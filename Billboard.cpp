@@ -4,7 +4,6 @@
 using namespace std;
 using namespace glm;
 
-
 Billboard::Billboard() {
 	cout << "EMPTY BILLBOARD" << endl;
 }
@@ -20,12 +19,14 @@ Billboard::Billboard(vec3 _pos, int _ID)
 
 	ID = _ID;
 
-	if (ID == 1)
-		textureFile = "Content/tallgrass.png";
-	if (ID == 2)
-		textureFile = "Content/torch.png";
-	if (ID == 3)
-		textureFile = "Content/guy.png";
+	//if (ID == 1)
+	textureFilePath = "Content/FlameSheet.png";
+	//if (ID == 2)
+		//textureFilePath = "Content/torch.png";
+	//if (ID == 3)
+		//textureFilePath = "Content/guy.png";
+
+	//textureFilePath2 = "Content/FlameSheet.png";
 }
 
 Billboard::~Billboard()
@@ -38,13 +39,12 @@ void Billboard::Init() {
 	if (!isInit) {
 		isInit = true;
 
-		Origin = vec3(-.5f, 0, 0);
-		//Rotation.y = Helper::RandomRange(360);
+		Origin = vec3(-1.0f, 0, 0);
 
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		Texture2D texture = Texture2D(textureFile);
+		Texture2D texture = Texture2D(textureFilePath);
 
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
@@ -58,6 +58,33 @@ void Billboard::Init() {
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 
+		// Set the filter parameters
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+		glGenTextures(1, &textureID2);
+		glBindTexture(GL_TEXTURE_2D, textureID2);
+
+		Texture2D texture2 = Texture2D(textureFilePath2);
+
+		//float t_GridTexture[16] = {
+		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
+		//	0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f, 1.0f,
+		//};
+
+		//Define texture images
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_FLOAT, t_GridTexture);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture2.width, texture2.height, 0, GL_RGBA, GL_FLOAT, texture2.Pixels);
+
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 		// Set the filter parameters
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
@@ -69,6 +96,8 @@ void Billboard::Init() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+		curTexID = textureID;
+
 		shader = ShaderPipeline("Shaders/StandardVert.vert", "Shaders/StandardFrag.frag");
 		shaderProgram = shader.GetProgram();
 	}
@@ -79,10 +108,10 @@ void Billboard::Buffer() {
 	GLfloat verts[] = {
 
 		0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		1, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		1, 1, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		1, 1, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0, 1, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		2, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		2, 2, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		2, 2, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0, 2, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 		0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 	};
 
@@ -96,7 +125,7 @@ void Billboard::Buffer() {
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, curTexID);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 
@@ -116,12 +145,11 @@ void Billboard::Buffer() {
 	glEnableVertexAttribArray(2); // Normal attribute
 }
 
-
 void Billboard::SetUniforms() {
 	glUseProgram(shaderProgram);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, curTexID);
 	glUniform1i(glGetUniformLocation(shaderProgram, "MainTexture"), 0);
 
 	//glActiveTexture(GL_TEXTURE1);
@@ -145,9 +173,12 @@ void Billboard::SetUniforms() {
 	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
 	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
 
+	glUniform1i(glGetUniformLocation(shaderProgram, "SourceFrames"), SourceFrames);
+
+	glUniform1i(glGetUniformLocation(shaderProgram, "CurrentFrame"), CurrentFrame);
+
 	for (int i = 0; i < Main::PointLights.size(); i++) {
 		string _i = std::to_string(i);
-		//cout << _i << endl;
 
 		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
 			Main::PointLights[i]->Position.x, Main::PointLights[i]->Position.y, Main::PointLights[i]->Position.z);
@@ -161,7 +192,6 @@ void Billboard::SetUniforms() {
 		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
 			Main::PointLights[i]->Brightness);
 	}
-
 }
 
 void Billboard::UpdateModelMatrix() {
@@ -192,6 +222,14 @@ void Billboard::Update() {
 		return;
 
 	Init();
+
+	ActiveFrameTimer -= Main::DeltaTime;
+	if (ActiveFrameTimer < 0) {
+		CurrentFrame++;
+		ActiveFrameTimer = (1 / AnimationFrameRate);
+		if (CurrentFrame >= SourceFrames)
+			CurrentFrame = 0;
+	}
 
 	if (Dynamic)
 		Rotation.y = Helper::AngleBetween_DEG(

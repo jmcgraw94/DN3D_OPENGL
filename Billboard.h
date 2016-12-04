@@ -42,8 +42,19 @@ public:
 
 	bool isInit;
 
-	string textureFile;
+	int SourceFrames = 7;
+	int CurrentFrame = 1;
+
+	float AnimationFrameRate = 12;
+	float ActiveFrameTimer = 0;
+
+	GLuint curTexID;
+
+	string textureFilePath;
 	GLuint textureID;
+
+	string textureFilePath2;
+	GLuint textureID2;
 
 	GLfloat * VertArray;
 
