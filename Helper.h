@@ -27,6 +27,14 @@ public:
 		);
 	}
 
+	static vec3 ConvertColorDown(vec3 v) {
+
+	}
+
+	static vec3 ConvertColorUp(vec3 v) {
+
+	}
+
 	static void PrintVec3(vec3 v, string name = "") {
 		cout << name << " [" << v.x << ',' << v.y << "," << v.z << "]" << endl;
 	}

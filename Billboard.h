@@ -1,5 +1,6 @@
 #pragma once
 #include "ShaderPipeline.h"
+#include "AnimationTimer.h"
 #include "GameObject.h"
 
 #include "..\include\math\vect3d.h"
@@ -42,11 +43,8 @@ public:
 
 	bool isInit;
 
-	int SourceFrames = 7;
-	int CurrentFrame = 1;
 
-	float AnimationFrameRate = 12;
-	float ActiveFrameTimer = 0;
+	AnimationTimer * AnimTimer;
 
 	GLuint curTexID;
 

@@ -122,6 +122,7 @@
   <ItemGroup>
     <ClInclude Include="..\include\MapFactory.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="AnimationTimer.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Blurb.h" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AnimationTimer.cpp" />
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blurb.cpp" />

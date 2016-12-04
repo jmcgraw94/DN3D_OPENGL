@@ -4,13 +4,12 @@
 #include "Blurb.h"
 #include "MapFactory.h"
 #include "ContentManager.h"
-#include "Texture2D.h"
 #include "ShaderPipeline.h"
 #include "Camera.h"
 #include "Helper.h"
-#include "Texture2D.h"
 #include "PointLight.h"
 #include "FrameBuffer.h"
+#include "Texture2D.h"
 
 #include "..\include\glm\glm.hpp"
 #include "..\include\GL\glew.h"
@@ -38,7 +37,7 @@ public:
 
 	static Texture2D Map;
 
-	static vector<PointLight * > PointLights;
+	static vector<PointLight *> PointLights;
 
 	static FrameBuffer ScreenFBO;
 

@@ -180,7 +180,6 @@ void Blurb::Buffer() {
 	glEnableVertexAttribArray(2); // Normal attribute
 }
 
-
 void Blurb::SetUniforms() {
 	glUseProgram(shaderProgram);
 

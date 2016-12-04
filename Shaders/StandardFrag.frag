@@ -20,6 +20,7 @@ struct PointLight {
 //Uniforms
 uniform int DSL = 0; //Double Side Lighting
 uniform int DistanceLighting = 0;
+uniform int SelfIlluminated = 0;
 
 uniform int LightCount;
 uniform PointLight PointLights[36];
@@ -29,6 +30,8 @@ uniform sampler2D NormalTexture;
 
 uniform int SourceFrames = 1;
 uniform int CurrentFrame = 1;
+
+uniform vec2 TextureSize;
 
 //Functions
 vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
@@ -43,35 +46,49 @@ void main()
 {
 	vec3 normal = normalize(Normal);
 	//specColor = texture(NormalTexture, curPixel);
-	
+		
 	vec2 curPixel = vec2(
 		(CurrentFrame / float(SourceFrames)) + (TexCoord.x / SourceFrames), 
-		-TexCoord.y);
+		(-TexCoord.y));
 	
 	vec4 imgColor = texture(MainTexture, curPixel);
 	
 	vec4 preColor = imgColor;
 	
-	
-	
 	if (preColor.a < 1f){
-		discard;
+		float neighborAlpha = 0;
+		float xSize = 1 / (TextureSize.x);
+		float ySize = 1 / (TextureSize.y);
+		
+		neighborAlpha += texture(MainTexture, curPixel + vec2(xSize, 0)).a;
+		neighborAlpha += texture(MainTexture, curPixel - vec2(xSize, 0)).a;
+		
+		neighborAlpha += texture(MainTexture, curPixel + vec2(0, ySize)).a;
+		neighborAlpha += texture(MainTexture, curPixel - vec2(0, ySize)).a;
+		
+		if (neighborAlpha > 0)
+			preColor = vec4(0,0,0,1);
+		else
+			discard;
 	}
 	else {
 		vec4 runTotal = ShadowColor * AmbientColor;
-		for (int i = 0; i < LightCount; i++){
-			vec4 LightResult = CalculatePointLight(PointLights[i], normal, FragPos);
-			runTotal += LightResult;
-		}
 		
-		preColor *= runTotal;
-		preColor.rgb = clamp(preColor.rgb, vec3(0,0,0), imgColor.rgb).rgb;
-		
-		for (int i = 0; i < LightCount; i++){
-			preColor.rgb *= PointLights[i].Brightness;
+		//Non Self Illuminated Objects
+		if (SelfIlluminated == 0){
+			for (int i = 0; i < LightCount; i++){
+				vec4 LightResult = CalculatePointLight(PointLights[i], normal, FragPos);
+				runTotal += LightResult;
+			}
+			
+			preColor *= runTotal;
+			preColor.rgb = clamp(preColor.rgb, vec3(0,0,0), imgColor.rgb).rgb;
+			
+			for (int i = 0; i < LightCount; i++){
+				preColor.rgb *= PointLights[i].Brightness;
+			}
 		}
-
-		//preColor.rgb = specColor.rgb;
+				
 		color = preColor;
 	}
 

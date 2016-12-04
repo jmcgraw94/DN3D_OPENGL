@@ -8,9 +8,7 @@
 #include "..\include\glm\gtc\matrix_transform.hpp"
 #include "..\include\glm\gtc\type_ptr.hpp"
 #include "..\include\MapFactory.h"
-#include "Texture2D.h"
 #include "Billboard.h"
-#include "PointLight.h"
 
 #include <glew.h>
 #include <stdlib.h>
@@ -52,12 +50,12 @@ float Main::FrameRate;
 vector<Blurb * > Blurbs = vector<Blurb * >();
 vector<Billboard> Billboards = vector<Billboard>();
 
-
 Blurb * GlowBlurb1 = new Blurb();
 Blurb * GlowBlurb2 = new Blurb();
 
 Billboard * Bill1;
 Billboard * Bill2;
+Billboard * Bill3;
 
 FrameBuffer GeometryFrameBuffer;
 
@@ -140,8 +138,9 @@ void Main::Setup() {
 	PointLights.push_back(P_Light2);
 	PointLights.push_back(P_Light3);
 	
-	Bill1 = new Billboard(vec3(3, 1, 5), 3);
-	Bill2 = new Billboard(vec3(1.15f, 2.25f, 6), 2);
+	Bill1 = new Billboard(vec3(3, 1, 5), 1);
+	Bill2 = new Billboard(vec3(1.15f, 2.0f, 6), 2);
+	Bill3 = new Billboard(vec3(1.15f, 2.08f, 6), 4);
 
 	MousePos = vec2(WINW, WINH) / 2.0f;
 	OldMousePos = vec2(WINW, WINH) / 2.0f;
@@ -263,6 +262,7 @@ void Main::Update() {
 
 	Bill1->Update();
 	Bill2->Update();
+	Bill3->Update();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i]->Update();
@@ -286,7 +286,8 @@ void Main::Draw() {
 	GlowBlurb2->Position = Main::PointLights[1]->Position;
 
 	Bill1->Draw();
-	Bill2->Draw();
+	//Bill2->Draw();
+	Bill3->Draw();
 
 	for (int i = 0; i < Blurbs.size(); i++) {
 		Blurbs[i]->Draw();
