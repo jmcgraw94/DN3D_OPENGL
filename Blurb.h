@@ -43,6 +43,9 @@ public:
 	string textureFile;
 	GLuint textureID;
 
+	vec3 WaveDirection;
+	vec2 TextureTrans;
+
 	string normalFile;
 	GLuint normalID;
 

@@ -160,7 +160,7 @@ void Camera::Update() {
 		float yWave = (float)(sin(((float)Main::TotalTime * 2.0f) + Position.x) / 3.0f) * Main::WaveFactor;
 		float xWave = (float)(cos(((float)Main::TotalTime * 2.0f) + Position.x) / 3.0f) * Main::WaveFactor;
 
-		Offset = vec3(xWave, yWave, xWave);
+		Offset = vec3(xWave, yWave, 0);
 	}
 
 	//ForwardVec = Rotation;

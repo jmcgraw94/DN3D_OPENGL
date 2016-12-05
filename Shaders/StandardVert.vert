@@ -16,16 +16,19 @@ uniform mat4 projection;
 uniform float Time;
 uniform vec3 WorldPos;
 uniform float WaveFactor;
+uniform vec3 WaveDirection;
 
 void main()
 {	
 	vec4 prePos = vec4(position, 1.0f);
 	mat4 MVP = projection * view * model;
 	
-	float yWave = (sin((Time * 2) + WorldPos.x + position.x) / 3.0f) * WaveFactor;
-	float xWave = (cos((Time * 2) + WorldPos.x + position.x) / 3.0f) * WaveFactor;
+	float yWave = (sin((Time * 2) + WorldPos.x + position.x) / 3.0f);
+	float xWave = (cos((Time * 2) + WorldPos.x + position.x) / 3.0f) ;
 	
-    gl_Position = MVP * (prePos + vec4(xWave, yWave,xWave,0));
+	vec3 preWaveVector = vec3(xWave, yWave, xWave) * WaveDirection * WaveFactor;
+	
+    gl_Position = MVP * (prePos + vec4(preWaveVector,0));
 
 	FragPos = vec3(model * vec4(position, 1.0f));
 	

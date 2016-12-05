@@ -17,7 +17,7 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	//Dynamic = true;
 
 	Constructed = true;
-
+	WaveDirection = vec3(1, 1, 1);
 	ID = _ID;
 
 	if (ID == 1)
@@ -36,6 +36,10 @@ Blurb::Blurb(vec3 _pos, int _ID)
 		textureFile = "Content/bookshelf.png";
 	if (ID == 8)
 		textureFile = "Content/stonebrick.png";
+	if (ID == 9) {
+		textureFile = "Content/water.png";
+		WaveDirection = vec3(0, 1, 0);
+	}
 
 	normalFile = "Content/emerald_block_spec.png";
 }
@@ -52,6 +56,7 @@ void Blurb::Init() {
 
 
 		Origin = vec3(0, 0, 0);
+		/*TextureTrans = vec2(1, 1);*/
 
 		GLchar * VertexShaderPath = "Shaders/StandardVert.vert";
 		GLchar * FragmentShaderPath = "Shaders/StandardFrag.frag";
@@ -204,7 +209,7 @@ void Blurb::SetUniforms() {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),
 		1, GL_FALSE, glm::value_ptr(Main::MainCamera.view));
 
-	
+
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
 		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
@@ -217,9 +222,18 @@ void Blurb::SetUniforms() {
 
 	glUniform1f(glGetUniformLocation(shaderProgram, "Time"), Main::TotalTime);
 
-	glUniform1f(glGetUniformLocation(shaderProgram, "WaveFactor"), Main::WaveFactor);
+	if (ID == 9)
+		glUniform1f(glGetUniformLocation(shaderProgram, "WaveFactor"), clamp(abs((float)sin(Main::TotalTime / 10)),0.5f,1.0f));
+	else
+		glUniform1f(glGetUniformLocation(shaderProgram, "WaveFactor"), Main::WaveFactor);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "WorldPos"), 
+	glUniform3f(glGetUniformLocation(shaderProgram, "WaveDirection"),
+		WaveDirection.x - Origin.x, WaveDirection.y - Origin.y, WaveDirection.z - Origin.z);
+
+	glUniform2f(glGetUniformLocation(shaderProgram, "TextureTrans"),
+		TextureTrans.x, TextureTrans.y);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "WorldPos"),
 		Position.x - Origin.x, Position.y - Origin.y, Position.z - Origin.z);
 
 	for (int i = 0; i < Main::PointLights.size(); i++) {
@@ -227,16 +241,16 @@ void Blurb::SetUniforms() {
 		//cout << _i << endl;
 
 		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Position").c_str()),
-		Main::PointLights[i]->Position.x, Main::PointLights[i]->Position.y, Main::PointLights[i]->Position.z);
+			Main::PointLights[i]->Position.x, Main::PointLights[i]->Position.y, Main::PointLights[i]->Position.z);
 
 		glUniform3f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Color").c_str()),
-		Main::PointLights[i]->Color.x, Main::PointLights[i]->Color.y, Main::PointLights[i]->Color.z);
+			Main::PointLights[i]->Color.x, Main::PointLights[i]->Color.y, Main::PointLights[i]->Color.z);
 
 		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Range").c_str()),
-		Main::PointLights[i]->Range);
+			Main::PointLights[i]->Range);
 
 		glUniform1f(glGetUniformLocation(shaderProgram, ("PointLights[" + _i + "].Brightness").c_str()),
-		Main::PointLights[i]->Brightness);
+			Main::PointLights[i]->Brightness);
 	}
 	// ----
 
@@ -294,6 +308,9 @@ void Blurb::Update() {
 	if (!Constructed)
 		return;
 	Init();
+
+	if (ID == 9)
+		TextureTrans += vec2(Main::DeltaTime, Main::DeltaTime) / 2.0f;
 
 	//if (Dynamic)
 		//Rotation.y = Helper::AngleBetween_DEG(

@@ -35,6 +35,7 @@ uniform int Outlined = 0;
 uniform float OutlineDivisor = 1;
 
 uniform vec2 TextureSize;
+uniform vec2 TextureTrans;
 
 //Functions
 vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
@@ -50,9 +51,11 @@ void main()
 	vec3 normal = normalize(Normal);
 	//specColor = texture(NormalTexture, curPixel);
 		
+	vec2 postTextCoord = TexCoord + TextureTrans;
+		
 	vec2 curPixel = vec2(
-		(CurrentFrame / float(SourceFrames)) + (TexCoord.x / SourceFrames), 
-		(-TexCoord.y));
+		(CurrentFrame / float(SourceFrames)) + (postTextCoord.x / SourceFrames), 
+		(-postTextCoord.y));
 	
 	vec4 imgColor = texture(MainTexture, curPixel);
 	

@@ -129,7 +129,7 @@ void Main::Setup() {
 	GlowBlurb2 = new Blurb(vec3(2, 4, -2), 4);
 	GameObjects.push_back(GlowBlurb2);
 
-	PointLight * P_Light1 = new PointLight(vec3(05, 2.5f, 15), vec3(0, 1, 1), 15.0f, 1.0f);
+	PointLight * P_Light1 = new PointLight(vec3(13, 2.5f, 10), vec3(238, 181, 128) / 255.0f, 25.0f, 1.0f);
 	PointLight * P_Light2 = new PointLight(vec3(10, 2.5f, 4), vec3(0, 1, 1), 15.0f, 1.0f);
 	PointLight * P_Light3 = new PointLight(vec3(15, 2.5f, 6), vec3(1, 1, 1), 15.0f, 1.0f);
 
@@ -139,18 +139,26 @@ void Main::Setup() {
 	
 	Billboard * Bill1 = new Billboard(vec3(3, 1, 5), 3);
 	Billboard * Bill2 = new Billboard(vec3(1.15f, 2.08f, 6), 4);
-	Billboard * Bill3 = new Billboard(vec3(8.0f, 1, 3), 1);
+	Billboard * Bill3 = new Billboard(vec3(4.0f, 2.08f, 10.92f), 4);
+	Billboard * Bill4 = new Billboard(vec3(8.0f, 1, 3), 1);
 
 	GameObjects.push_back(Bill1);
 	GameObjects.push_back(Bill2);
 	GameObjects.push_back(Bill3);
+	GameObjects.push_back(Bill4);
 
 	MousePos = vec2(WINW, WINH) / 2.0f;
 	OldMousePos = vec2(WINW, WINH) / 2.0f;
 
 	for (int y = 0; y < Map.height; y++) {
 		for (int x = 0; x < Map.width; x++) {
+			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 0))
+				continue;
+
 			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 1)) {
+				Blurb * D = new Blurb(vec3(x, 0, y), 2);
+				GameObjects.push_back(D);
+
 				Blurb * B = new Blurb(vec3(x, 1, y), 7);
 				GameObjects.push_back(B);
 
@@ -174,16 +182,21 @@ void Main::Setup() {
 				Blurb * C = new Blurb(vec3(x, 3, y), 5);
 				GameObjects.push_back(C);
 
+				Blurb * D = new Blurb(vec3(x, 0, y), 8);
+				GameObjects.push_back(D);
+
 			}
 			else if (Map.GetPixel(x, y) == vec4(1, 0, 0, 1)) {
 				Blurb * B = new Blurb(vec3(x, 0, y), 6);
 				GameObjects.push_back(B);
 			}
+			else if (Map.GetPixel(x, y) == vec4(0, 1, 1, 1)) {
+				Blurb * B = new Blurb(vec3(x, -.5f, y), 9);
+				GameObjects.push_back(B);
+			}
 			else {
 				Blurb * B = new Blurb(vec3(x, 0, y), 2);
 				GameObjects.push_back(B);
-
-				
 			}
 			Blurb * A = new Blurb(vec3(x, 4, y), 6);
 			GameObjects.push_back(A);
@@ -227,16 +240,16 @@ void Main::Update() {
 		cout << "RENDER TIME: " << DeltaTime << "ms" << endl;
 		cout << "====== --- ========" << endl;
 	}
-	if (Main::HeldKeys[GLFW_KEY_UP]) {
+	if (Main::HeldKeys[GLFW_KEY_LEFT]) {
 		Main::Main::PointLights[0]->Position.z -= .1f;
 	}
-	if (Main::HeldKeys[GLFW_KEY_DOWN]) {
+	if (Main::HeldKeys[GLFW_KEY_RIGHT]) {
 		Main::Main::PointLights[0]->Position.z += .1f;
 	}
-	if (Main::HeldKeys[GLFW_KEY_LEFT]) {
+	if (Main::HeldKeys[GLFW_KEY_DOWN]) {
 		Main::Main::PointLights[0]->Position.x -= .1f;
 	}
-	if (Main::HeldKeys[GLFW_KEY_RIGHT]) {
+	if (Main::HeldKeys[GLFW_KEY_UP]) {
 		Main::Main::PointLights[0]->Position.x += .1f;
 	}
 	if (Main::TapKeys[GLFW_KEY_COMMA]) {
