@@ -55,7 +55,7 @@ public:
 
 	static float WaveFactor;
 
-	static bool FrameFuck;
+	static bool FramePop;
 
 	static float
 		FrameRate;

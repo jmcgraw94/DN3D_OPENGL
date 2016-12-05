@@ -42,7 +42,7 @@ Main::QuadraticDeltaMousePos, Main::Q_Delta;
 FrameBuffer Main::ScreenFBO;
 vector<PointLight * > Main::PointLights;
 int Main::ColorBitDepth = 24;
-bool Main::FrameFuck = false;
+bool Main::FramePop = false;
 double Main::StartFrameTime, Main::EndFrameTime, Main::DeltaTime, Main::TotalTime;
 Texture2D Main::Map;
 float Main::FrameRate, Main::WaveFactor;
@@ -255,7 +255,7 @@ void Main::Update() {
 		WaveFactor -= .05f;
 	}
 	if (Main::TapKeys[GLFW_KEY_F]) {
-		FrameFuck = !FrameFuck;
+		FramePop = !FramePop;
 	}
 
 	if (Main::TapKeys[GLFW_KEY_ESCAPE]) {

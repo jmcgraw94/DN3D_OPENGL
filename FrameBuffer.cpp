@@ -52,7 +52,7 @@ void FrameBuffer::DrawFrameBuffer() {
 
 	mat4 model = mat4();
 
-	if (Main::FrameFuck) {
+	if (Main::FramePop) {
 		rot += Main::DeltaTime * 10;
 
 		model = glm::rotate(model, glm::radians(0.f), vec3(0, 0, 1));
