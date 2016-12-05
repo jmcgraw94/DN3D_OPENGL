@@ -25,7 +25,7 @@ void main()
 	float yWave = (sin((Time * 2) + WorldPos.x + position.x) / 3.0f) * WaveFactor;
 	float xWave = (cos((Time * 2) + WorldPos.x + position.x) / 3.0f) * WaveFactor;
 	
-    gl_Position = MVP * (prePos + vec4(xWave, yWave,0,0));
+    gl_Position = MVP * (prePos + vec4(xWave, yWave,xWave,0));
 
 	FragPos = vec3(model * vec4(position, 1.0f));
 	

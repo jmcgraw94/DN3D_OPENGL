@@ -7,7 +7,7 @@ using namespace std;
 bool init = false;
 float bobTimer = 0;
 float bobHeight = 0.5f;
-float bobSpeed = 1.5f;
+float bobSpeed = 1.8f;
 vec3 RightVec = vec3(0, 0, 0);
 
 float Ysensitivity = 3;
@@ -126,7 +126,7 @@ void Camera::Update() {
 		velocity *= SpeedMultiplyer * Main::DeltaTime;
 
 		if (moved)
-			bobSpeed *= 1.5f;
+			bobSpeed *= 1.8f;
 		else
 			bobSpeed *= .9f;
 
@@ -160,7 +160,7 @@ void Camera::Update() {
 		float yWave = (float)(sin(((float)Main::TotalTime * 2.0f) + Position.x) / 3.0f) * Main::WaveFactor;
 		float xWave = (float)(cos(((float)Main::TotalTime * 2.0f) + Position.x) / 3.0f) * Main::WaveFactor;
 
-		Offset = vec3(xWave, yWave, 0);
+		Offset = vec3(xWave, yWave, xWave);
 	}
 
 	//ForwardVec = Rotation;

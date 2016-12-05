@@ -52,14 +52,17 @@ void FrameBuffer::DrawFrameBuffer() {
 
 	mat4 model = mat4();
 
-	//rot += Main::DeltaTime * 10;
+	if (Main::FrameFuck) {
+		rot += Main::DeltaTime * 10;
 
-	//model = glm::rotate(model, glm::radians(0.f), vec3(0, 0, 1));
-	//model = glm::rotate(model, glm::radians(rot), vec3(0, 1, 0));
-	//model = glm::rotate(model, glm::radians(rot), vec3(1, 0, 0));
+		model = glm::rotate(model, glm::radians(0.f), vec3(0, 0, 1));
+		model = glm::rotate(model, glm::radians(rot), vec3(0, 1, 0));
+		model = glm::rotate(model, glm::radians(rot), vec3(1, 0, 0));
 
-	//model = glm::scale(model, glm::vec3(1, 1, 1));
-
+		model = glm::scale(model, glm::vec3(1, 1, 1));
+	}
+	else
+		rot = 0;
 	//Uniforms
 	glUniform1i(glGetUniformLocation(ScreenShader.Program, "BitDepth"), Main::ColorBitDepth);
 

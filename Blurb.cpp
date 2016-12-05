@@ -25,7 +25,7 @@ Blurb::Blurb(vec3 _pos, int _ID)
 	if (ID == 2)
 		textureFile = "Content/planks_birch.png";
 	if (ID == 3)
-		textureFile = "Content/emerald_block.png";
+		textureFile = "Content/trapdoor.png";
 	if (ID == 4)
 		textureFile = "Content/white.png";
 	if (ID == 5)
@@ -52,7 +52,6 @@ void Blurb::Init() {
 
 
 		Origin = vec3(0, 0, 0);
-		//Rotation.y = Helper::RandomRange(360);
 
 		GLchar * VertexShaderPath = "Shaders/StandardVert.vert";
 		GLchar * FragmentShaderPath = "Shaders/StandardFrag.frag";

@@ -20,7 +20,9 @@ PointLight::~PointLight()
 
 void PointLight::Update() {
 
-	Position.y += sin(Main::FrameCount / 10.0f) / 140;
+	Range += sin(Main::TotalTime * 5) / 12;
+
+	/*Position.y += sin(Main::FrameCount / 10.0f) / 140;
 	Position.x += cos(Main::FrameCount / 20.0f) / 200;
-	Position.z += sin(Main::FrameCount / 20.0f) / 200;
+	Position.z += sin(Main::FrameCount / 20.0f) / 200;*/
 }
