@@ -31,6 +31,8 @@ uniform sampler2D NormalTexture;
 uniform int SourceFrames = 1;
 uniform int CurrentFrame = 1;
 
+uniform int Outlined = 0;
+
 uniform vec2 TextureSize;
 
 //Functions
@@ -56,18 +58,30 @@ void main()
 	vec4 preColor = imgColor;
 	
 	if (preColor.a < 1f){
+	
 		float neighborAlpha = 0;
-		float xSize = 1 / (TextureSize.x);
-		float ySize = 1 / (TextureSize.y);
 		
-		neighborAlpha += texture(MainTexture, curPixel + vec2(xSize, 0)).a;
-		neighborAlpha += texture(MainTexture, curPixel - vec2(xSize, 0)).a;
+		if (Outlined == 1){
+			float xSize = 1 / (TextureSize.x );
+			float ySize = 1 / (TextureSize.y );
+			
+			if (curPixel.x + xSize < 1)
+				neighborAlpha += texture(MainTexture, curPixel + vec2(xSize, 0)).a;
 		
-		neighborAlpha += texture(MainTexture, curPixel + vec2(0, ySize)).a;
-		neighborAlpha += texture(MainTexture, curPixel - vec2(0, ySize)).a;
+			if (curPixel.x - xSize > 0)
+				neighborAlpha += texture(MainTexture, curPixel - vec2(xSize, 0)).a;
+			
+			if (curPixel.y + ySize < 1)
+				neighborAlpha += texture(MainTexture, curPixel + vec2(0, ySize)).a;
+			
+			if (curPixel.y - ySize > -1)
+				neighborAlpha += texture(MainTexture, curPixel - vec2(0, ySize)).a;
 		
-		if (neighborAlpha > 0)
-			preColor = vec4(0,0,0,1);
+			if (neighborAlpha > 0)
+				preColor = vec4(0,0,0,1);
+			else
+				discard;
+		}
 		else
 			discard;
 	}
@@ -75,7 +89,7 @@ void main()
 		vec4 runTotal = ShadowColor * AmbientColor;
 		
 		//Non Self Illuminated Objects
-		if (SelfIlluminated == 0){
+		if (SelfIlluminated != 1){
 			for (int i = 0; i < LightCount; i++){
 				vec4 LightResult = CalculatePointLight(PointLights[i], normal, FragPos);
 				runTotal += LightResult;

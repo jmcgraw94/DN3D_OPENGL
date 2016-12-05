@@ -47,15 +47,13 @@ Texture2D Main::Map;
 float Main::FrameRate;
 
 //Private
-vector<Blurb * > Blurbs = vector<Blurb * >();
-vector<Billboard> Billboards = vector<Billboard>();
+//vector<Blurb * > Blurbs = vector<Blurb * >();
+//vector<Billboard> Billboards = vector<Billboard>();
+
+vector<GameObject * > GameObjects = vector<GameObject * >();
 
 Blurb * GlowBlurb1 = new Blurb();
 Blurb * GlowBlurb2 = new Blurb();
-
-Billboard * Bill1;
-Billboard * Bill2;
-Billboard * Bill3;
 
 FrameBuffer GeometryFrameBuffer;
 
@@ -125,10 +123,10 @@ void Main::Setup() {
 	Map = Texture2D("Content/Map.png");
 
 	GlowBlurb1 = new Blurb(vec3(2, 4, -2), 4);
-	Blurbs.push_back(GlowBlurb1);
+	GameObjects.push_back(GlowBlurb1);
 
 	GlowBlurb2 = new Blurb(vec3(2, 4, -2), 4);
-	Blurbs.push_back(GlowBlurb2);
+	GameObjects.push_back(GlowBlurb2);
 
 	PointLight * P_Light1 = new PointLight(vec3(05, 2.5f, 5), vec3(1, 1, 1), 15.0f, 1.0f);
 	PointLight * P_Light2 = new PointLight(vec3(10, 2.5f, 4), vec3(0, 1, 1), 15.0f, 1.0f);
@@ -138,9 +136,11 @@ void Main::Setup() {
 	PointLights.push_back(P_Light2);
 	PointLights.push_back(P_Light3);
 	
-	Bill1 = new Billboard(vec3(3, 1, 5), 1);
-	Bill2 = new Billboard(vec3(1.15f, 2.0f, 6), 2);
-	Bill3 = new Billboard(vec3(1.15f, 2.08f, 6), 4);
+	Billboard * Bill1 = new Billboard(vec3(3, 1, 5), 1);
+	Billboard * Bill2 = new Billboard(vec3(1.15f, 2.08f, 6), 4);
+
+	GameObjects.push_back(Bill1);
+	GameObjects.push_back(Bill2);
 
 	MousePos = vec2(WINW, WINH) / 2.0f;
 	OldMousePos = vec2(WINW, WINH) / 2.0f;
@@ -149,41 +149,41 @@ void Main::Setup() {
 		for (int x = 0; x < Map.width; x++) {
 			if (Map.GetPixel(x, y) == vec4(0, 0, 0, 1)) {
 				Blurb * B = new Blurb(vec3(x, 1, y), 7);
-				Blurbs.push_back(B);
+				GameObjects.push_back(B);
 
 				Blurb * A = new Blurb(vec3(x, 2, y), 1);
-				Blurbs.push_back(A);
+				GameObjects.push_back(A);
 
 				Blurb * C = new Blurb(vec3(x, 3, y), 1);
-				Blurbs.push_back(C);
+				GameObjects.push_back(C);
 			}
 			else if (Map.GetPixel(x, y) == vec4(0, 1, 0, 1)) {
 				Blurb * B = new Blurb(vec3(x, 1, y), 3);
-				Blurbs.push_back(B);
+				GameObjects.push_back(B);
 			}
 			else if (Map.GetPixel(x, y) == vec4(0, 0, 1, 1)) {
 				Blurb * A = new Blurb(vec3(x, 1, y), 8);
-				Blurbs.push_back(A);
+				GameObjects.push_back(A);
 
 				Blurb * B = new Blurb(vec3(x, 2, y), 5);
-				Blurbs.push_back(B);
+				GameObjects.push_back(B);
 
 				Blurb * C = new Blurb(vec3(x, 3, y), 5);
-				Blurbs.push_back(C);
+				GameObjects.push_back(C);
 
 			}
 			else if (Map.GetPixel(x, y) == vec4(1, 0, 0, 1)) {
 				Blurb * B = new Blurb(vec3(x, 0, y), 6);
-				Blurbs.push_back(B);
+				GameObjects.push_back(B);
 			}
 			else {
 				Blurb * B = new Blurb(vec3(x, 0, y), 2);
-				Blurbs.push_back(B);
+				GameObjects.push_back(B);
 
 				
 			}
 			Blurb * A = new Blurb(vec3(x, 4, y), 6);
-			Blurbs.push_back(A);
+			GameObjects.push_back(A);
 		}
 	}
 
@@ -218,7 +218,7 @@ void Main::Update() {
 	if (Main::TapKeys[GLFW_KEY_L]) {
 		cout << "====== LOG ========" << endl;
 		cout << "FPS: " << FrameRate << endl;
-		cout << "BLURBS: " << Blurbs.size() << endl;
+		cout << "GAMEOBJECTS: " << GameObjects.size() << endl;
 		cout << "COLOR DEPTH: " << ColorBitDepth / 3 << " bits" << " (" << ColorBitDepth << " bits total)" << endl;
 		cout << "LIGHTS: " << PointLights.size() << endl;
 		cout << "RENDER TIME: " << DeltaTime << "ms" << endl;
@@ -260,14 +260,15 @@ void Main::Update() {
 	StartFrameTime = glfwGetTime();
 	Main::MainCamera.Update();
 
-	Bill1->Update();
-	Bill2->Update();
-	Bill3->Update();
+	//Bill1->Update();
+	//Bill2->Update();
+	//Bill3->Update();
 
-	for (int i = 0; i < Blurbs.size(); i++) {
-		Blurbs[i]->Update();
-		if (Blurbs[i]->ID == 4)
-			Blurbs[i]->Position = Main::Main::PointLights[0]->Position - vec3(.5f, .5f, .5f);
+	for (int i = 0; i < GameObjects.size(); i++) {
+		GameObjects[i]->Update();
+		//cout << i << endl;
+		if (GameObjects[i]->ID == 4)
+			GameObjects[i]->Position = Main::Main::PointLights[0]->Position - vec3(.5f, .5f, .5f);
 	}
 }
 
@@ -285,12 +286,12 @@ void Main::Draw() {
 	GlowBlurb1->Position = Main::PointLights[0]->Position;
 	GlowBlurb2->Position = Main::PointLights[1]->Position;
 
-	Bill1->Draw();
+	//Bill1->Draw();
 	//Bill2->Draw();
-	Bill3->Draw();
+	//Bill3->Draw();
 
-	for (int i = 0; i < Blurbs.size(); i++) {
-		Blurbs[i]->Draw();
+	for (int i = 0; i < GameObjects.size(); i++) {
+		GameObjects[i]->Draw();
 	}
 
 	glDisable(GL_BLEND);

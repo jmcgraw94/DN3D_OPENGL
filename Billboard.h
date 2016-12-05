@@ -23,10 +23,10 @@ public:
 
 	void Buffer();
 	void Init();
-	void Update();
 	void SetUniforms();
 	void UpdateModelMatrix();
 
+	void Update();
 	void Draw();
 
 
@@ -34,7 +34,10 @@ public:
 
 	bool Constructed = false;
 	string Name;
-	int ID = 0;
+	int
+		ID = 0,
+		Outlined = 1,
+		SelfIlluminated = -1;
 
 	vec3 Position;
 	vec3 Rotation;

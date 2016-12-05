@@ -21,10 +21,10 @@ public:
 
 	void Buffer();
 	void Init();
-	void Update();
 	void SetUniforms();
 	void UpdateModelMatrix();
 
+	void Update();
 	void Draw();
 
 	bool Constructed = false;

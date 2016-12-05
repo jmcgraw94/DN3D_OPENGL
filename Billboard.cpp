@@ -5,8 +5,6 @@
 using namespace std;
 using namespace glm;
 
-Texture2D MainTexture;
-
 Billboard::Billboard() {
 	cout << "EMPTY BILLBOARD" << endl;
 }
@@ -31,11 +29,14 @@ Billboard::Billboard(vec3 _pos, int _ID)
 	if (ID == 3)
 		textureFilePath = "Content/guy.png";
 	if (ID == 4) {
-		textureFilePath = "Content/FlameSheet.png";
+		textureFilePath = "Content/TorchSheet.png";
 		AnimTimer->SourceFrames = 7;
 		Scale = vec3(2, 2, 2);
+		SelfIlluminated = 1;
+		PointLight * P = new PointLight(Position, vec3(238, 181, 128) / 255.0f, 06, 1.1f);
+		Main::PointLights.push_back(P);
 	}
-
+	
 	Origin = vec3(-.5f, 0, 0) * Scale;
 }
 
@@ -53,9 +54,6 @@ void Billboard::Init() {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		MainTexture = Texture2D(textureFilePath);
-
-		PointLight * P = new PointLight(Position, vec3(238, 181, 128) / 255.0f, 02, 1.1f);
-		Main::PointLights.push_back(P);
 
 		//float t_GridTexture[16] = {
 		//	1.0f, 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 1.0f,
@@ -101,8 +99,8 @@ void Billboard::Init() {
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -189,9 +187,10 @@ void Billboard::SetUniforms() {
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "CurrentFrame"), AnimTimer->CurrentFrame);
 
-	glUniform1i(glGetUniformLocation(shaderProgram, "SelfIlluminated"), 1);
+	glUniform1i(glGetUniformLocation(shaderProgram, "SelfIlluminated"), SelfIlluminated);
 
-	cout << MainTexture.width << endl;
+	glUniform1i(glGetUniformLocation(shaderProgram, "Outlined"), Outlined);
+
 	glUniform2f(glGetUniformLocation(shaderProgram, "TextureSize"), 
 		MainTexture.width, MainTexture.height);
 
@@ -238,6 +237,10 @@ void Billboard::UpdateModelMatrix() {
 void Billboard::Update() {
 	if (!Constructed)
 		return;
+	
+	if (Main::TapKeys[GLFW_KEY_I]) {
+		Outlined *= -1;
+	}
 
 	Init();
 	AnimTimer->Update();
@@ -264,7 +267,3 @@ void Billboard::Draw() {
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//glBindTexture(GL_TEXTURE_2D, 0);
 }
-
-
-
-

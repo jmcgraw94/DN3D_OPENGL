@@ -285,7 +285,6 @@ void Blurb::UpdateModelMatrix() {
 void Blurb::Update() {
 	if (!Constructed)
 		return;
-
 	Init();
 
 	//if (Dynamic)
