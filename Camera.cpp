@@ -156,6 +156,11 @@ void Camera::Update() {
 		//Position.z += velocity.z;
 		Rotation.x = clamp(Rotation.x, -PI / 2, PI / 2);
 		Position += velocity;
+
+		float yWave = (float)(sin(((float)Main::TotalTime * 2.0f) + Position.x) / 3.0f) * Main::WaveFactor;
+		float xWave = (float)(cos(((float)Main::TotalTime * 2.0f) + Position.x) / 3.0f) * Main::WaveFactor;
+
+		Offset = vec3(xWave, yWave, 0);
 	}
 
 	//ForwardVec = Rotation;
@@ -175,7 +180,7 @@ void Camera::Update() {
 	view = glm::rotate(view, Rotation.x, vec3(1, 0, 0));
 	view = glm::rotate(view, Rotation.y + glm::radians(90.0f), vec3(0, 1, 0));
 
-	view = glm::translate(view, -Position);
+	view = glm::translate(view, -(Position + Offset));
 	view = glm::translate(view, vec3(0, sin(bobTimer * bobHeight) / (1 / bobSpeed * 70), 0));
 	projection = glm::perspective(45.0f, (float)WINW / (float)WINH, 0.1f, 100.0f);
 	//projection *= glm::lookAt(vec3(0,0,0), cameraPos, cameraUp);

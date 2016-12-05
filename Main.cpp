@@ -42,9 +42,9 @@ Main::QuadraticDeltaMousePos, Main::Q_Delta;
 FrameBuffer Main::ScreenFBO;
 vector<PointLight * > Main::PointLights;
 int Main::ColorBitDepth = 24;
-double Main::StartFrameTime, Main::EndFrameTime, Main::DeltaTime;
+double Main::StartFrameTime, Main::EndFrameTime, Main::DeltaTime, Main::TotalTime;
 Texture2D Main::Map;
-float Main::FrameRate;
+float Main::FrameRate, Main::WaveFactor;
 
 //Private
 //vector<Blurb * > Blurbs = vector<Blurb * >();
@@ -247,6 +247,12 @@ void Main::Update() {
 	if (Main::TapKeys[GLFW_KEY_SLASH]) {
 		Main::Main::PointLights[0]->Color.b = Main::Main::PointLights[0]->Color.b != 0 ? 0 : 1;
 	}
+	if (Main::TapKeys[GLFW_KEY_Y]) {
+		WaveFactor += .05f;
+	}
+	if (Main::TapKeys[GLFW_KEY_U]) {
+		WaveFactor -= .05f;
+	}
 
 	if (Main::TapKeys[GLFW_KEY_ESCAPE]) {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -316,6 +322,8 @@ void Main::LateUpdate() {
 
 	OldMousePos = MousePos;
 	EndFrameTime = StartFrameTime;
+
+	TotalTime += DeltaTime;
 
 	for (int i = 0; i < 1024; i++)
 		TapKeys[i] = false;

@@ -13,13 +13,19 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-uniform vec2 SourceRect = vec2(0,0);
-uniform int SourceFrame = 1;
+uniform float Time;
+uniform vec3 WorldPos;
+uniform float WaveFactor;
 
 void main()
-{
+{	
+	vec4 prePos = vec4(position, 1.0f);
+	mat4 MVP = projection * view * model;
 	
-    gl_Position = projection * view * model * vec4(position, 1.0f);
+	float yWave = (sin((Time * 2) + WorldPos.x + position.x) / 3.0f) * WaveFactor;
+	float xWave = (cos((Time * 2) + WorldPos.x + position.x) / 3.0f) * WaveFactor;
+	
+    gl_Position = MVP * (prePos + vec4(xWave, yWave,0,0));
 
 	FragPos = vec3(model * vec4(position, 1.0f));
 	

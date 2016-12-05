@@ -1,6 +1,8 @@
 #pragma once
 #include "glm\glm.hpp"
 
+using namespace glm;
+
 class Camera
 {
 public:
@@ -9,14 +11,16 @@ public:
 	void Update();
 	void Init();
 
-	glm::mat4 view;
-	glm::mat4 projection;
+	mat4 view;
+	mat4 projection;
 
-	glm::vec3 Position;
-	glm::vec3 Rotation;
+	vec3 Position;
+	vec3 Rotation;
+	vec3 Offset;
 
-	glm::vec3 ForwardVec;
-	glm::vec3 UpVec;
+
+	vec3 ForwardVec;
+	vec3 UpVec;
 
 	~Camera();
 };

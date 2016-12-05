@@ -196,6 +196,12 @@ void Billboard::SetUniforms() {
 	glUniform2f(glGetUniformLocation(shaderProgram, "TextureSize"), 
 		MainTexture.width, MainTexture.height);
 
+	glUniform1f(glGetUniformLocation(shaderProgram, "Time"), Main::TotalTime);
+	glUniform1f(glGetUniformLocation(shaderProgram, "WaveFactor"), Main::WaveFactor);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "WorldPos"),
+		Position.x, Position.y, Position.z);
+
 	for (int i = 0; i < Main::PointLights.size(); i++) {
 		string _i = std::to_string(i);
 

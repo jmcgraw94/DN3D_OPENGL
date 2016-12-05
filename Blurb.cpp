@@ -205,6 +205,8 @@ void Blurb::SetUniforms() {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),
 		1, GL_FALSE, glm::value_ptr(Main::MainCamera.view));
 
+	
+
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"),
 		1, GL_FALSE, glm::value_ptr(Main::MainCamera.projection));
 
@@ -213,6 +215,13 @@ void Blurb::SetUniforms() {
 	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, "Time"), Main::TotalTime);
+
+	glUniform1f(glGetUniformLocation(shaderProgram, "WaveFactor"), Main::WaveFactor);
+
+	glUniform3f(glGetUniformLocation(shaderProgram, "WorldPos"), 
+		Position.x - Origin.x, Position.y - Origin.y, Position.z - Origin.z);
 
 	for (int i = 0; i < Main::PointLights.size(); i++) {
 		string _i = std::to_string(i);
