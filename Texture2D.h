@@ -23,9 +23,5 @@ public:
 		ColorMap;
 
 	~Texture2D();
-
-private:
-	vector<vector<vector<int>>>
-		ColorArray;
 };
 

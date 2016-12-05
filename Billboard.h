@@ -2,6 +2,7 @@
 #include "ShaderPipeline.h"
 #include "AnimationTimer.h"
 #include "GameObject.h"
+#include "Texture2D.h"
 
 #include "..\include\math\vect3d.h"
 #include "..\include\GL\glew.h"
@@ -43,7 +44,7 @@ public:
 
 	bool isInit;
 
-	//Texture2D MainTexture;
+	Texture2D MainTexture;
 
 	AnimationTimer * AnimTimer;
 

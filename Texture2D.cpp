@@ -7,8 +7,6 @@ Texture2D::Texture2D(string path)
 {
 	Pixels = Main::CM.LoadPixels(path, &width, &height);
 	ColorMap = Main::CM.CreatePixelGrid(path, &width, &height);
-
-
 }
 
 Texture2D::~Texture2D()

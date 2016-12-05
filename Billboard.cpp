@@ -1,6 +1,7 @@
 #include "Billboard.h"
 #include "Main.h"
 
+
 using namespace std;
 using namespace glm;
 
@@ -34,6 +35,7 @@ Billboard::Billboard(vec3 _pos, int _ID)
 		AnimTimer->SourceFrames = 7;
 		Scale = vec3(2, 2, 2);
 	}
+
 	Origin = vec3(-.5f, 0, 0) * Scale;
 }
 
