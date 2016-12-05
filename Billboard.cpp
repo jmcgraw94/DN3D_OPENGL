@@ -23,11 +23,13 @@ Billboard::Billboard(vec3 _pos, int _ID)
 	ID = _ID;
 
 	if (ID == 1)
-		textureFilePath = "Content/guy.png";
+		textureFilePath = "Content/tallgrass.png";
 	if (ID == 2)
 		textureFilePath = "Content/torch.png";
-	if (ID == 3)
+	if (ID == 3) {
 		textureFilePath = "Content/guy.png";
+		Scale = vec3(2, 2, 2);
+	}
 	if (ID == 4) {
 		textureFilePath = "Content/TorchSheet.png";
 		AnimTimer->SourceFrames = 7;

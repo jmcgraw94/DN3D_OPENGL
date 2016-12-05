@@ -128,7 +128,7 @@ void Main::Setup() {
 	GlowBlurb2 = new Blurb(vec3(2, 4, -2), 4);
 	GameObjects.push_back(GlowBlurb2);
 
-	PointLight * P_Light1 = new PointLight(vec3(05, 2.5f, 5), vec3(1, 1, 1), 15.0f, 1.0f);
+	PointLight * P_Light1 = new PointLight(vec3(05, 2.5f, 15), vec3(0, 1, 1), 15.0f, 1.0f);
 	PointLight * P_Light2 = new PointLight(vec3(10, 2.5f, 4), vec3(0, 1, 1), 15.0f, 1.0f);
 	PointLight * P_Light3 = new PointLight(vec3(15, 2.5f, 6), vec3(1, 1, 1), 15.0f, 1.0f);
 
@@ -136,11 +136,13 @@ void Main::Setup() {
 	PointLights.push_back(P_Light2);
 	PointLights.push_back(P_Light3);
 	
-	Billboard * Bill1 = new Billboard(vec3(3, 1, 5), 1);
+	Billboard * Bill1 = new Billboard(vec3(3, 1, 5), 3);
 	Billboard * Bill2 = new Billboard(vec3(1.15f, 2.08f, 6), 4);
+	Billboard * Bill3 = new Billboard(vec3(8.0f, 1, 3), 1);
 
 	GameObjects.push_back(Bill1);
 	GameObjects.push_back(Bill2);
+	GameObjects.push_back(Bill3);
 
 	MousePos = vec2(WINW, WINH) / 2.0f;
 	OldMousePos = vec2(WINW, WINH) / 2.0f;

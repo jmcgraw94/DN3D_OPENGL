@@ -32,6 +32,7 @@ uniform int SourceFrames = 1;
 uniform int CurrentFrame = 1;
 
 uniform int Outlined = 0;
+uniform float OutlineDivisor = 1;
 
 uniform vec2 TextureSize;
 
@@ -62,8 +63,8 @@ void main()
 		float neighborAlpha = 0;
 		
 		if (Outlined == 1){
-			float xSize = 1 / (TextureSize.x );
-			float ySize = 1 / (TextureSize.y );
+			float xSize = 1 / (TextureSize.x * OutlineDivisor);
+			float ySize = 1 / (TextureSize.y * OutlineDivisor);
 			
 			if (curPixel.x + xSize < 1)
 				neighborAlpha += texture(MainTexture, curPixel + vec2(xSize, 0)).a;
