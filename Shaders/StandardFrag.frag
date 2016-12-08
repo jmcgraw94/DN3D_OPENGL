@@ -116,7 +116,7 @@ void Outline(){
 
 	vec4 OutlineColor = 
 	//vec4(0,0,0,1);
-		vec4(TexCoord,1,1);
+		vec4(1,TexCoord,1);
 	
 	if (neighborAlpha > 0){
 		preColor = OutlineColor; //vec4(0,0,0,1);

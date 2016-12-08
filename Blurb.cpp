@@ -216,7 +216,7 @@ void Blurb::SetUniforms() {
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "LightCount"), Main::PointLights.size());
 
-	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 1);
+	glUniform1i(glGetUniformLocation(shaderProgram, "DSL"), 0);
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "DistanceLighting"), 1);
 

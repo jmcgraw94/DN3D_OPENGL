@@ -116,7 +116,6 @@ void Main::Setup() {
 
 	MainCamera = Camera();
 
-
 	glfwSetCursorPos(window, WINW / 2, WINH / 2);
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
