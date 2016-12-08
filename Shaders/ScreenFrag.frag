@@ -10,17 +10,14 @@ uniform vec2 ViewDelta;
 
 vec3 BitWeight = vec3(1.0f, 1.0f, 1.0f);
 
+float MotionStartDampen = 7f;
+float MaxBlurResult = 16f;
 
-//float BlurSteps = 1;
+float BlurStep = 1.75f;
+float SampleDist = 8;
 
 void main()
 { 
-	
-	float BlurStep = 1f;
-	float MotionStartDampen = 6f;
-	float MaxBlurResult = 16f;
-	float SampleDist = 8;
-	
 	vec2 PixelUnit = (1 / ScreenSize);
 	vec4 preColor = texture(screenTexture, TexCoords);
 	
