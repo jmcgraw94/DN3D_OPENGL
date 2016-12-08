@@ -246,11 +246,8 @@ void Billboard::Update() {
 	if (!Constructed)
 		return;
 	
-	if (Main::TapKeys[GLFW_KEY_K]) {
-		OutlineMode += 1;
-	}
-	if (Main::TapKeys[GLFW_KEY_J]) {
-		OutlineMode -= 1;
+	if (Main::TapKeys[GLFW_KEY_I]) {
+		OutlineMode *= -1;
 	}
 
 

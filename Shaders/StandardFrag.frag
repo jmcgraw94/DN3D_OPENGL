@@ -114,8 +114,12 @@ void Outline(){
 	if (curPixel.y - ySize > -1)
 		neighborAlpha += texture(MainTexture, curPixel - vec2(0, ySize)).a;
 
+	vec4 OutlineColor = 
+	//vec4(0,0,0,1);
+		vec4(TexCoord,1,1);
+	
 	if (neighborAlpha > 0){
-		preColor.rb = TexCoord; //vec4(0,0,0,1);
+		preColor = OutlineColor; //vec4(0,0,0,1);
 	}
 	else
 		discard;

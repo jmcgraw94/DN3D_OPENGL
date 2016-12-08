@@ -134,8 +134,8 @@ void Main::Setup() {
 	PointLight * P_Light3 = new PointLight(vec3(15, 2.5f, 6), vec3(1, 1, 1), 15.0f, 1.0f);
 
 	PointLights.push_back(P_Light1);
-	//PointLights.push_back(P_Light2);
-	//PointLights.push_back(P_Light3);
+	PointLights.push_back(P_Light2);
+	PointLights.push_back(P_Light3);
 	
 	Billboard * Bill1 = new Billboard(vec3(3, 1, 5), 3);
 	Billboard * Bill2 = new Billboard(vec3(1.15f, 2.08f, 6), 4);
