@@ -6,6 +6,7 @@ layout (location = 2) in vec3 normal;
 out vec2 TexCoord;
 out vec3 Normal;
 out vec3 FragPos;
+out vec3 FragScreenPos;
 
 uniform mat4 normalMatrix;
 uniform mat4 transform;
@@ -36,5 +37,6 @@ void main()
 	
     TexCoord = texCoord;
 	
+	FragScreenPos = vec3(MVP * vec4(position, 1.0f));
 	
 }

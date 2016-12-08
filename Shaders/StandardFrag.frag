@@ -5,6 +5,7 @@ in vec3 ourColor;
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
+in vec3 FragScreenPos;
 
 //Output variables
 out vec4 color;
@@ -31,7 +32,7 @@ uniform sampler2D NormalTexture;
 uniform int SourceFrames = 1;
 uniform int CurrentFrame = 1;
 
-uniform int Outlined = 0;
+uniform int OutlineMode = 0; //0 None, 1 Lit, 2 Non Lit
 uniform float OutlineDivisor = 1;
 
 uniform vec2 TextureSize;
@@ -39,58 +40,42 @@ uniform vec2 TextureTrans;
 
 //Functions
 vec4 CalculatePointLight(PointLight P, vec3 Normal, vec3 FragPos);
+void Outline();
 
 //Local Variables
 float AV =  .05f;
 vec4 AmbientColor = vec4(AV,AV,AV, 1);
 vec4 ShadowColor = vec4(56f / 255f, 50f / 255f, 24f / 255f, 1.0f);
 vec4 specColor = vec4(0,0,0,1);
+vec4 preColor, imgColor;
+vec2 curPixel, postTextCoord;
+
+vec4 runTotal;
 
 void main()
 {
+	
 	vec3 normal = normalize(Normal);
 	//specColor = texture(NormalTexture, curPixel);
 		
-	vec2 postTextCoord = TexCoord + TextureTrans;
+	postTextCoord = TexCoord + TextureTrans;
 		
-	vec2 curPixel = vec2(
+	curPixel = vec2(
 		(CurrentFrame / float(SourceFrames)) + (postTextCoord.x / SourceFrames), 
 		(-postTextCoord.y));
 	
-	vec4 imgColor = texture(MainTexture, curPixel);
+	imgColor = texture(MainTexture, curPixel);
 	
-	vec4 preColor = imgColor;
+	preColor = imgColor;
 	
 	if (preColor.a < 1f){
-	
-		float neighborAlpha = 0;
-		
-		if (Outlined == 1){
-			float xSize = 1 / (TextureSize.x * OutlineDivisor);
-			float ySize = 1 / (TextureSize.y * OutlineDivisor);
-			
-			if (curPixel.x + xSize < 1)
-				neighborAlpha += texture(MainTexture, curPixel + vec2(xSize, 0)).a;
-		
-			if (curPixel.x - xSize > 0)
-				neighborAlpha += texture(MainTexture, curPixel - vec2(xSize, 0)).a;
-			
-			if (curPixel.y + ySize < 1)
-				neighborAlpha += texture(MainTexture, curPixel + vec2(0, ySize)).a;
-			
-			if (curPixel.y - ySize > -1)
-				neighborAlpha += texture(MainTexture, curPixel - vec2(0, ySize)).a;
-		
-			if (neighborAlpha > 0)
-				preColor = vec4(0,0,0,1);
-			else
-				discard;
-		}
+		if (OutlineMode >= 1)
+			Outline();
 		else
 			discard;
 	}
 	else {
-		vec4 runTotal = ShadowColor * AmbientColor;
+		runTotal = ShadowColor * AmbientColor;
 		
 		//Non Self Illuminated Objects
 		if (SelfIlluminated != 1){
@@ -106,10 +91,34 @@ void main()
 				preColor.rgb *= PointLights[i].Brightness;
 			}
 		}
-				
-		color = preColor;
 	}
+	
+	color = preColor;
+}
 
+void Outline(){
+	float neighborAlpha = 0;
+	
+	float xSize = 1 / (TextureSize.x * OutlineDivisor);
+	float ySize = 1 / (TextureSize.y * OutlineDivisor);
+	
+	if (curPixel.x + xSize < 1)
+		neighborAlpha += texture(MainTexture, curPixel + vec2(xSize, 0)).a;
+
+	if (curPixel.x - xSize > 0)
+		neighborAlpha += texture(MainTexture, curPixel - vec2(xSize, 0)).a;
+	
+	if (curPixel.y + ySize < 1)
+		neighborAlpha += texture(MainTexture, curPixel + vec2(0, ySize)).a;
+	
+	if (curPixel.y - ySize > -1)
+		neighborAlpha += texture(MainTexture, curPixel - vec2(0, ySize)).a;
+
+	if (neighborAlpha > 0){
+		preColor.rb = TexCoord; //vec4(0,0,0,1);
+	}
+	else
+		discard;
 }
 
 vec4 CalculatePointLight(PointLight P, vec3 _normal, vec3 FragPos){
@@ -125,8 +134,7 @@ vec4 CalculatePointLight(PointLight P, vec3 _normal, vec3 FragPos){
 		intensity = max(dot(_normal, lightDir), 0.0);
 		
 	if (DistanceLighting == 1)
-		intensity = .8f;
-	
+		intensity = clamp(intensity, .35f,  1f);
 	
 	float Attenuation = clamp(P.Range / pow(DistFromLight, 3), 0, 1);
 	

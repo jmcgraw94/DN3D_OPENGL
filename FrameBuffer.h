@@ -19,7 +19,7 @@ public:
 
 	GLuint 
 		TextureColorBuffer,
-		PositionColorBuffer;
+		DepthColorBuffer;
 
 	ShaderPipeline ScreenShader;
 	GLuint quadVAO, quadVBO;
@@ -35,7 +35,8 @@ public:
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	GLuint ReserveScreenRectTexture();
+	GLuint ReserveScreenRGBTexture();
+	GLuint ReserveScreenDepthTexture();
 
 	void Dispose();
 

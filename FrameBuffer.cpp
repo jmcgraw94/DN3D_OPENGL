@@ -13,12 +13,26 @@ FrameBuffer::~FrameBuffer()
 
 float rot = 0;
 
-GLuint FrameBuffer::ReserveScreenRectTexture()
+GLuint FrameBuffer::ReserveScreenRGBTexture()
 {
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WINW, WINH, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return textureID;
+}
+
+GLuint FrameBuffer::ReserveScreenDepthTexture()
+{
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, WINW, WINH, 0, GL_DEPTH24_STENCIL8, GL_UNSIGNED_BYTE, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -66,11 +80,19 @@ void FrameBuffer::DrawFrameBuffer() {
 	//Uniforms
 	glUniform1i(glGetUniformLocation(ScreenShader.Program, "BitDepth"), Main::ColorBitDepth);
 
+	glUniform2f(glGetUniformLocation(ScreenShader.Program, "ScreenSize"), 
+		WINW, WINH);
+
+	glUniform2f(glGetUniformLocation(ScreenShader.Program, "ViewDelta"),
+		Main::DeltaMousePos.x, Main::DeltaMousePos.y);
+
 	glUniformMatrix4fv(glGetUniformLocation(ScreenShader.Program, "model"),
 		1, GL_FALSE, glm::value_ptr(model));
 
 	//Activate the current 
 	glBindTexture(GL_TEXTURE_2D, TextureColorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, DepthColorBuffer);
+
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 }
@@ -89,9 +111,13 @@ void FrameBuffer::Setup() {
 	glGenBuffers(1, &quadVBO);
 
 	//Reserve space for a screen rect buffer
-	TextureColorBuffer = ReserveScreenRectTexture();
+	TextureColorBuffer = ReserveScreenRGBTexture();
+
+	DepthColorBuffer = ReserveScreenDepthTexture();
+
 	//Activate the Framebuffer for following operations
 	glBindFramebuffer(GL_FRAMEBUFFER, FrameBufferObject);
+
 	//Attach the recently reserved color buffer 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, TextureColorBuffer, 0);
 
@@ -103,10 +129,7 @@ void FrameBuffer::Setup() {
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	//Provide Render Buffer Object
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RenderBufferObject); 
-	//Check for completion
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		cout << "ERROR: Incomplete FrameBuffer" << endl;
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RenderBufferObject);
 
 	//Finally unbind the framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -117,12 +140,13 @@ void FrameBuffer::Setup() {
 	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
 	//Buffer object
 	glBufferData(GL_ARRAY_BUFFER, sizeof(ScreenVertices), &ScreenVertices, GL_STATIC_DRAW);
+
 	//Vec2 Stride
 	int Stride = 2;
 	//Enable Position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-	//Enable TextCoords 
+	//Enable TexCoords 
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(Stride * sizeof(GLfloat)));
 	//Unbind active Vertex Array Object

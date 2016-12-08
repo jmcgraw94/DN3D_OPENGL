@@ -191,7 +191,7 @@ void Billboard::SetUniforms() {
 
 	glUniform1i(glGetUniformLocation(shaderProgram, "SelfIlluminated"), SelfIlluminated);
 
-	glUniform1i(glGetUniformLocation(shaderProgram, "Outlined"), Outlined);
+	glUniform1i(glGetUniformLocation(shaderProgram, "OutlineMode"), OutlineMode);
 
 	glUniform2f(glGetUniformLocation(shaderProgram, "TextureSize"), 
 		MainTexture.width, MainTexture.height);
@@ -246,9 +246,13 @@ void Billboard::Update() {
 	if (!Constructed)
 		return;
 	
-	if (Main::TapKeys[GLFW_KEY_I]) {
-		Outlined *= -1;
+	if (Main::TapKeys[GLFW_KEY_K]) {
+		OutlineMode += 1;
 	}
+	if (Main::TapKeys[GLFW_KEY_J]) {
+		OutlineMode -= 1;
+	}
+
 
 	Init();
 	AnimTimer->Update();

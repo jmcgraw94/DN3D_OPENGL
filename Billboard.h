@@ -36,7 +36,7 @@ public:
 	string Name;
 	int
 		ID = 0,
-		Outlined = 1,
+		OutlineMode = 1,
 		SelfIlluminated = -1;
 
 	vec3 Position;
